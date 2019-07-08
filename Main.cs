@@ -16,18 +16,15 @@ namespace SRML
 		public override void PreLoad()
 		{
 			// Initializes the Console
+			FileLogger.Init();
 			Console.Init();
+
+			// Config Handler
+
 
 			// Gets the Assembly being executed
 			execAssembly = Assembly.GetExecutingAssembly();
 			HarmonyInstance.PatchAll(execAssembly);
-
-			UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ChangeScene;
-		}
-
-		public void ChangeScene(UnityEngine.SceneManagement.Scene old, UnityEngine.SceneManagement.Scene scene)
-		{
-			Console.Log($"{scene.buildIndex}: {scene.name ?? "NoName"}");
 		}
 
 		// POST LOAD MOD

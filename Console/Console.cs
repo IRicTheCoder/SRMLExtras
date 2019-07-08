@@ -52,17 +52,9 @@ namespace SRML
 		/// <summary>
 		/// Initializes the console
 		/// </summary>
-		public static void Init()
+		internal static void Init()
 		{
 			Application.logMessageReceived += console.AppLog;
-
-			if (!Directory.Exists(srmlLogFile.Substring(0, srmlLogFile.LastIndexOf('/'))))
-				Directory.CreateDirectory(srmlLogFile.Substring(0, srmlLogFile.LastIndexOf('/')));
-
-			if (File.Exists(srmlLogFile))
-				File.Delete(srmlLogFile);
-
-			File.Create(srmlLogFile).Close();
 
 			Log("CONSOLE INITIALIZED!");
 			Log("Patching SceneManager to attach window");

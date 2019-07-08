@@ -15,6 +15,20 @@ namespace SRML
 		internal static string srmlLogFile = Path.Combine(Application.persistentDataPath, "SRML/srml.log");
 
 		/// <summary>
+		/// Initializes the file logger (run this before Console.Init)
+		/// </summary>
+		internal static void Init()
+		{
+			if (!Directory.Exists(Path.GetDirectoryName(srmlLogFile)))
+				Directory.CreateDirectory(Path.GetDirectoryName(srmlLogFile));
+
+			if (File.Exists(srmlLogFile))
+				File.Delete(srmlLogFile);
+
+			File.Create(srmlLogFile).Close();
+		}
+
+		/// <summary>
 		/// Logs a info message
 		/// </summary>
 		/// <param name="message">Message to log</param>

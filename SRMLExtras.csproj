@@ -39,6 +39,10 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\ComponentReplacer.cs" />
+    <Compile Include="Components\IModdedComponent.cs" />
+    <Compile Include="Components\Plots\ModdedGardenCatcher.cs" />
+    <Compile Include="Components\Plots\ModdedGardenUI.cs" />
     <Compile Include="Console\Commands\EditButtonCommand.cs" />
     <Compile Include="Console\Commands\RemoveButtonCommand.cs" />
     <Compile Include="Console\Commands\AddButtonCommand.cs" />
@@ -120,7 +124,6 @@
     <EmbeddedResource Include="modinfo.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BehaviourReplacer\" />
     <Folder Include="Configs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
