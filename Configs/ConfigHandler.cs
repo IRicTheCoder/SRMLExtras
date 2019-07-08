@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace SRML.Configs
+namespace SRMLExtras.Configs
 {
 	internal class ConfigHandler
 	{
@@ -15,22 +15,19 @@ namespace SRML.Configs
 		{
 			// THIS LINE ENSURES THAT LOCATION IS ALWAYS RIGHT. USING Assembly.Location DOESN'T ALWAYS PROVIDE THE RIGHT RESULT
 			string configFolder = Path.Combine(Path.GetDirectoryName(Uri.UnescapeDataString(new UriBuilder(modDll.CodeBase).Path)), "Configs");
-			if (!Directory.Exists(configFolder))
-				Directory.CreateDirectory(configFolder);
 
 			// SEARCHS ALL FILES IN THE MANIFEST AND CREATES THEM
 			// FILES NEED TO BE STORED IN FOLDER "Resources/Configs"
 			foreach (string fileWithNamespace in modDll.GetManifestResourceNames())
 			{
-				UnityEngine.Debug.Log("File: " + fileWithNamespace);
-
 				string file = fileWithNamespace.Substring(fileWithNamespace.IndexOf('.') + 1);
 				if (!file.StartsWith("Resources.Configs.") || !file.EndsWith(".config"))
 					continue;
 
-				string pathFile = file.Replace("Resources.Configs.", "").Replace(".config", "").Replace('.', '/') + ".config";
+				if (!Directory.Exists(configFolder))
+					Directory.CreateDirectory(configFolder);
 
-				UnityEngine.Debug.Log("FileNew: " + pathFile);
+				string pathFile = file.Replace("Resources.Configs.", "").Replace(".config", "").Replace('.', '/') + ".config";
 
 				if (File.Exists(Path.Combine(configFolder, pathFile)))
 					continue;
@@ -38,12 +35,8 @@ namespace SRML.Configs
 				if (!Directory.Exists(Path.Combine(configFolder, Path.GetDirectoryName(pathFile))))
 					Directory.CreateDirectory(Path.Combine(configFolder, Path.GetDirectoryName(pathFile)));
 
-				UnityEngine.Debug.Log("DirectoryCreate: " + pathFile);
-
-				using (Stream stream = Main.execAssembly.GetManifestResourceStream(fileWithNamespace))
+				using (Stream stream = modDll.GetManifestResourceStream(fileWithNamespace))
 				{
-					UnityEngine.Debug.Log("FileStream: " + stream);
-
 					using (StreamReader reader = new StreamReader(stream))
 					{
 						File.WriteAllText(Path.Combine(configFolder, pathFile), reader.ReadToEnd());
