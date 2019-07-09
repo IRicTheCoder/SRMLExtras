@@ -16,7 +16,7 @@ namespace SRMLExtras.Components.Plots
 
 		protected override GameObject CreatePurchaseUI()
 		{
-			SRML.Console.Console.Log("Modded Garden UI");
+			//SRML.Console.Console.Log("Modded Garden UI");
 
 			List<PurchaseUI.Purchasable> purchasables = new List<PurchaseUI.Purchasable>
 			{
@@ -49,7 +49,7 @@ namespace SRMLExtras.Components.Plots
 
 			GardenUI gardenUI = (GardenUI)original;
 
-			SRML.Console.Console.Log("FromOriginal");
+			//SRML.Console.Console.Log("FromOriginal");
 
 			soil = gardenUI.soil;
 			sprinkler = gardenUI.sprinkler;

@@ -8,7 +8,7 @@ namespace SRMLExtras.Components
 {
 	public static class ComponentReplacer
 	{
-		internal static Dictionary<Type, Type> uiReplacements = new Dictionary<Type, Type>()
+		/*internal static Dictionary<Type, Type> uiReplacements = new Dictionary<Type, Type>()
 		{
 			{
 				typeof(GardenUI),
@@ -22,7 +22,7 @@ namespace SRMLExtras.Components
 				typeof(GardenCatcher),
 				typeof(Plots.ModdedGardenCatcher)
 			}
-		};
+		};*/
 
 		// PATCHES THE COMPONENTS
 		/*[HarmonyPatch(typeof(SRBehaviour))]
@@ -48,7 +48,7 @@ namespace SRMLExtras.Components
 			}
 		}*/
 
-		[HarmonyPatch(typeof(BaseUI))]
+		/*[HarmonyPatch(typeof(BaseUI))]
 		[HarmonyPatch("Awake")]
 		internal static class BaseUIPatcher
 		{
@@ -68,6 +68,6 @@ namespace SRMLExtras.Components
 					UnityEngine.Object.Destroy(__instance);
 				}
 			}
-		}
+		}*/
 	}
 }

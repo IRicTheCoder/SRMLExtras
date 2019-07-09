@@ -18,6 +18,7 @@ namespace SRMLExtras
 		{
 			// Generates the config file
 			Configs.ConfigHandler.CopyFiles(Assembly.GetExecutingAssembly());
+			Configs.ConfigHandler.Populate(Assembly.GetExecutingAssembly());
 
 			// Gets the Assembly being executed
 			execAssembly = Assembly.GetExecutingAssembly();
