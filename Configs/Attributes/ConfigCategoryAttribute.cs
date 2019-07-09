@@ -5,7 +5,7 @@ namespace SRMLExtras.Configs.Attributes
 	/// <summary>
 	/// Defines a category inside the config file when using ConfigValueAttribute
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class ConfigCategoryAttribute : Attribute
 	{
 		public string category;

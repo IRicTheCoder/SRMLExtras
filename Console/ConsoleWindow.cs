@@ -178,7 +178,8 @@ namespace SRML.ConsoleSystem
 			if (showWindow)
 			{
 				GUI.backgroundColor = new Color(0, 0, 0, 0.25f);
-				GUI.Box(new Rect(-20, -20, Screen.width + 20, Screen.height + 20), "", window);
+				GUI.Window(1234567892, new Rect(-20, -20, Screen.width + 20, Screen.height + 20), (id) => { }, string.Empty, window);
+				GUI.BringWindowToBack(1234567892);
 				GUI.backgroundColor = Color.white;
 
 				GUI.Window(1234567890, windowRect, DrawWindow, string.Empty, window);
@@ -191,6 +192,11 @@ namespace SRML.ConsoleSystem
 					GUI.Window(1234567891, completeRect, DrawACWindow, acTitle, window);
 					GUI.BringWindowToFront(1234567891);
 				}
+			}
+
+			if (Event.current.isKey || Event.current.isMouse || Event.current.isScrollWheel)
+			{
+				Event.current.Use();
 			}
 
 			GUI.skin.font = font;

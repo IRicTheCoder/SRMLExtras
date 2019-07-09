@@ -10,36 +10,59 @@ namespace SRMLExtras.Configs
 	{
 		private static Dictionary<FileID, ConfigFile> files = new Dictionary<FileID, ConfigFile>();
 
-		// COPIES THE DEFAULT FILES IF THEY EXIST
-		internal static void CopyFiles(Assembly modDll)
+		private static Assembly[] cachedModDlls;
+
+		internal static void Init(params Assembly[] modDlls)
 		{
-			// THIS LINE ENSURES THAT LOCATION IS ALWAYS RIGHT. USING Assembly.Location DOESN'T ALWAYS PROVIDE THE RIGHT RESULT
-			string configFolder = Path.Combine(Path.GetDirectoryName(Uri.UnescapeDataString(new UriBuilder(modDll.CodeBase).Path)), "Configs");
+			SRML.Console.Reload += ReloadConfigs;
+			cachedModDlls = modDlls;
 
-			// SEARCHS ALL FILES IN THE MANIFEST AND CREATES THEM
-			// FILES NEED TO BE STORED IN FOLDER "Resources/Configs"
-			foreach (string fileWithNamespace in modDll.GetManifestResourceNames())
+			CopyFiles();
+			ReadFiles();
+			Populate();
+			SaveFiles();
+		}
+
+		internal static void ReloadConfigs()
+		{
+			ReadFiles();
+			Populate();
+			files.Clear();
+		}
+
+		// COPIES THE DEFAULT FILES IF THEY EXIST
+		internal static void CopyFiles()
+		{
+			foreach (Assembly modDll in cachedModDlls)
 			{
-				string file = fileWithNamespace.Substring(fileWithNamespace.IndexOf('.') + 1);
-				if (!file.StartsWith("Resources.Configs.") || !file.EndsWith(".config"))
-					continue;
+				// THIS LINE ENSURES THAT LOCATION IS ALWAYS RIGHT. USING Assembly.Location DOESN'T ALWAYS PROVIDE THE RIGHT RESULT
+				string configFolder = Path.Combine(Path.GetDirectoryName(Uri.UnescapeDataString(new UriBuilder(modDll.CodeBase).Path)), "Configs");
 
-				if (!Directory.Exists(configFolder))
-					Directory.CreateDirectory(configFolder);
-
-				string pathFile = file.Replace("Resources.Configs.", "").Replace(".config", "").Replace('.', '/') + ".config";
-
-				if (File.Exists(Path.Combine(configFolder, pathFile)))
-					continue;
-
-				if (!Directory.Exists(Path.Combine(configFolder, Path.GetDirectoryName(pathFile))))
-					Directory.CreateDirectory(Path.Combine(configFolder, Path.GetDirectoryName(pathFile)));
-
-				using (Stream stream = modDll.GetManifestResourceStream(fileWithNamespace))
+				// SEARCHS ALL FILES IN THE MANIFEST AND CREATES THEM
+				// FILES NEED TO BE STORED IN FOLDER "Resources/Configs"
+				foreach (string fileWithNamespace in modDll.GetManifestResourceNames())
 				{
-					using (StreamReader reader = new StreamReader(stream))
+					string file = fileWithNamespace.Substring(fileWithNamespace.IndexOf('.') + 1);
+					if (!file.StartsWith("Resources.Configs.") || !file.EndsWith(".config"))
+						continue;
+
+					if (!Directory.Exists(configFolder))
+						Directory.CreateDirectory(configFolder);
+
+					string pathFile = file.Replace("Resources.Configs.", "").Replace(".config", "").Replace('.', '/') + ".config";
+
+					if (File.Exists(Path.Combine(configFolder, pathFile)))
+						continue;
+
+					if (!Directory.Exists(Path.Combine(configFolder, Path.GetDirectoryName(pathFile))))
+						Directory.CreateDirectory(Path.Combine(configFolder, Path.GetDirectoryName(pathFile)));
+
+					using (Stream stream = modDll.GetManifestResourceStream(fileWithNamespace))
 					{
-						File.WriteAllText(Path.Combine(configFolder, pathFile), reader.ReadToEnd());
+						using (StreamReader reader = new StreamReader(stream))
+						{
+							File.WriteAllText(Path.Combine(configFolder, pathFile), reader.ReadToEnd());
+						}
 					}
 				}
 			}
@@ -47,15 +70,16 @@ namespace SRMLExtras.Configs
 
 		// READS ALL CONFIG FILES FROM A GIVEN ASSEMBLY, THIS CACHES VALUES TO USE DURING POPULATE, THIS PREVENTS MOST OVERHEAD
 		// MAKING SETTING VALUES THROUGH ATTRIBUTES SAFE, CAUSE NO OTHER INSTRUCTION WILL RUN DURING THIS PROCESS
-		private static void ReadFiles()
+		internal static void ReadFiles()
 		{
-			foreach (Assembly modDll in AppDomain.CurrentDomain.GetAssemblies())
+			files.Clear();
+			foreach (Assembly modDll in cachedModDlls)
 			{
 				string configFolder = Path.Combine(Path.GetDirectoryName(Uri.UnescapeDataString(new UriBuilder(modDll.CodeBase).Path)), "Configs");
 				foreach (string file in Directory.GetFiles(configFolder, "*", SearchOption.AllDirectories))
 				{
-					string fileRelative = file.Replace(configFolder + "\\", "");
-					files.Add(new FileID(modDll, fileRelative), new ConfigFile(file).Load());
+					string fileRelative = file.Replace(configFolder + "\\", "").Replace("\\", "/");
+					files.Add(new FileID(modDll, fileRelative), new ConfigFile(modDll, fileRelative).Load());
 				}
 			}
 		}
@@ -64,23 +88,71 @@ namespace SRMLExtras.Configs
 		// POPULATES EVERY CLASS WITH THE CONFIG VALUES. THESE VALUES CAN STILL BE OBTAINED IN A CONVENTIONAL WAY THROUGH FILES
 		internal static void Populate()
 		{
-			foreach (Assembly modDll in AppDomain.CurrentDomain.GetAssemblies())
+			foreach (Assembly modDll in cachedModDlls)
 			{
 				foreach (Type type in modDll.GetTypes())
 				{
 					foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
 					{
-						ConfigValueAttribute configValue = field.GetCustomAttributes(typeof(ConfigValueAttribute), false)?[0] as ConfigValueAttribute;
-						ConfigDescriptionAttribute description = field.GetCustomAttributes(typeof(ConfigDescriptionAttribute), false)?[0] as ConfigDescriptionAttribute;
-						ConfigCategoryAttribute category = field.GetCustomAttributes(typeof(ConfigCategoryAttribute), false)?[0] as ConfigCategoryAttribute;
-						ConfigConverterAttribute converter = field.GetCustomAttributes(typeof(ConfigConverterAttribute), false)?[0] as ConfigConverterAttribute;
+						object[] attributes = field.GetCustomAttributes(typeof(ConfigValueAttribute), false);
+						ConfigValueAttribute configValue = attributes.Length > 0 ? attributes[0] as ConfigValueAttribute : null;
 
-						ConfigFile file = files[new FileID(modDll, configValue.file ?? "main.config")];
-						IConfigConverter convert = converter.converter;
+						attributes = field.GetCustomAttributes(typeof(ConfigDescriptionAttribute), false);
+						ConfigDescriptionAttribute description = attributes.Length > 0 ? attributes[0] as ConfigDescriptionAttribute : null;
+
+						attributes = field.GetCustomAttributes(typeof(ConfigCategoryAttribute), false);
+						ConfigCategoryAttribute category = attributes.Length > 0 ? attributes[0] as ConfigCategoryAttribute : null;
+
+						attributes = field.GetCustomAttributes(typeof(ConfigConverterAttribute), false);
+						ConfigConverterAttribute converter = attributes.Length > 0 ? attributes[0] as ConfigConverterAttribute : null;
+
+						attributes = field.GetCustomAttributes(typeof(ConfigUIAttribute), false);
+						ConfigUIAttribute uiDesign = attributes.Length > 0 ? attributes[0] as ConfigUIAttribute : null;
+
+						if (configValue == null)
+							continue;
+
+						ConfigFile file;
+						FileID id = new FileID(modDll, configValue.file == null ? "main.config" : configValue.file + ".config");
+
+						if (!files.ContainsKey(id))
+						{
+							file = new ConfigFile(modDll, configValue.file == null ? "main.config" : configValue.file + ".config");
+							files.Add(id, file);
+						}
+						else
+						{
+							file = files[id];
+						}
+						IConfigConverter convert = converter?.converter;
+						if (uiDesign != null)
+							file.AddDesign(configValue.name, uiDesign, category?.category);
+
+						string value = file.Get(configValue.name, convert != null ? convert.ConvertFromValue(configValue.defaultValue) : configValue.defaultValue.ToString(), null, category?.category, description?.description);
 						
+						try
+						{
+							field.SetValue(null, Convert.ChangeType(value, field.FieldType));
+						}
+						catch (Exception e)
+						{
+							SRML.Console.LogError($"Trying to set value for field '{field.Name}' from config, but config value can't be converted. Default value will be used, however this might mean a field is asking for a diferent type of data then it can contain");
+							UnityEngine.Debug.LogException(e);
+							field.SetValue(null, configValue.defaultValue);
+							continue;
+						}
 					}
 				}
 			}
+		}
+
+		internal static void SaveFiles()
+		{
+			foreach (ConfigFile file in files.Values)
+			{
+				file.Save();
+			}
+			files.Clear();
 		}
 
 		private struct FileID

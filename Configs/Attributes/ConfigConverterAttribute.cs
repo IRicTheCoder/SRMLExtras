@@ -5,7 +5,7 @@ namespace SRMLExtras.Configs.Attributes
 	/// <summary>
 	/// Defines the converter used to get the value from a ConfigValueAttribute
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class ConfigConverterAttribute : Attribute
 	{
 		public IConfigConverter converter;

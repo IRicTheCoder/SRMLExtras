@@ -6,7 +6,7 @@ namespace SRMLExtras.Configs.Attributes
 	/// Tags a variable with a description to add to the config
 	/// Requires a ConfigValueAttribue to function
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class ConfigDescriptionAttribute : Attribute
 	{
 		public string description;

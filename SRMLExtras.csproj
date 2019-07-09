@@ -15,8 +15,8 @@
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>G:\Jogos\Steam\SteamApps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -42,6 +42,7 @@
     <Compile Include="Components\IModdedComponent.cs" />
     <Compile Include="Components\Plots\ModdedGardenCatcher.cs" />
     <Compile Include="Components\Plots\ModdedGardenUI.cs" />
+    <Compile Include="Configs\Attributes\ConfigUIAttribute.cs" />
     <Compile Include="Configs\Attributes\ConfigCategoryAttribute.cs" />
     <Compile Include="Configs\Attributes\ConfigConverterAttribute.cs" />
     <Compile Include="Configs\Attributes\ConfigDescriptionAttribute.cs" />
