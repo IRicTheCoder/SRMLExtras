@@ -9,6 +9,8 @@ namespace SRMLExtras.Components.Plots
 	/// </summary>
 	public class ModdedGardenUI : GardenUI, IModdedComponent
 	{
+		private GardenUI original;
+
 		public static List<PurchaseUI.Purchasable> moddedPurchasables = new List<PurchaseUI.Purchasable>()
 		{
 			//new PurchaseUI.Purchasable("m.upgrade.name.garden.scareslime2", scareslime.icon, scareslime.img, "m.upgrade.desc.garden.scareslime", scareslime.cost, new PediaDirector.Id?(PediaDirector.Id.GARDEN), new UnityAction(UpgradeScareslime), () => true, () => !activator.HasUpgrade(LandPlot.Upgrade.SCARESLIME), null, null, null, null)
@@ -17,6 +19,7 @@ namespace SRMLExtras.Components.Plots
 		protected override GameObject CreatePurchaseUI()
 		{
 			//SRML.Console.Console.Log("Modded Garden UI");
+			//LoadFromOriginal(original);
 
 			List<PurchaseUI.Purchasable> purchasables = new List<PurchaseUI.Purchasable>
 			{
@@ -62,6 +65,11 @@ namespace SRMLExtras.Components.Plots
 			plantButtonPanelObject = gardenUI.plantButtonPanelObject;
 
 			playerState = SRSingleton<SceneContext>.Instance.PlayerState;
+		}
+
+		public void SetOriginal(object original)
+		{
+			this.original = (GardenUI)original;
 		}
 	}
 }

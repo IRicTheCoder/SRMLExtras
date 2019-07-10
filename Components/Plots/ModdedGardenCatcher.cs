@@ -11,5 +11,9 @@ namespace SRMLExtras.Components.Plots
 		{
 			
 		}
+
+		public void SetOriginal(object original)
+		{
+		}
 	}
 }

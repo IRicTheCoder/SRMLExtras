@@ -16,7 +16,7 @@ namespace SRMLExtras
 		// THE EXECUTING ASSEMBLY
 		public static Assembly execAssembly;
 
-		[ConfigValue("TEST", "YOUR OTHER ASS")]
+		/*[ConfigValue("TEST", "YOUR OTHER ASS")]
 		public static string test;
 
 		[ConfigValue("COOL VALUE", 250)]
@@ -31,12 +31,12 @@ namespace SRMLExtras
 
 		[ConfigValue("Test Coisa", "OtherFolder/otherfile", 0.5f)]
 		[ConfigDescription("Nice description to have")]
-		public static float otherFileValue;
+		public static float otherFileValue;*/
 
 		// PRE LOAD MOD
 		public override void PreLoad()
 		{
-			FileLogger.Init();
+			/*FileLogger.Init();
 			Console.Init();
 
 			// Generates the config file
@@ -47,20 +47,20 @@ namespace SRMLExtras
 			Console.Log($"otherCoolValue: {otherCoolValue} ({otherCoolValue.GetType().ToString()})");
 			Console.Log($"otherFileValue: {otherFileValue} ({otherFileValue.GetType().ToString()})");
 
-			Console.Reload += Reload;
+			Console.Reload += Reload;*/
 
 			// Gets the Assembly being executed
 			execAssembly = Assembly.GetExecutingAssembly();
 			HarmonyInstance.PatchAll(execAssembly);
 		}
 
-		public void Reload()
+		/*public void Reload()
 		{
 			Console.Log($"test: {test} ({test?.GetType().ToString()})");
 			Console.Log($"coolValue: {coolValue} ({coolValue.GetType().ToString()})");
 			Console.Log($"otherCoolValue: {otherCoolValue} ({otherCoolValue.GetType().ToString()})");
 			Console.Log($"otherFileValue: {otherFileValue} ({otherFileValue.GetType().ToString()})");
-		}
+		}*/
 
 		// POST LOAD MOD
 		public override void PostLoad()
