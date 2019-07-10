@@ -2,8 +2,6 @@
 using System.Reflection;
 using HarmonyLib;
 using SRML;
-using SRMLExtras.Configs;
-using SRMLExtras.Configs.Attributes;
 //using SRML.Console;
 
 namespace SRMLExtras

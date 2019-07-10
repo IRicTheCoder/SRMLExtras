@@ -229,6 +229,13 @@ namespace SRML.ConsoleSystem
 					Event.current.Use();
 					return;
 				}
+                else if (Event.current.keyCode == KeyCode.Escape && !autoComplete)
+                {
+                    ToggleWindow();
+                    
+                    Event.current.Use();
+					return;
+                }
 
 				// SUBMITS THE TEXTFIELD
 				if (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)

@@ -38,32 +38,7 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Components\ComponentReplacer.cs" />
-    <Compile Include="Components\IModdedComponent.cs" />
-    <Compile Include="Components\Plots\ModdedGardenCatcher.cs" />
-    <Compile Include="Components\Plots\ModdedGardenUI.cs" />
-    <Compile Include="Configs\Attributes\ConfigUIAttribute.cs" />
-    <Compile Include="Configs\Attributes\ConfigCategoryAttribute.cs" />
-    <Compile Include="Configs\Attributes\ConfigConverterAttribute.cs" />
-    <Compile Include="Configs\Attributes\ConfigDescriptionAttribute.cs" />
-    <Compile Include="Configs\Attributes\ConfigValueAttribute.cs" />
-    <Compile Include="Configs\IConfigConverter.cs" />
-    <Compile Include="Configs\ConfigFile.cs" />
-    <Compile Include="Configs\ConfigHandler.cs" />
-    <Compile Include="Console\Commands\AddButtonCommand.cs" />
-    <Compile Include="Console\Commands\ClearCommand.cs" />
-    <Compile Include="Console\Commands\DumpCommand.cs" />
-    <Compile Include="Console\Commands\EditButtonCommand.cs" />
-    <Compile Include="Console\Commands\HelpCommand.cs" />
-    <Compile Include="Console\Commands\ModsCommand.cs" />
-    <Compile Include="Console\Commands\ReloadCommand.cs" />
-    <Compile Include="Console\Commands\RemoveButtonCommand.cs" />
-    <Compile Include="Console\Console.cs" />
-    <Compile Include="Console\ConsoleBinder.cs" />
-    <Compile Include="Console\ConsoleButton.cs" />
-    <Compile Include="Console\ConsoleCommand.cs" />
-    <Compile Include="Console\ConsoleWindow.cs" />
-    <Compile Include="Console\FileLogger.cs" />
+    <Compile Include="Components\ContentReplacer.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
