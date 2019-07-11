@@ -34,10 +34,19 @@ namespace SRMLExtras
 		// PRE LOAD MOD
 		public override void PreLoad()
 		{
-			/*FileLogger.Init();
+			FileLogger.Init();
 			Console.Init();
 
-			// Generates the config file
+			Console.RegisterDumpAction("ambientColor", (writer) =>
+			{
+				foreach (AmbianceDirector.ZoneSetting zone in SceneContext.Instance.AmbianceDirector.zones)
+				{
+					writer.WriteLine($"{zone.zone.ToString()} - Day Ambiance [R: {zone.dayAmbientColor.r}  G: {zone.dayAmbientColor.g}  B: {zone.dayAmbientColor.b}  HEX: {UnityEngine.ColorUtility.ToHtmlStringRGB(zone.dayAmbientColor)}]");
+					writer.WriteLine($"{zone.zone.ToString()} - Night Ambiance [R: {zone.nightAmbientColor.r}  G: {zone.nightAmbientColor.g}  B: {zone.nightAmbientColor.b}  HEX: {UnityEngine.ColorUtility.ToHtmlStringRGB(zone.nightAmbientColor)}]");
+				}
+			});
+
+			/*// Generates the config file
 			ConfigHandler.Init(Assembly.GetExecutingAssembly());
 
 			Console.Log($"test: {test} ({test?.GetType().ToString()})");

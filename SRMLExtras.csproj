@@ -38,7 +38,25 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Components\ContentReplacer.cs" />
+    <Compile Include="Components\ContentPatcher.cs" />
+    <Compile Include="Components\ModdedGameObject.cs" />
+    <Compile Include="Components\ModdedPrefab.cs" />
+    <Compile Include="Components\ModdedTransform.cs" />
+    <Compile Include="Components\Prefabs\PlantablePrefab.cs" />
+    <Compile Include="Console\Commands\AddButtonCommand.cs" />
+    <Compile Include="Console\Commands\ClearCommand.cs" />
+    <Compile Include="Console\Commands\DumpCommand.cs" />
+    <Compile Include="Console\Commands\EditButtonCommand.cs" />
+    <Compile Include="Console\Commands\HelpCommand.cs" />
+    <Compile Include="Console\Commands\ModsCommand.cs" />
+    <Compile Include="Console\Commands\ReloadCommand.cs" />
+    <Compile Include="Console\Commands\RemoveButtonCommand.cs" />
+    <Compile Include="Console\Console.cs" />
+    <Compile Include="Console\ConsoleBinder.cs" />
+    <Compile Include="Console\ConsoleButton.cs" />
+    <Compile Include="Console\ConsoleCommand.cs" />
+    <Compile Include="Console\ConsoleWindow.cs" />
+    <Compile Include="Console\FileLogger.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
@@ -90,6 +108,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Jogos\Steam\SteamApps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

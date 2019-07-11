@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SRMLExtras.Components
 {
-	public static class ContentReplacer
+	public static class ContentPatcher
 	{
 		internal static Dictionary<string, Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>> purchaseUIs = new Dictionary<string, Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>>();
 		internal static List<GardenCatcher.PlantSlot> catcherPlantables = new List<GardenCatcher.PlantSlot>()
@@ -24,13 +24,43 @@ namespace SRMLExtras.Components
 		[HarmonyPatch("Awake")]
 		internal static class GardenCatcherPatcher
 		{
-			public static void Postfix(GardenCatcher __instance, ref Dictionary<Identifiable.Id, GameObject> ___plantableDict, ref Dictionary<Identifiable.Id, GameObject> ___deluxeDict)
+			public static void Postfix(ref Dictionary<Identifiable.Id, GameObject> ___plantableDict, ref Dictionary<Identifiable.Id, GameObject> ___deluxeDict)
 			{
-				foreach (GardenCatcher.PlantSlot slot in catcherPlantables)
+				/*foreach (GardenCatcher.PlantSlot slot in catcherPlantables)
 				{
 					___plantableDict.Add(slot.id, slot.plantedPrefab);
 					___deluxeDict.Add(slot.id, slot.deluxePlantedPrefab);
+				}*/
+				SRML.Console.Log("Normal Plantable");
+				//foreach (GameObject go in ___plantableDict.Values)
+				//{
+					SRML.Console.Log(string.Empty);
+					PrintPlantablePrefab(___plantableDict[Identifiable.Id.CARROT_VEGGIE], string.Empty);
+					SRML.Console.Log("===============================");
+				//}
+
+				SRML.Console.Log("Deluxe Plantable");
+			}
+		}
+
+		private static void PrintPlantablePrefab(GameObject obj, string indent)
+		{
+			SRML.Console.Log(indent + obj.name);
+			foreach (Component comp in obj.GetComponents<Component>())
+			{
+				SRML.Console.Log(indent + "C: " + comp.GetType().Name);
+
+				if (comp is SpawnResource)
+				{
+					SpawnResource res = (SpawnResource)comp;
+					foreach (GameObject go in res.ObjectsToSpawn)
+						PrintPlantablePrefab(go, "S:");
 				}
+			}
+
+			foreach (Transform child in obj.transform)
+			{
+				PrintPlantablePrefab(child.gameObject, "  " + indent);
 			}
 		}
 

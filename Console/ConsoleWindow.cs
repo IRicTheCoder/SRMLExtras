@@ -17,6 +17,7 @@ namespace SRML.ConsoleSystem
 		private static bool focus = false;
 		private static bool autoComplete = false;
 		private static bool hasAlreadyPaused = false;
+		private static SRInput.InputMode previousInput;
 
 		// TEXT VARIABLES
 		private static readonly string cmdName = "cmdLine";
@@ -95,7 +96,7 @@ namespace SRML.ConsoleSystem
 		private static Rect intRect = new Rect(5, 0, acsRect.width - 20, 0);
 		private static Rect cBtnRect = new Rect(0, 0, intRect.width - 5, 20);
 
-		private static List<string> cachedAC = new List<string>();
+		private static readonly List<string> cachedAC = new List<string>();
 		private static string oldCmdText = null;
 
 		/// <summary>
@@ -165,11 +166,19 @@ namespace SRML.ConsoleSystem
 			window.onHover.background = window.normal.background;
 			window.onFocused.background = window.normal.background;
 
+
+			// FORCES WINDOW TO CLOSE IF THE GAME IS LOADING
+			if (GameContext.Instance.AutoSaveDirector.IsLoadingGame() && showWindow)
+			{
+				SetWindowOff();
+			}
+				
+
 			// LISTENS TO MAIN INPUT
 			if (Event.current.isKey && Event.current.type == EventType.KeyDown)
 			{
 				// TOGGLES THE WINDOW
-				if ((Event.current.modifiers == EventModifiers.Control || Event.current.modifiers == EventModifiers.Command) && Event.current.keyCode == KeyCode.Tab)
+				if ((Event.current.modifiers == EventModifiers.Control || Event.current.modifiers == EventModifiers.Command) && Event.current.keyCode == KeyCode.Tab && !GameContext.Instance.AutoSaveDirector.IsLoadingGame())
 				{
 					ToggleWindow();
 				}
@@ -192,11 +201,11 @@ namespace SRML.ConsoleSystem
 					GUI.Window(1234567891, completeRect, DrawACWindow, acTitle, window);
 					GUI.BringWindowToFront(1234567891);
 				}
-			}
 
-			if (Event.current.isKey || Event.current.isMouse || Event.current.isScrollWheel)
-			{
-				Event.current.Use();
+				if (Event.current.isKey || Event.current.isMouse || Event.current.isScrollWheel)
+				{
+					Event.current.Use();
+				}
 			}
 
 			GUI.skin.font = font;
@@ -231,7 +240,7 @@ namespace SRML.ConsoleSystem
 				}
                 else if (Event.current.keyCode == KeyCode.Escape && !autoComplete)
                 {
-                    ToggleWindow();
+					SetWindowOff();
                     
                     Event.current.Use();
 					return;
@@ -390,7 +399,7 @@ namespace SRML.ConsoleSystem
 				GUI.FocusControl(cmdName);
 			}
 
-			textArea.wordWrap = true;
+			textArea.wordWrap = false;
 			textArea.clipping = TextClipping.Clip;
 			textArea.richText = true;
 			textArea.padding = new RectOffset(5, 5, 5, 5);
@@ -466,7 +475,13 @@ namespace SRML.ConsoleSystem
 			// UPDATES THE SCROLL POSITION FOR THE CONSOLE TO SHOW LATEST MESSAGES
 			if (updateDisplay)
 			{
-				consoleScroll.y = textArea.CalcSize(new GUIContent(fullText.ToString())).y;
+				fullText = string.Empty;
+				for (int i = 0; i < Console.lines.Count; i++)
+				{
+					fullText += $"{(i == 0 ? string.Empty : "\n")}{Console.lines[i]}";
+				}
+
+				consoleScroll.y = TextSize.y;
 				updateDisplay = false;
 			}
 
@@ -629,6 +644,9 @@ namespace SRML.ConsoleSystem
 
 			if (showWindow)
 			{
+				previousInput = SRInput.Instance.GetInputMode();
+				SRInput.Instance.SetInputMode(SRInput.InputMode.NONE);
+
 				autoComplete = false;
 				currHistory = -1;
 				forceClose = false;
@@ -646,11 +664,16 @@ namespace SRML.ConsoleSystem
 				cachedCasters = FindObjectsOfType<GraphicRaycaster>();
 				foreach (GraphicRaycaster caster in cachedCasters)
 				{
+					if (caster == null)
+						continue;
+
 					caster.enabled = false;
 				}
 			}
 			else
 			{
+				SRInput.Instance.SetInputMode(previousInput);
+
 				autoComplete = false;
 				currHistory = -1;
 				forceClose = false;
@@ -664,11 +687,41 @@ namespace SRML.ConsoleSystem
 
 				foreach (GraphicRaycaster caster in cachedCasters)
 				{
+					if (caster == null)
+						continue;
+
 					caster.enabled = true;
 				}
 				cachedCasters = null;
 				hasAlreadyPaused = false;
 			}
+		}
+
+		private void SetWindowOff()
+		{
+			SRInput.Instance.SetInputMode(previousInput);
+
+			showWindow = false;
+			autoComplete = false;
+			currHistory = -1;
+			forceClose = false;
+			completeIndex = 0;
+
+			if (SceneManager.GetActiveScene().name.Equals("worldGenerated"))
+			{
+				if (!hasAlreadyPaused)
+					SceneContext.Instance.TimeDirector.Unpause(true);
+			}
+
+			foreach (GraphicRaycaster caster in cachedCasters)
+			{
+				if (caster == null)
+					continue;
+
+				caster.enabled = true;
+			}
+			cachedCasters = null;
+			hasAlreadyPaused = false;
 		}
 	}
 }
