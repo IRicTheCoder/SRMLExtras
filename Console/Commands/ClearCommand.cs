@@ -20,7 +20,7 @@ namespace SRML.Commands
 				return false;
 			}
 
-			ConsoleWindow.fullText = string.Empty;
+			Console.lines.Clear();
 			return true;
 		}
 	}

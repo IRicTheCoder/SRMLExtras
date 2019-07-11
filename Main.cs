@@ -34,10 +34,7 @@ namespace SRMLExtras
 		// PRE LOAD MOD
 		public override void PreLoad()
 		{
-			FileLogger.Init();
-			Console.Init();
-
-			Console.RegisterDumpAction("ambientColor", (writer) =>
+			SRML.Console.Console.RegisterDumpAction("ambientColor", (writer) =>
 			{
 				foreach (AmbianceDirector.ZoneSetting zone in SceneContext.Instance.AmbianceDirector.zones)
 				{

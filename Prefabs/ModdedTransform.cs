@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SRMLExtras.Components
+namespace SRMLExtras.Prefabs
 {
 	/// <summary>
 	/// A mod version of the Transform, to be used in ModdedGameObjects
