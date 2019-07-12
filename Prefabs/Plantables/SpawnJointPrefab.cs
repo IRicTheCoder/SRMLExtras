@@ -15,7 +15,7 @@ namespace SRMLExtras.Prefabs
 
 		private readonly Identifiable.Id ID;
 		
-		public SpawnJointPrefab(string jointName, Vector3 position, Vector3 rotation, Vector3 scale, Mesh customMesh = null, Material[] customMaterials = null) : base(jointName)
+		public SpawnJointPrefab(string jointName, bool intern, Vector3 position, Vector3 rotation, Vector3 scale, Mesh customMesh = null, Material[] customMaterials = null) : base(jointName, intern)
 		{
 			this.jointName = jointName;
 			this.position = position;
@@ -26,7 +26,7 @@ namespace SRMLExtras.Prefabs
 			ID = Identifiable.Id.NONE;
 		}
 
-		public SpawnJointPrefab(string jointName, Vector3 position, Vector3 rotation, Vector3 scale, Identifiable.Id ID) : base(jointName)
+		public SpawnJointPrefab(string jointName, bool intern, Vector3 position, Vector3 rotation, Vector3 scale, Identifiable.Id ID) : base(jointName, intern)
 		{
 			this.jointName = jointName;
 			this.position = position;
@@ -49,13 +49,14 @@ namespace SRMLExtras.Prefabs
 		public override void Setup(GameObject root)
 		{
 			// Setup Transform
-			root.transform.position = position;
+			root.transform.localPosition = position;
 			root.transform.eulerAngles = rotation;
 			root.transform.localScale = scale;
 
 			// Setup Render Stuff
-			root.GetComponent<MeshFilter>().sharedMesh = ID == Identifiable.Id.NONE ? customMesh : GameContext.Instance.LookupDirector.GetPrefab(ID).GetComponent<MeshFilter>().sharedMesh;
-			root.GetComponent<MeshRenderer>().sharedMaterials = ID == Identifiable.Id.NONE ? customMaterials : GameContext.Instance.LookupDirector.GetPrefab(ID).GetComponent<MeshRenderer>().sharedMaterials;
+			GameObject model = GameContext.Instance.LookupDirector.GetPrefab(ID).FindChildWithPartialName("model_");
+			root.GetComponent<MeshFilter>().sharedMesh = ID == Identifiable.Id.NONE ? customMesh : model?.GetComponent<MeshFilter>().sharedMesh;
+			root.GetComponent<MeshRenderer>().sharedMaterials = ID == Identifiable.Id.NONE ? customMaterials : model?.GetComponent<MeshRenderer>().sharedMaterials;
 
 			// Setup RigidBody
 			Rigidbody body = root.GetComponent<Rigidbody>();

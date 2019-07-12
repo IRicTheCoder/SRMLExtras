@@ -12,14 +12,10 @@ namespace SRMLExtras.Prefabs
 
 		public void Awake()
 		{
-			SRML.Console.Console.Log("PrefabState: " + prefab);
-
 			if (gameObject.scene == ContentPatcher.prefabScene)
 				return;
 
-			SRML.Console.Console.Log("InstanciateOnAwake - GO: " + gameObject + " - Contains: " + ModdedPrefab.registeredPrefabs.ContainsKey(prefab));
 			ModdedPrefab.registeredPrefabs[prefab].ToGameObject(gameObject);
-
 			Destroy(this);
 		}
 	}

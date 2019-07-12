@@ -18,11 +18,11 @@ namespace SRMLExtras.Prefabs
 
 		public ModdedGameObject MainObject { get; protected set; }
 
-		public ModdedPrefab(string ID)
+		public ModdedPrefab(string ID, bool intern)
 		{
 			this.ID = ID;
 
-			if (!registeredPrefabs.ContainsKey(ID))
+			if (!registeredPrefabs.ContainsKey(ID) && !intern)
 				registeredPrefabs.Add(ID, this);
 		}
 
