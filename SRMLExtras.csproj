@@ -39,11 +39,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Patches\ContentPatcher.cs" />
+    <Compile Include="Prefabs\IChild.cs" />
     <Compile Include="Prefabs\InstanciateOnAwake.cs" />
     <Compile Include="Prefabs\ComponentExtensions.cs" />
     <Compile Include="Prefabs\ModdedGameObject.cs" />
     <Compile Include="Prefabs\ModdedPrefab.cs" />
-    <Compile Include="Prefabs\ModdedTransform.cs" />
     <Compile Include="Prefabs\Plantables\PlantablePrefab.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Prefabs\General\SpawnJointPrefab.cs" />

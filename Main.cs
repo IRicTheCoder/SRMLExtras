@@ -2,6 +2,7 @@
 using System.Reflection;
 using HarmonyLib;
 using SRML;
+using SRMLExtras.Prefabs;
 //using SRML.Console;
 
 namespace SRMLExtras
@@ -34,14 +35,7 @@ namespace SRMLExtras
 		// PRE LOAD MOD
 		public override void PreLoad()
 		{
-			SRML.Console.Console.RegisterDumpAction("ambientColor", (writer) =>
-			{
-				foreach (AmbianceDirector.ZoneSetting zone in SceneContext.Instance.AmbianceDirector.zones)
-				{
-					writer.WriteLine($"{zone.zone.ToString()} - Day Ambiance [R: {zone.dayAmbientColor.r}  G: {zone.dayAmbientColor.g}  B: {zone.dayAmbientColor.b}  HEX: {UnityEngine.ColorUtility.ToHtmlStringRGB(zone.dayAmbientColor)}]");
-					writer.WriteLine($"{zone.zone.ToString()} - Night Ambiance [R: {zone.nightAmbientColor.r}  G: {zone.nightAmbientColor.g}  B: {zone.nightAmbientColor.b}  HEX: {UnityEngine.ColorUtility.ToHtmlStringRGB(zone.nightAmbientColor)}]");
-				}
-			});
+			Patches.ContentPatcher.Init();
 
 			/*// Generates the config file
 			ConfigHandler.Init(Assembly.GetExecutingAssembly());
@@ -69,6 +63,7 @@ namespace SRMLExtras
 		// POST LOAD MOD
 		public override void PostLoad()
 		{
+			Patches.ContentPatcher.prefabTest = new PlantablePrefab("patchGinger01", false, new PlantablePrefab.Spawnable(SpawnResource.Id.CARROT_PATCH, Identifiable.Id.GINGER_VEGGIE, null, null)).Create() as PlantablePrefab;
 		}
 	}
 }

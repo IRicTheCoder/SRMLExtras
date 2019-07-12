@@ -4,23 +4,43 @@ using HarmonyLib;
 using UnityEngine;
 using SRML.Console;
 using UnityEngine.SceneManagement;
+using SRMLExtras.Prefabs;
 
 namespace SRMLExtras.Patches
 {
 	public static class ContentPatcher
-	{
-		internal static Scene prefabScene = SceneManager.CreateScene("PrefabScene");
+	{	
+		internal static PlantablePrefab prefabTest;
 
 		internal static Dictionary<string, System.Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>> purchaseUIs = new Dictionary<string, System.Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>>();
-		internal static List<GardenCatcher.PlantSlot> catcherPlantables = new List<GardenCatcher.PlantSlot>()
+		internal static List<GardenCatcher.PlantSlot> catcherPlantables = new List<GardenCatcher.PlantSlot>();
+
+		internal static Scene prefabScene = new Scene();
+
+		public static void Init()
 		{
-			/*new GardenCatcher.PlantSlot()
+			SceneManager.sceneLoaded += OnSceneLoad;
+		}
+
+		private static void OnSceneLoad(Scene scene, LoadSceneMode mode)
+		{
+			if (scene.name.Equals("worldGenerated"))
 			{
-				id = Identifiable.Id.KOOKADOBA_FRUIT,
-				plantedPrefab = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.KOOKADOBA_FRUIT),
-				deluxePlantedPrefab = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.KOOKADOBA_FRUIT)
-			}*/
-		};
+				if (prefabScene.name?.Equals(string.Empty) ?? true)
+					prefabScene = SceneManager.CreateScene("PrefabScene");
+				else
+					SceneManager.LoadSceneAsync(prefabScene.name, LoadSceneMode.Additive);
+
+				catcherPlantables.Add(
+					new GardenCatcher.PlantSlot()
+					{
+						id = Identifiable.Id.GINGER_VEGGIE,
+						plantedPrefab = prefabTest.ToPrefabObject(),
+						deluxePlantedPrefab = prefabTest.ToPrefabObject()
+					}
+				);
+			}
+		}
 
 		// PATCHES THE GARDEN CATCHER
 		[HarmonyPatch(typeof(GardenCatcher))]
@@ -29,21 +49,16 @@ namespace SRMLExtras.Patches
 		{
 			public static void Postfix(ref Dictionary<Identifiable.Id, GameObject> ___plantableDict, ref Dictionary<Identifiable.Id, GameObject> ___deluxeDict)
 			{
-				foreach (GameObject obj in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
-					Console.Log(obj.name);
-
-				/*foreach (GardenCatcher.PlantSlot slot in catcherPlantables)
+				foreach (GardenCatcher.PlantSlot slot in catcherPlantables)
 				{
 					___plantableDict.Add(slot.id, slot.plantedPrefab);
 					___deluxeDict.Add(slot.id, slot.deluxePlantedPrefab);
-				}*/
-				Console.Log("Normal Plantable");
-				//foreach (GameObject go in ___plantableDict.Values)
-				//{
+				}
+
+				/*Console.Log("Normal Plantable");
 				Console.Log(string.Empty);
 				PrintPlantablePrefab(___plantableDict[Identifiable.Id.CARROT_VEGGIE], string.Empty);
-				Console.Log("===============================");
-				//}
+				Console.Log("===============================");*/
 
 				//Console.Log("Deluxe Plantable");
 			}
@@ -67,47 +82,32 @@ namespace SRMLExtras.Patches
 					Console.Log(indent + $"TR: Scale: {trans.localScale}");
 				}
 
-				/*if (comp is SpawnResource)
+				if (comp is MeshFilter)
 				{
-					SpawnResource res = (SpawnResource)comp;
-					foreach (GameObject go in res.ObjectsToSpawn)
-						PrintPlantablePrefab(go, "S: ");
+					MeshFilter filter = (MeshFilter)comp;
+					Console.Log(indent + $"F: Mesh: {filter.sharedMesh.name}");
+				}
 
-					Console.Log(string.Empty);
-
-					foreach (GameObject go in res.BonusObjectsToSpawn)
-						PrintPlantablePrefab(go, "S: ");
-
-					Console.Log(string.Empty);
-					Console.Log($"S: BonusChance: {res.BonusChance}");
-					Console.Log($"S: forceDestroyLeftoversOnSpawn: {res.forceDestroyLeftoversOnSpawn}");
-					Console.Log($"S: id: {res.id}");
-					Console.Log($"S: MaxActiveSpawns: {res.MaxActiveSpawns}");
-					Console.Log($"S: MaxObjectsSpawned: {res.MaxObjectsSpawned}");
-					Console.Log($"S: MaxSpawnIntervalGameHours: {res.MaxSpawnIntervalGameHours}");
-					Console.Log($"S: MaxTotalSpawns: {res.MaxTotalSpawns}");
-					Console.Log($"S: minBonusSelections: {res.minBonusSelections}");
-					Console.Log($"S: MinNutrientObjectsSpawned: {res.MinNutrientObjectsSpawned}");
-					Console.Log($"S: MinObjectsSpawned: {res.MinObjectsSpawned}");
-					Console.Log($"S: MinSpawnIntervalGameHours: {res.MinSpawnIntervalGameHours}");
-					Console.Log($"S: wateringDurationHours: {res.wateringDurationHours}");
-					Console.Log(string.Empty);
-				}*/
-
-				/*if (comp is ScaleYOnlyMarker)
+				if (comp is MeshRenderer)
 				{
-					ScaleYOnlyMarker scale = (ScaleYOnlyMarker)comp;
-					Console.Log($"Y: {scale.doNotScaleAsReplacement}");
-				}*/
+					MeshRenderer render = (MeshRenderer)comp;
+					foreach (Material mat in render.sharedMaterials)
+						Console.Log(indent + $"R: Material: {mat.name}");
+				}
 
-				/*if (comp is BoxCollider)
+				if (comp is Rigidbody)
 				{
-					BoxCollider col = (BoxCollider)comp;
-					Console.Log($"CO: Size: {col.size}");
-					Console.Log($"CO: Center: {col.center}");
-					Console.Log($"CO: Trigger: {col.isTrigger}");
-					Console.Log($"CO: Bounds: {col.bounds}");
-				}*/
+					Rigidbody body = (Rigidbody)comp;
+					foreach (PropertyInfo field in body.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+						Console.Log(indent + $"RB: {field.Name}: {field.GetValue(body, null)}");
+				}
+
+				if (comp is FixedJoint)
+				{
+					FixedJoint joint = (FixedJoint)comp;
+					foreach (PropertyInfo field in joint.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+						Console.Log(indent + $"J: {field.Name}: {field.GetValue(joint, null)}");
+				}
 			}
 
 			foreach (Transform child in obj.transform)

@@ -1,18 +1,32 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using SRMLExtras.Patches;
+using System.Collections.Generic;
 
 namespace SRMLExtras.Prefabs
 {
 	/// <summary>
 	/// A base prefab made for mods
 	/// </summary>
-	public abstract class ModdedPrefab
+	public abstract class ModdedPrefab : IChild
 	{
-		private GameObject prefabObject;
+		public readonly static Dictionary<string, ModdedPrefab> registeredPrefabs = new Dictionary<string, ModdedPrefab>();
+
+		private GameObject prefabObject = null;
+
+		private string ID = "NoID";
 
 		public ModdedGameObject MainObject { get; protected set; }
 
-		public abstract void Create();
+		public ModdedPrefab(string ID)
+		{
+			this.ID = ID;
+
+			if (!registeredPrefabs.ContainsKey(ID))
+				registeredPrefabs.Add(ID, this);
+		}
+
+		public abstract ModdedPrefab Create();
 
 		public abstract void Setup(GameObject root);
 
@@ -20,6 +34,9 @@ namespace SRMLExtras.Prefabs
 		{
 			foreach (System.Type comp in MainObject.GetComponents())
 				root.AddComponent(comp);
+			root.tag = MainObject.Tag;
+			root.layer = MainObject.Layer;
+			root.name = MainObject.Name;
 
 			RunThroughChildren(MainObject, root);
 
@@ -28,20 +45,45 @@ namespace SRMLExtras.Prefabs
 			return root;
 		}
 
+		internal virtual GameObject ToGameObjectChild(GameObject parent)
+		{
+			GameObject root = new GameObject(MainObject.Name);
+			root.transform.parent = parent.transform;
+			return ToGameObject(root);
+		}
+
 		public GameObject ToPrefabObject()
 		{
-			// TODO: Arranja esta merda
-			return null;
+			if (prefabObject == null)
+			{
+				Scene prev = SceneManager.GetActiveScene();
+				SceneManager.SetActiveScene(ContentPatcher.prefabScene);
+				prefabObject = new GameObject("!PREFAB: " + MainObject.Name, typeof(InstanciateOnAwake));
+				prefabObject.GetComponent<InstanciateOnAwake>().prefab = ID;
+				SceneManager.SetActiveScene(prev);
+			}
+
+			return prefabObject;
 		}
 
 		private void RunThroughChildren(ModdedGameObject modded, GameObject parent)
 		{
-			foreach (ModdedGameObject child in modded.children)
+			foreach (IChild child in modded.children)
 			{
-				GameObject c = child.ToGameObject(parent.transform);
+				if (child is ModdedGameObject)
+				{
+					ModdedGameObject go = (ModdedGameObject)child;
+					GameObject c = go.ToGameObject(parent.transform);
 
-				if (child.children.Count > 0)
-					RunThroughChildren(child, c);
+					if (go.children.Count > 0)
+						RunThroughChildren(go, c);
+				}
+
+				if (child is ModdedPrefab)
+				{
+					ModdedPrefab go = (ModdedPrefab)child;
+					go.ToGameObjectChild(parent);
+				}
 			}
 		}
 	}

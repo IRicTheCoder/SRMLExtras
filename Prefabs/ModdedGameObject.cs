@@ -6,14 +6,14 @@ namespace SRMLExtras.Prefabs
 	/// <summary>
 	/// A game object made for mods, it gets converted to an actual game object
 	/// </summary>
-	public class ModdedGameObject
+	public class ModdedGameObject : IChild
 	{
 		private readonly List<System.Type> components = new List<System.Type>();
 
-		public readonly List<ModdedGameObject> children = new List<ModdedGameObject>();
+		public readonly List<IChild> children = new List<IChild>();
 
 		public string Name { get; set; } = "Modded Game Object";
-		public string Tag { get; set; } = string.Empty;
+		public string Tag { get; set; } = "Untagged";
 		public LayerMask Layer { get; set; } = LayerMask.NameToLayer("Default");
 
 		public ModdedGameObject(string name, params System.Type[] comps)
@@ -22,7 +22,7 @@ namespace SRMLExtras.Prefabs
 			components.AddRange(comps);
 		}
 
-		public void AddChild(ModdedGameObject gameObject)
+		public void AddChild(IChild gameObject)
 		{
 			children.Add(gameObject);
 		}

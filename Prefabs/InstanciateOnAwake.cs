@@ -8,14 +8,19 @@ namespace SRMLExtras.Prefabs
 	/// </summary>
 	public class InstanciateOnAwake : MonoBehaviour
 	{
-		public ModdedPrefab prefab;
+		public string prefab;
 
 		public void Awake()
 		{
+			SRML.Console.Console.Log("PrefabState: " + prefab);
+
 			if (gameObject.scene == ContentPatcher.prefabScene)
 				return;
 
-			// TODO: Faz merdas
+			SRML.Console.Console.Log("InstanciateOnAwake - GO: " + gameObject + " - Contains: " + ModdedPrefab.registeredPrefabs.ContainsKey(prefab));
+			ModdedPrefab.registeredPrefabs[prefab].ToGameObject(gameObject);
+
+			Destroy(this);
 		}
 	}
 }
