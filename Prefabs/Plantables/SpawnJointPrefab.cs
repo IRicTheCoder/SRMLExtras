@@ -33,8 +33,6 @@ namespace SRMLExtras.Prefabs
 			this.rotation = rotation;
 			this.scale = scale;
 			this.ID = ID;
-
-			Create();
 		}
 
 		public override ModdedPrefab Create()

@@ -19,7 +19,7 @@ namespace SRMLExtras.Prefabs
 			this.spawnable = spawnable;
 
 			// TODO: For SRML 1.8
-			try
+			/*try
 			{
 				GameContext.Instance.LookupDirector.GetResourcePrefab(spawnable.ID);
 			}
@@ -30,7 +30,7 @@ namespace SRMLExtras.Prefabs
 					.GetValue(GameContext.Instance.LookupDirector) as Dictionary<SpawnResource.Id, GameObject>;
 
 				resourcePrefabDict.Add(spawnable.ID, ToPrefabObject());
-			}
+			}*/
 		}
 
 		public override ModdedPrefab Create()

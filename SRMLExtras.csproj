@@ -39,17 +39,20 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DebugCommand.cs" />
     <Compile Include="Patches\ContentPatcher.cs" />
-    <Compile Include="Prefabs\IChild.cs" />
-    <Compile Include="Prefabs\InstanciateOnAwake.cs" />
-    <Compile Include="Prefabs\Plantables\GardenBedPrefab.cs" />
+    <Compile Include="BaseObjects.cs" />
+    <Compile Include="Templates\Components\AddDebugMarker.cs" />
+    <Compile Include="Templates\Components\Create.cs" />
+    <Compile Include="Templates\Components\DebugMarker.cs" />
+    <Compile Include="Templates\Components\ICreateComponent.cs" />
+    <Compile Include="Templates\Components\MarkerType.cs" />
+    <Compile Include="Templates\GameObjectTemplate.cs" />
+    <Compile Include="Templates\ModPrefab.cs" />
+    <Compile Include="Templates\Plantables\PlantableTemplate.cs" />
     <Compile Include="Utils\GameObjectExtensions.cs" />
     <Compile Include="Utils\ComponentExtensions.cs" />
-    <Compile Include="Prefabs\ModdedGameObject.cs" />
-    <Compile Include="Prefabs\ModdedPrefab.cs" />
-    <Compile Include="Prefabs\Plantables\PlantablePrefab.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Prefabs\Plantables\SpawnJointPrefab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
     <Compile Include="Utils\PrefabUtils.cs" />
@@ -128,9 +131,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Prefabs\General\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>start steam://rungameid/433340</PostBuildEvent>

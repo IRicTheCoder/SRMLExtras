@@ -54,14 +54,14 @@ namespace SRMLExtras.Prefabs
 
 		public GameObject ToPrefabObject()
 		{
-			if (prefabObject == null)
+			/*if (prefabObject == null)
 			{
 				Scene prev = SceneManager.GetActiveScene();
 				SceneManager.SetActiveScene(ContentPatcher.prefabScene);
 				prefabObject = new GameObject("!PREFAB: " + MainObject.Name, typeof(InstanciateOnAwake));
 				prefabObject.GetComponent<InstanciateOnAwake>().prefab = ID;
 				SceneManager.SetActiveScene(prev);
-			}
+			}*/
 
 			return prefabObject;
 		}

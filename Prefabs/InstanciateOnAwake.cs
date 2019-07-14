@@ -12,11 +12,11 @@ namespace SRMLExtras.Prefabs
 
 		public void Awake()
 		{
-			if (gameObject.scene == ContentPatcher.prefabScene)
+			/*if (gameObject.scene == ContentPatcher.prefabScene)
 				return;
 
 			ModdedPrefab.registeredPrefabs[prefab].ToGameObject(gameObject);
-			Destroy(this);
+			Destroy(this);*/
 		}
 	}
 }

@@ -7,23 +7,28 @@ namespace SRMLExtras
 {
 	public static class PrefabUtils
 	{
-		public static void DumpPrefab(GameObject obj)
+		public static void DumpPrefab(GameObject obj, string folder = null)
 		{
-			List<GameObject> subPrefabs = DumpPrefabStructure(obj, obj.name + "/");
-			List<GameObject> prefabs = new List<GameObject>(subPrefabs);
-
-			while (prefabs.Count > 0)
+			try
 			{
-				subPrefabs.Clear();
-				foreach (GameObject prefab in prefabs)
-				{
-					if (prefab != null)
-						subPrefabs.AddRange(DumpPrefabStructure(prefab, obj.name + "/"));
-				}
+				List<GameObject> subPrefabs = DumpPrefabStructure(obj, (folder != null ? folder + "/" : string.Empty) + obj.name + "/");
+				List<GameObject> prefabs = new List<GameObject>(subPrefabs);
 
-				prefabs.Clear();
-				prefabs.AddRange(subPrefabs);
+				while (prefabs.Count > 0)
+				{
+					subPrefabs.Clear();
+					foreach (GameObject prefab in prefabs)
+					{
+						if (prefab != null)
+							subPrefabs.AddRange(DumpPrefabStructure(prefab, (folder != null ? folder + "/" : string.Empty) + obj.name + "/"));
+					}
+
+					prefabs.Clear();
+					prefabs.AddRange(subPrefabs);
+				}
 			}
+			catch { }
+			finally { }
 		}
 
 		private static List<GameObject> DumpPrefabStructure(GameObject go, string folder = "")
@@ -40,7 +45,7 @@ namespace SRMLExtras
 
 					foreach (FieldInfo field in comp.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
 					{
-						if (field.FieldType == typeof(GameObject) && !field.FieldType.HasElementType)
+						if (field.FieldType == typeof(GameObject) && !field.FieldType.HasElementType && !field.Name.Equals("gameObject"))
 						{
 							GameObject value = field.GetValue(comp) as GameObject;
 							writer.WriteLine($"{indent}f - ({field.Name} - go: {value?.name})");
@@ -63,7 +68,7 @@ namespace SRMLExtras
 
 					foreach (FieldInfo field in comp.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
 					{
-						if (field.FieldType == typeof(GameObject) && !field.FieldType.HasElementType)
+						if (field.FieldType == typeof(GameObject) && !field.FieldType.HasElementType && !field.Name.Equals("gameObject"))
 						{
 							GameObject value = field.GetValue(comp) as GameObject;
 							writer.WriteLine($"{indent}f - ({field.Name} - go: {value?.name})");
@@ -86,7 +91,7 @@ namespace SRMLExtras
 
 					foreach (PropertyInfo field in comp.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
 					{
-						if (field.PropertyType == typeof(GameObject) && !field.PropertyType.HasElementType)
+						if (field.PropertyType == typeof(GameObject) && !field.PropertyType.HasElementType && !field.Name.Equals("gameObject"))
 						{
 							GameObject value = field.GetValue(comp, null) as GameObject;
 							writer.WriteLine($"{indent}p - ({field.Name} - go: {value?.name})");
@@ -109,7 +114,7 @@ namespace SRMLExtras
 
 					foreach (PropertyInfo field in comp.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
 					{
-						if (field.PropertyType == typeof(GameObject) && !field.PropertyType.HasElementType)
+						if (field.PropertyType == typeof(GameObject) && !field.PropertyType.HasElementType && !field.Name.Equals("gameObject"))
 						{
 							GameObject value = field.GetValue(comp, null) as GameObject;
 							writer.WriteLine($"{indent}p - ({field.Name} - go: {value?.name})");
