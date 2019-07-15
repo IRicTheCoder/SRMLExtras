@@ -129,77 +129,111 @@ namespace SRMLExtras
 		internal static void Populate()
 		{
 			// Populate Single Objects
-			GameObject carrotPatch = Director.GetResourcePrefab(SpawnResource.Id.CARROT_PATCH);
-			dirtMesh = carrotPatch.FindChild("Bed/Dirt").GetComponent<MeshFilter>().sharedMesh;
-			dirtMaterials = carrotPatch.FindChild("Bed/Dirt").GetComponent<MeshRenderer>().sharedMaterials;
+			dirtMesh = BaseObjects.originMesh["dirt_long"];
+			dirtMaterials = new[] { BaseObjects.originMaterial["veggieDirtClod01"] };
 
-			rockMesh = carrotPatch.FindChild("Bed/Dirt/rocks_long").GetComponent<MeshFilter>().sharedMesh;
-			rockMaterials = carrotPatch.FindChild("Bed/Dirt/rocks_long").GetComponent<MeshRenderer>().sharedMaterials;
+			rockMesh = BaseObjects.originMesh["rocks_long"];
+			rockMaterials = new[] { BaseObjects.originMaterial["veggieDirtClod02"] };
 
-			carrotPatch = Director.GetResourcePrefab(SpawnResource.Id.CARROT_PATCH_DLX).FindChild("Bed", true);
-			deluxeDirtMesh = carrotPatch.FindChild("Dirt").GetComponent<MeshFilter>().sharedMesh;
-			deluxeDirtMaterials = carrotPatch.FindChild("Dirt").GetComponent<MeshRenderer>().sharedMaterials;
+			deluxeDirtMesh = BaseObjects.originMesh["dirt_mid"];
+			deluxeDirtMaterials = dirtMaterials;
 
-			deluxeRockMesh = carrotPatch.FindChild("Dirt/rocks_long").GetComponent<MeshFilter>().sharedMesh;
-			deluxeRockMaterials = carrotPatch.FindChild("Dirt/rocks_long").GetComponent<MeshRenderer>().sharedMaterials;
+			deluxeRockMesh = BaseObjects.originMesh["rocks_mid"];
+			deluxeRockMaterials = rockMaterials;
 
-			// Populate Lists & Dictionaries
-			foreach (GameObject obj in Director.identifiablePrefabs)
-			{
-				GameObject modelChild = obj.FindChildWithPartialName("model_");
-				if (modelChild != null)
-				{
-					Identifiable.Id ID = obj.GetComponent<Identifiable>().id;
-					modelMeshs.Add(ID, modelChild.GetComponent<MeshFilter>().sharedMesh);
-					modelMaterials.Add(ID, modelChild.GetComponent<MeshRenderer>().sharedMaterials);
-				}
-			}
+			// Gets all models and materials for veggies
+			modelMeshs.Add(Identifiable.Id.BEET_VEGGIE, BaseObjects.originMesh["model_heartbeet"]);
+			modelMeshs.Add(Identifiable.Id.CARROT_VEGGIE, BaseObjects.originMesh["model_carrot"]);
+			modelMeshs.Add(Identifiable.Id.GINGER_VEGGIE, BaseObjects.originMesh["model_ginger"]);
+			modelMeshs.Add(Identifiable.Id.OCAOCA_VEGGIE, BaseObjects.originMesh["model_ocaoca"]);
+			modelMeshs.Add(Identifiable.Id.ONION_VEGGIE, BaseObjects.originMesh["model_oddOnion"]);
+			modelMeshs.Add(Identifiable.Id.PARSNIP_VEGGIE, BaseObjects.originMesh["model_parsnip"]);
 
-			foreach (GameObject obj in Director.resourceSpawnerPrefabs)
-			{
-				if (obj.GetComponent<SpawnResource>() != null)
-				{
-					SpawnResource.Id ID = obj.GetComponent<SpawnResource>().id;
+			modelMaterials.Add(Identifiable.Id.BEET_VEGGIE, new[] { BaseObjects.originMaterial["heartbeet"] });
+			modelMaterials.Add(Identifiable.Id.CARROT_VEGGIE, new[] { BaseObjects.originMaterial["carrot"] });
+			modelMaterials.Add(Identifiable.Id.GINGER_VEGGIE, new[] { BaseObjects.originMaterial["ginger"] });
+			modelMaterials.Add(Identifiable.Id.OCAOCA_VEGGIE, new[] { BaseObjects.originMaterial["ocaoca"] });
+			modelMaterials.Add(Identifiable.Id.ONION_VEGGIE, new[] { BaseObjects.originMaterial["onion"] });
+			modelMaterials.Add(Identifiable.Id.PARSNIP_VEGGIE, new[] { BaseObjects.originMaterial["parsnip"] });
 
-					if (ID.ToString().EndsWith("_DLX"))
-					{
-						SpawnResource.Id trueID = (SpawnResource.Id)System.Enum.Parse(ID.GetType(), ID.ToString().Replace("_DLX", ""));
-						if (treeSpawnJoints.ContainsKey(trueID))
-						{
-							foreach (GameObject joint in obj.FindChildrenWithPartialName("SpawnJoint"))
-								treeSpawnJoints[trueID].Add(new ObjectTransformValues(joint.transform.localPosition, joint.transform.localEulerAngles, joint.transform.localScale));
-						}
+			modelSproutMeshs.Add(SpawnResource.Id.BEET_PATCH, BaseObjects.originMesh["sprout_beet"]);
+			modelSproutMeshs.Add(SpawnResource.Id.CARROT_PATCH, BaseObjects.originMesh["sprout_carrot"]);
+			modelSproutMeshs.Add(SpawnResource.Id.OCAOCA_PATCH, BaseObjects.originMesh["sprout_ocaoca"]);
+			modelSproutMeshs.Add(SpawnResource.Id.PARSNIP_PATCH, BaseObjects.originMesh["sprout_parsnip"]);
 
-						continue;
-					}
+			modelSproutMaterials.Add(SpawnResource.Id.BEET_PATCH, new[] { BaseObjects.originMaterial["heartbeet NoSway"] });
+			modelSproutMaterials.Add(SpawnResource.Id.CARROT_PATCH, new[] { BaseObjects.originMaterial["carrot NoSway"] });
+			modelSproutMaterials.Add(SpawnResource.Id.OCAOCA_PATCH, new[] { BaseObjects.originMaterial["ocaoca NoSway"] });
+			modelSproutMaterials.Add(SpawnResource.Id.PARSNIP_PATCH, new[] { BaseObjects.originMaterial["parsnip NoSway"] });
 
-					GameObject child = obj.FindChildWithPartialName("Sprout");
+			// Gets all models and materials for fruits
+			modelMeshs.Add(Identifiable.Id.CUBERRY_FRUIT, BaseObjects.originMesh["model_cuberry"]);
+			modelMeshs.Add(Identifiable.Id.KOOKADOBA_FRUIT, BaseObjects.originMesh["kook4"]);
+			modelMeshs.Add(Identifiable.Id.LEMON_FRUIT, BaseObjects.originMesh["model_phaseLemon"]);
+			modelMeshs.Add(Identifiable.Id.MANGO_FRUIT, BaseObjects.originMesh["model_mintmango"]);
+			modelMeshs.Add(Identifiable.Id.PEAR_FRUIT, BaseObjects.originMesh["model_pricklepear"]);
+			modelMeshs.Add(Identifiable.Id.POGO_FRUIT, BaseObjects.originMesh["model_pogofruit"]);
 
-					if (child != null)
-					{
-						modelSproutMeshs.Add(ID, child.GetComponent<MeshFilter>().sharedMesh);
-						modelSproutMaterials.Add(ID, child.GetComponent<MeshRenderer>().sharedMaterials);
-					}
+			modelMaterials.Add(Identifiable.Id.CUBERRY_FRUIT, new[] { BaseObjects.originMaterial["cuberry"] });
+			modelMaterials.Add(Identifiable.Id.KOOKADOBA_FRUIT, new[] { BaseObjects.originMaterial["kookadoba"] });
+			modelMaterials.Add(Identifiable.Id.LEMON_FRUIT, new[] { BaseObjects.originMaterial["phaseLemon"] });
+			modelMaterials.Add(Identifiable.Id.MANGO_FRUIT, new[] { BaseObjects.originMaterial["mintmango"] });
+			modelMaterials.Add(Identifiable.Id.PEAR_FRUIT, new[] { BaseObjects.originMaterial["pricklepear"] });
+			modelMaterials.Add(Identifiable.Id.POGO_FRUIT, new[] { BaseObjects.originMaterial["pogo"] });
 
-					child = obj.FindChildWithPartialName("tree_");
+			modelTreeMeshs.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMesh["tree_cube"]);
+			modelTreeMeshs.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMesh["tree_pogo"]);
+			modelTreeMeshs.Add(SpawnResource.Id.MANGO_TREE, BaseObjects.originMesh["tree_mango"]);
+			modelTreeMeshs.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMesh["tree_pear"]);
+			modelTreeMeshs.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMesh["tree_pogo"]);
 
-					if (child != null)
-					{
-						modelTreeCols.Add(ID, child.GetComponent<MeshCollider>().sharedMesh);
-						modelTreeMeshs.Add(ID, child.GetComponent<MeshFilter>().sharedMesh);
-						modelTreeMaterials.Add(ID, child.GetComponent<MeshRenderer>().sharedMaterials);
-					}
+			modelTreeMaterials.Add(SpawnResource.Id.CUBERRY_TREE, new[] { BaseObjects.originMaterial["objTreeBark_cube"] });
+			modelTreeMaterials.Add(SpawnResource.Id.LEMON_TREE, new[] { BaseObjects.originMaterial["objTreeBark_lemon_alt"] });
+			modelTreeMaterials.Add(SpawnResource.Id.MANGO_TREE, new[] { BaseObjects.originMaterial["objTreeBark_mango"] });
+			modelTreeMaterials.Add(SpawnResource.Id.PEAR_TREE, new[] { BaseObjects.originMaterial["objTreeBark_pear"] });
+			modelTreeMaterials.Add(SpawnResource.Id.POGO_TREE, new[] { BaseObjects.originMaterial["objTreeBark_pogo"] });
 
-					child = obj.FindChildWithPartialName("leaves_");
+			modelTreeCols.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMesh["tree_cube_COL"]);
+			modelTreeCols.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMesh["tree_pogo_COL"]);
+			modelTreeCols.Add(SpawnResource.Id.MANGO_TREE, BaseObjects.originMesh["tree_mango_COL"]);
+			modelTreeCols.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMesh["tree_pear_COL"]);
+			modelTreeCols.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMesh["tree_pogo_COL"]);
 
-					if (child != null)
-					{
-						modelLeavesCols.Add(ID, child.GetComponent<MeshCollider>().sharedMesh);
-						modelLeavesMeshs.Add(ID, child.GetComponent<MeshFilter>().sharedMesh);
-						modelLeavesMaterials.Add(ID, child.GetComponent<MeshRenderer>().sharedMaterials);
-					}
-				}
-			}
+			modelLeavesMeshs.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMesh["leaves_cube"]);
+			modelLeavesMeshs.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMesh["planeTree"]);
+			modelLeavesMeshs.Add(SpawnResource.Id.MANGO_TREE, BaseObjects.originMesh["leaves_mango"]);
+			modelLeavesMeshs.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMesh["leaves_pear"]);
+			modelLeavesMeshs.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMesh["leaves_pogo"]);
+
+			modelLeavesMaterials.Add(SpawnResource.Id.CUBERRY_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_cube"] });
+			modelLeavesMaterials.Add(SpawnResource.Id.LEMON_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_lemon_alt"] });
+			modelLeavesMaterials.Add(SpawnResource.Id.MANGO_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_mango"] });
+			modelLeavesMaterials.Add(SpawnResource.Id.PEAR_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_pear"] });
+			modelLeavesMaterials.Add(SpawnResource.Id.POGO_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_pogo"] });
+
+			modelLeavesCols.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMesh["leaves_cube_COL"]);
+			modelLeavesCols.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMesh["planeTree"]);
+			modelLeavesCols.Add(SpawnResource.Id.MANGO_TREE, BaseObjects.originMesh["leaves_mango_COL"]);
+			modelLeavesCols.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMesh["leaves_pear_COL"]);
+			modelLeavesCols.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMesh["leaves_pogo_COL"]);
+
+			// Get all tree joints
+			foreach (GameObject joint in Director.GetResourcePrefab(SpawnResource.Id.POGO_TREE_DLX).FindChildrenWithPartialName("SpawnJoint"))
+				treeSpawnJoints[SpawnResource.Id.POGO_TREE].Add(new ObjectTransformValues(joint.transform.localPosition, joint.transform.localEulerAngles, joint.transform.localScale));
+
+			foreach (GameObject joint in Director.GetResourcePrefab(SpawnResource.Id.CUBERRY_TREE_DLX).FindChildrenWithPartialName("SpawnJoint"))
+				treeSpawnJoints[SpawnResource.Id.CUBERRY_TREE].Add(new ObjectTransformValues(joint.transform.localPosition, joint.transform.localEulerAngles, joint.transform.localScale));
+
+			foreach (GameObject joint in Director.GetResourcePrefab(SpawnResource.Id.LEMON_TREE_DLX).FindChildrenWithPartialName("SpawnJoint"))
+				treeSpawnJoints[SpawnResource.Id.LEMON_TREE].Add(new ObjectTransformValues(joint.transform.localPosition, joint.transform.localEulerAngles, joint.transform.localScale));
+
+			foreach (GameObject joint in Director.GetResourcePrefab(SpawnResource.Id.PEAR_TREE_DLX).FindChildrenWithPartialName("SpawnJoint"))
+				treeSpawnJoints[SpawnResource.Id.PEAR_TREE].Add(new ObjectTransformValues(joint.transform.localPosition, joint.transform.localEulerAngles, joint.transform.localScale));
+
+			foreach (GameObject joint in Director.GetResourcePrefab(SpawnResource.Id.MANGO_TREE_DLX).FindChildrenWithPartialName("SpawnJoint"))
+				treeSpawnJoints[SpawnResource.Id.MANGO_TREE].Add(new ObjectTransformValues(joint.transform.localPosition, joint.transform.localEulerAngles, joint.transform.localScale));
 		}
+
+		internal static void LatePopulate() { }
 	}
 }

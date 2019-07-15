@@ -17,6 +17,12 @@ namespace SRMLExtras.Templates
 
 		public abstract T Create();
 
+		public T AddStartAction(string actionID)
+		{
+			mainObject.AddStartAction(actionID);
+			return (T)this;
+		}
+
 		public GameObject ToPrefab()
 		{
 			if (prefabVersion == null)

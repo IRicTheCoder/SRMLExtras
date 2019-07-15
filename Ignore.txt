@@ -1,0 +1,18 @@
+﻿// Dump prefabs for World Objects
+foreach (GameObject obj in Object.FindObjectsOfType<GameObject>())
+{
+	if (obj.scene != sceneLoaded || obj.name.StartsWith("SimpleInstance") || obj.name.StartsWith("LowpassInstance") || Regex.IsMatch(obj.name, @".*\(.*\)"))
+		continue;
+
+	PrefabUtils.DumpPrefab(obj, "World Objects");
+}
+
+// Dumps prefabs
+foreach (GameObject obj in Director.identifiablePrefabs)
+	PrefabUtils.DumpPrefab(obj, "Identifiables");
+
+foreach (GameObject obj in Director.plotPrefabs)
+	PrefabUtils.DumpPrefab(obj, "Plots");
+
+foreach (GameObject obj in Director.resourceSpawnerPrefabs)
+	PrefabUtils.DumpPrefab(obj, "Resource Spawners");

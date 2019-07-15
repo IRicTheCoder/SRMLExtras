@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using MonomiPark.SlimeRancher.DataModel;
 using MonomiPark.SlimeRancher.Regions;
 using SRML.Console;
@@ -12,6 +13,7 @@ namespace SRMLExtras.Templates
 	{
 		// The Director
 		private static LookupDirector Director => GameContext.Instance.LookupDirector;
+		private static GameModel GameModel => SceneContext.Instance.GameModel;
 
 		// Markers
 		public readonly static Material fadeMat = new Material(Shader.Find("Standard")).Initialize((mat) =>
@@ -44,23 +46,61 @@ namespace SRMLExtras.Templates
 
 		public static GameObject markerIdentifier;
 
+		// Original Meshes and Materials
+		public readonly static Dictionary<string, Mesh> originMesh = new Dictionary<string, Mesh>();
+		public readonly static Dictionary<string, Material> originMaterial = new Dictionary<string, Material>();
+		public readonly static Dictionary<string, Texture> originTexture = new Dictionary<string, Texture>();
+		public readonly static Dictionary<string, Sprite> originSprite = new Dictionary<string, Sprite>();
+		public readonly static Dictionary<string, AudioClip> originClips = new Dictionary<string, AudioClip>();
+
+		private readonly static List<string> materialBlacklist = new List<string>()
+		{
+			"Spawn Point Marker",
+			"Plot Marker",
+			"Gadget Location Marker",
+			"Drone Node Marker",
+			"Plot Area",
+			"Gadget Location Area",
+			"Standard"
+		};
+
 		// Populates required values
 		internal static void Populate()
 		{
-			// Dumps prefabs
-			foreach (GameObject obj in Director.identifiablePrefabs)
-				PrefabUtils.DumpPrefab(obj, "Identifiables");
+			// Obtains objects loaded into the game that might be useful
+			foreach (Mesh mesh in Resources.FindObjectsOfTypeAll<Mesh>())
+			{
+				if (!mesh.name.Equals(string.Empty) && !originMesh.ContainsKey(mesh.name.Replace("(Instance)", "")))
+					originMesh.Add(mesh.name.Replace("(Instance)", ""), mesh);
+			}
 
-			foreach (GameObject obj in Director.plotPrefabs)
-				PrefabUtils.DumpPrefab(obj, "Plots");
+			foreach (Material mat in Resources.FindObjectsOfTypeAll<Material>())
+			{
+				if (!mat.name.Equals(string.Empty) && !originMaterial.ContainsKey(mat.name.Replace("(Instance)", "")) &&
+					!mat.name.StartsWith("Hidden/") && !materialBlacklist.Contains(mat.name.Replace("(Instance)", "")))
+					originMaterial.Add(mat.name.Replace("(Instance)", ""), mat);
+			}
 
-			foreach (GameObject obj in Director.resourceSpawnerPrefabs)
-				PrefabUtils.DumpPrefab(obj, "Resource Spawners");
+			foreach (Texture tex in Resources.FindObjectsOfTypeAll<Texture>())
+			{
+				if (!tex.name.Equals(string.Empty) && !originTexture.ContainsKey(tex.name.Replace("(Instance)", "")))
+					originTexture.Add(tex.name.Replace("(Instance)", ""), tex);
+			}
+
+			foreach (Sprite sprite in Resources.FindObjectsOfTypeAll<Sprite>())
+			{
+				if (!sprite.name.Equals(string.Empty) && !originSprite.ContainsKey(sprite.name.Replace("(Instance)", "")))
+					originSprite.Add(sprite.name.Replace("(Instance)", ""), sprite);
+			}
+
+			foreach (AudioClip clip in Resources.FindObjectsOfTypeAll<AudioClip>())
+			{
+				if (!clip.name.Equals(string.Empty) && !originClips.ContainsKey(clip.name.Replace("(Instance)", "")))
+					originClips.Add(clip.name.Replace("(Instance)", ""), clip);
+			}
 
 			// Gets the cube for the markers
-			GameObject cubeObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			cubeMesh = cubeObj.GetComponent<MeshFilter>().sharedMesh;
-			Object.Destroy(cubeObj);
+			cubeMesh = originMesh["Cube"];
 
 			markerIdentifier = new GameObject("MarkerIdentifier", typeof(MarkerRaycast));
 			Object.DontDestroyOnLoad(markerIdentifier);
@@ -80,10 +120,9 @@ namespace SRMLExtras.Templates
 					child.GetReadyForMarker(MarkerType.DroneNode, 3f);
 			}
 
-			Console.Log(SceneContext.Instance.GameModel.AllGadgetSites().Count.ToString());
-
 			// Populates all other object classes
 			GardenObjects.Populate();
+			TheWildsObjects.Populate();
 
 			// Adds Late Populate method
 			SceneManager.sceneLoaded += LatePopulate;
@@ -93,19 +132,55 @@ namespace SRMLExtras.Templates
 		{
 			if (sceneLoaded.name.Equals("worldGenerated"))
 			{
-				foreach (GadgetSiteModel obj in SceneContext.Instance.GameModel.AllGadgetSites().Values)
+				// Obtains objects loaded into the game that might be useful
+				foreach (Mesh mesh in Resources.FindObjectsOfTypeAll<Mesh>())
 				{
-					obj.transform.gameObject.GetReadyForMarker(MarkerType.GadgetLocation, 4f);
+					if (!mesh.name.Equals(string.Empty) && !originMesh.ContainsKey(mesh.name.Replace("(Instance)", "")) && 
+						!(!mesh.name.EndsWith("(Instance)") && Regex.IsMatch(mesh.name, @".*\(.*\)")))
+						originMesh.Add(mesh.name.Replace("(Instance)", ""), mesh);
 				}
 
-				/*System.Type regionSet = typeof(RegionRegistry.RegionSetId);
-				foreach (string id in System.Enum.GetNames(regionSet))
+				foreach (Material mat in Resources.FindObjectsOfTypeAll<Material>())
 				{
-					foreach (Region obj in SceneContext.Instance.RegionRegistry.GetRegions((RegionRegistry.RegionSetId)System.Enum.Parse(regionSet, id)))
-					{
-						obj.transform.gameObject.GetReadyForMarker(MarkerType.Region);
-					}
-				}*/
+					if (!mat.name.Equals(string.Empty) && !originMaterial.ContainsKey(mat.name.Replace("(Instance)", "")) &&
+						!mat.name.StartsWith("Hidden/") && !materialBlacklist.Contains(mat.name) &&
+						!(!mat.name.EndsWith("(Instance)") && Regex.IsMatch(mat.name, @".*\(.*\)")))
+						originMaterial.Add(mat.name.Replace("(Instance)", ""), mat);
+				}
+
+				foreach (Texture tex in Resources.FindObjectsOfTypeAll<Texture>())
+				{
+					if (!tex.name.Equals(string.Empty) && !originTexture.ContainsKey(tex.name.Replace("(Instance)", "")) &&
+						!(!tex.name.EndsWith("(Instance)") && Regex.IsMatch(tex.name, @".*\(.*\)")))
+						originTexture.Add(tex.name.Replace("(Instance)", ""), tex);
+				}
+
+				foreach (Sprite sprite in Resources.FindObjectsOfTypeAll<Sprite>())
+				{
+					if (!sprite.name.Equals(string.Empty) && !originSprite.ContainsKey(sprite.name.Replace("(Instance)", "")) &&
+						!(!sprite.name.EndsWith("(Instance)") && Regex.IsMatch(sprite.name, @".*\(.*\)")))
+						originSprite.Add(sprite.name.Replace("(Instance)", ""), sprite);
+				}
+
+				foreach (AudioClip clip in Resources.FindObjectsOfTypeAll<AudioClip>())
+				{
+					if (!clip.name.Equals(string.Empty) && !originClips.ContainsKey(clip.name.Replace("(Instance)", "")) &&
+						!(!clip.name.EndsWith("(Instance)") && Regex.IsMatch(clip.name, @".*\(.*\)")))
+						originClips.Add(clip.name.Replace("(Instance)", ""), clip);
+				}
+
+				// Adds markers for world objects
+				foreach (GadgetSiteModel obj in GameModel.AllGadgetSites().Values)
+					obj.transform.gameObject.GetReadyForMarker(MarkerType.GadgetLocation, 4f);
+
+				foreach (KookadobaPatchNode node in Resources.FindObjectsOfTypeAll<KookadobaPatchNode>())
+				{
+					foreach (GameObject child in node.gameObject.FindChildrenWithPartialName("SpawnJoint"))
+						child.GetReadyForMarker(MarkerType.SpawnPoint);
+				}
+
+				GardenObjects.LatePopulate();
+				TheWildsObjects.LatePopulate();
 			}
 		}
 	}

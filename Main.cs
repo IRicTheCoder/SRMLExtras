@@ -23,7 +23,7 @@ namespace SRMLExtras
 		public override void PreLoad()
 		{
 			Console.RegisterCommand(new DebugCommand());
-			DebugCommand.DebugMode = true;
+			//DebugCommand.DebugMode = true;
 
 			// Gets the Assembly being executed
 			execAssembly = Assembly.GetExecutingAssembly();
@@ -38,44 +38,15 @@ namespace SRMLExtras
 		{
 			BaseObjects.Populate();
 
-			GameObject gingerSpawnResource = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.GINGER_VEGGIE).CreatePrefabCopy();
+			// TODO: Make new stuff in the Lookup Director
+			/*GameObject gingerSpawnResource = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.GINGER_VEGGIE).CreatePrefabCopy();
 			gingerSpawnResource.GetComponent<ResourceCycle>().unripeGameHours = 12;
 
 			GameObject kookadobaSpawnResource = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.KOOKADOBA_FRUIT).CreatePrefabCopy();
-			kookadobaSpawnResource.GetComponent<ResourceCycle>().unripeGameHours = 6;
-
-			VeggiePlantableTemplate prefabTest = new VeggiePlantableTemplate("patchGinger01", false, Identifiable.Id.PARSNIP_VEGGIE, SpawnResource.Id.GINGER_PATCH)
-				.SetSpawnInfo(10, 20, 18, 24).AddBonusSpawn(gingerSpawnResource).SetBonusInfo(2, 0.1f).SetCustomSprout(SpawnResource.Id.PARSNIP_PATCH).Create();
-
-			VeggiePlantableTemplate prefabTest2 = new VeggiePlantableTemplate("patchGinger04", true, Identifiable.Id.PARSNIP_VEGGIE, SpawnResource.Id.GINGER_PATCH_DLX)
-				.SetSpawnInfo(12, 24, 18, 24).AddBonusSpawn(gingerSpawnResource).SetBonusInfo(2, 0.1f).SetCustomSprout(SpawnResource.Id.PARSNIP_PATCH).Create();
-
-			BushPlantableTemplate prefabTest3 = new BushPlantableTemplate("bushKookadoba01", false, Identifiable.Id.KOOKADOBA_FRUIT, KOOKADOBA_BUSH, new List<GameObject>() { kookadobaSpawnResource })
-				.SetSpawnInfo(10, 20, 18, 24).SetCustomTree(SpawnResource.Id.PEAR_TREE).SetCustomLeaves(SpawnResource.Id.POGO_TREE).Create();
-
-			BushPlantableTemplate prefabTest4 = new BushPlantableTemplate("bushKookadoba04", true, Identifiable.Id.KOOKADOBA_FRUIT, KOOKADOBA_BUSH_DLX, new List<GameObject>() { kookadobaSpawnResource })
-				.SetSpawnInfo(12, 24, 18, 24).SetCustomTree(SpawnResource.Id.PEAR_TREE).SetCustomLeaves(SpawnResource.Id.POGO_TREE).Create();
-
-			Patches.ContentPatcher.catcherPlantables.Add(
-					new GardenCatcher.PlantSlot()
-					{
-						id = Identifiable.Id.GINGER_VEGGIE,
-						plantedPrefab = prefabTest.ToPrefab(),
-						deluxePlantedPrefab = prefabTest2.ToPrefab()
-					}
-				);
-
-			Patches.ContentPatcher.catcherPlantables.Add(
-					new GardenCatcher.PlantSlot()
-					{
-						id = Identifiable.Id.KOOKADOBA_FRUIT,
-						plantedPrefab = prefabTest3.ToPrefab(),
-						deluxePlantedPrefab = prefabTest4.ToPrefab()
-					}
-				);
+			kookadobaSpawnResource.GetComponent<ResourceCycle>().unripeGameHours = 6;*/
 
 			// TODO: For SRML 1.8
-			try
+			/*try
 			{
 				GameContext.Instance.LookupDirector.GetResourcePrefab(SpawnResource.Id.GINGER_PATCH);
 			}
@@ -90,7 +61,7 @@ namespace SRMLExtras
 
 				resourcePrefabDict.Add(KOOKADOBA_BUSH_DLX, prefabTest4.ToPrefab());
 				resourcePrefabDict.Add(KOOKADOBA_BUSH, prefabTest3.ToPrefab());
-			}
+			}*/
 		}
 	}
 }

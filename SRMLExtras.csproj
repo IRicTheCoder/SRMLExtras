@@ -41,10 +41,12 @@
   <ItemGroup>
     <Compile Include="DebugCommand.cs" />
     <Compile Include="Patches\ContentPatcher.cs" />
+    <Compile Include="Templates\Base Objects\TheWildsObjects.cs" />
     <Compile Include="Templates\Base Objects\BaseObjects.cs" />
     <Compile Include="Templates\Base Objects\GardenObjects.cs" />
     <Compile Include="Templates\Base Objects\ObjectTransformValues.cs" />
     <Compile Include="Markers\AddDebugMarker.cs" />
+    <Compile Include="Templates\Components\ActionOnStart.cs" />
     <Compile Include="Templates\Components\Create.cs" />
     <Compile Include="Markers\DebugMarker.cs" />
     <Compile Include="Templates\Components\ICreateComponent.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="Templates\Plantables\BushPlantableTemplate.cs" />
     <Compile Include="Templates\Plantables\FruitPlantableTemplate.cs" />
     <Compile Include="Templates\Plantables\VeggiePlantableTemplate.cs" />
+    <Compile Include="Templates\TemplateActions.cs" />
     <Compile Include="Utils\GameObjectExtensions.cs" />
     <Compile Include="Utils\ComponentExtensions.cs" />
     <Compile Include="Main.cs" />
@@ -100,6 +103,10 @@
       <HintPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
@@ -136,7 +143,9 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Ignore.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>start steam://rungameid/433340</PostBuildEvent>

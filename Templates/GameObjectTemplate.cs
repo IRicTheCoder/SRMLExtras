@@ -25,6 +25,7 @@ namespace SRMLExtras.Templates
 		public MarkerType DebugMarker { get; private set; } = MarkerType.None;
 
 		private event System.Action<GameObject> afterChildren;
+		private List<string> actionOnStart = new List<string>();
 
 		public GameObjectTemplate(string name, params Component[] comps)
 		{
@@ -85,9 +86,15 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		public GameObjectTemplate SetAfterChildren(System.Action<GameObject> action)
+		public GameObjectTemplate AddAfterChildren(System.Action<GameObject> action)
 		{
 			afterChildren += action;
+			return this;
+		}
+
+		public GameObjectTemplate AddStartAction(string actionID)
+		{
+			actionOnStart.Add(actionID);
 			return this;
 		}
 
@@ -125,6 +132,12 @@ namespace SRMLExtras.Templates
 			obj.transform.localPosition = Position;
 			obj.transform.localEulerAngles = Rotation;
 			obj.transform.localScale = Scale;
+
+			if (actionOnStart.Count > 0)
+			{
+				ActionOnStart comp = obj.AddComponent<ActionOnStart>();
+				comp.actions = actionOnStart;
+			}
 
 			foreach (Component comp in components)
 			{

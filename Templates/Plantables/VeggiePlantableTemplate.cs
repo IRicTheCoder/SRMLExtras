@@ -7,32 +7,32 @@ namespace SRMLExtras.Templates
 {
 	public class VeggiePlantableTemplate : ModPrefab<VeggiePlantableTemplate>
 	{
-		private readonly bool isDeluxe = false;
+		protected readonly bool isDeluxe = false;
 
-		private readonly Identifiable.Id ID;
-		private readonly SpawnResource.Id resID;
+		protected readonly Identifiable.Id ID;
+		protected readonly SpawnResource.Id resID;
 
-		private int minSpawn = 15;
-		private int maxSpawn = 20;
-		private float minHours = 18;
-		private float maxHours = 24;
-		private float minNutrient = 20;
-		private float waterHours = 23;
+		protected int minSpawn = 15;
+		protected int maxSpawn = 20;
+		protected float minHours = 18;
+		protected float maxHours = 24;
+		protected float minNutrient = 20;
+		protected float waterHours = 23;
 
-		private int minBonusSelection = 4;
-		private float bonusChance = 0.01f;
+		protected int minBonusSelection = 4;
+		protected float bonusChance = 0.01f;
 
-		private List<GameObject> toSpawn = new List<GameObject>();
-		private List<GameObject> bonusToSpawn = new List<GameObject>();
+		protected List<GameObject> toSpawn = new List<GameObject>();
+		protected List<GameObject> bonusToSpawn = new List<GameObject>();
 
-		private SpawnResource.Id sproutID = SpawnResource.Id.CARROT_PATCH;
-		private Mesh sprout;
-		private Material[] sproutMaterials;
+		protected SpawnResource.Id sproutID = SpawnResource.Id.CARROT_PATCH;
+		protected Mesh sprout;
+		protected Material[] sproutMaterials;
 
-		private Mesh modelMesh;
-		private Material[] modelMaterials;
+		protected Mesh modelMesh;
+		protected Material[] modelMaterials;
 
-		private List<ObjectTransformValues> customSpawnJoints = null;
+		protected List<ObjectTransformValues> customSpawnJoints = null;
 
 		public VeggiePlantableTemplate(string name, bool isDeluxe, Identifiable.Id ID, SpawnResource.Id resID, List<GameObject> toSpawn = null) : base(name)
 		{
@@ -98,7 +98,9 @@ namespace SRMLExtras.Templates
 
 		public VeggiePlantableTemplate SetCustomSprout(SpawnResource.Id ID)
 		{
-			this.sproutID = ID;
+			if (GardenObjects.modelSproutMeshs.ContainsKey(ID))
+				sproutID = ID;
+
 			return this;
 		}
 
@@ -163,7 +165,7 @@ namespace SRMLExtras.Templates
 				{
 					doNotScaleAsReplacement = false
 				}
-			).SetAfterChildren(GrabJoints);
+			).AddAfterChildren(GrabJoints);
 
 			// Add spawn joints
 			for (int i = 0; i < 20; i++)

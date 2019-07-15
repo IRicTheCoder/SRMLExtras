@@ -15,6 +15,16 @@ namespace SRMLExtras
 			return obj;
 		}
 
+		public static GameObject AddStartAction(this GameObject obj, string actionID)
+		{
+			if (obj.GetComponent<ActionOnStart>() == null)
+				obj.AddComponent<ActionOnStart>().actions.Add(actionID);
+			else
+				obj.GetComponent<ActionOnStart>().actions.Add(actionID);
+
+			return obj;
+		}
+
 		// DEBUG STUFF
 		public static GameObject GetReadyForMarker(this GameObject obj, MarkerType type, float scaleMult = 1f)
 		{

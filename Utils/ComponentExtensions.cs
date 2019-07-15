@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace SRMLExtras
@@ -11,6 +12,19 @@ namespace SRMLExtras
 			mat.SetColor("_Color", color);
 			mat.name = name;
 			return mat;
+		}
+
+		public static Material[] Group(this Material mat)
+		{
+			return new[] { mat };
+		}
+
+		public static Material[] Group(this Material mat, params Material[] others)
+		{
+			List<Material> mats = new List<Material>();
+			mats.Add(mat);
+			mats.AddRange(others);
+			return mats.ToArray();
 		}
 
 		// PRIVATE FIELDS STUFF

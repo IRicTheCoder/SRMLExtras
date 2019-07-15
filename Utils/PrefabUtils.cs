@@ -9,6 +9,9 @@ namespace SRMLExtras
 	{
 		public static void DumpPrefab(GameObject obj, string folder = null)
 		{
+			LogType type = Debug.unityLogger.filterLogType;
+			Debug.unityLogger.filterLogType = LogType.Exception;
+
 			try
 			{
 				List<GameObject> subPrefabs = DumpPrefabStructure(obj, (folder != null ? folder + "/" : string.Empty) + obj.name + "/");
@@ -28,7 +31,9 @@ namespace SRMLExtras
 				}
 			}
 			catch { }
-			finally { }
+			finally { Debug.unityLogger.filterLogType = type; }
+
+			Debug.unityLogger.filterLogType = type;
 		}
 
 		private static List<GameObject> DumpPrefabStructure(GameObject go, string folder = "")
