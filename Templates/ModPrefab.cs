@@ -24,5 +24,10 @@ namespace SRMLExtras.Templates
 
 			return prefabVersion;
 		}
+
+		public GameObjectTemplate AsTemplate()
+		{
+			return mainObject;
+		}
 	}
 }

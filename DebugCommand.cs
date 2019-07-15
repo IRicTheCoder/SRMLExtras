@@ -1,4 +1,5 @@
-﻿using SRML.Console;
+﻿using System.Collections.Generic;
+using SRML.Console;
 
 namespace SRMLExtras
 {
@@ -19,6 +20,11 @@ namespace SRMLExtras
 			Console.LogSuccess($"Changed the debug mode to <color=white>{DebugMode}</color>");
 
 			return true;
+		}
+
+		public override List<string> GetAutoComplete(int argIndex, string argText)
+		{
+			return new List<string>() { "true", "false" };
 		}
 	}
 }

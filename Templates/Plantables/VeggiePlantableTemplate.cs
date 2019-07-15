@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using SRML.Console;
+using SRMLExtras.Markers;
 using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
-	public class PlantableTemplate : ModPrefab<PlantableTemplate>
+	public class VeggiePlantableTemplate : ModPrefab<VeggiePlantableTemplate>
 	{
-		private bool isDeluxe = false;
-		private bool isVeggie = false;
+		private readonly bool isDeluxe = false;
 
-		private Identifiable.Id ID;
-		private SpawnResource.Id resID;
+		private readonly Identifiable.Id ID;
+		private readonly SpawnResource.Id resID;
 
 		private int minSpawn = 15;
 		private int maxSpawn = 20;
@@ -24,17 +25,18 @@ namespace SRMLExtras.Templates
 		private List<GameObject> toSpawn = new List<GameObject>();
 		private List<GameObject> bonusToSpawn = new List<GameObject>();
 
-		private SpawnResource.Id sproutId = SpawnResource.Id.CARROT_PATCH;
+		private SpawnResource.Id sproutID = SpawnResource.Id.CARROT_PATCH;
 		private Mesh sprout;
 		private Material[] sproutMaterials;
 
 		private Mesh modelMesh;
 		private Material[] modelMaterials;
 
-		public PlantableTemplate(string name, bool isDeluxe, bool isVeggie, Identifiable.Id ID, SpawnResource.Id resID, List<GameObject> toSpawn = null) : base(name)
+		private List<ObjectTransformValues> customSpawnJoints = null;
+
+		public VeggiePlantableTemplate(string name, bool isDeluxe, Identifiable.Id ID, SpawnResource.Id resID, List<GameObject> toSpawn = null) : base(name)
 		{
 			this.isDeluxe = isDeluxe;
-			this.isVeggie = isVeggie;
 			this.ID = ID;
 			this.resID = resID;
 
@@ -44,63 +46,63 @@ namespace SRMLExtras.Templates
 				this.toSpawn = toSpawn;
 		}
 
-		public PlantableTemplate SetBonusInfo(int minBonusSelection, float bonusChance = 0.01f)
+		public VeggiePlantableTemplate SetBonusInfo(int minBonusSelection, float bonusChance = 0.01f)
 		{
 			this.minBonusSelection = minBonusSelection;
 			this.bonusChance = bonusChance;
 			return this;
 		}
 
-		public PlantableTemplate SetBonusSpawn(List<GameObject> bonusToSpawn)
+		public VeggiePlantableTemplate SetBonusSpawn(List<GameObject> bonusToSpawn)
 		{
 			this.bonusToSpawn = bonusToSpawn;
 			return this;
 		}
 
-		public PlantableTemplate AddBonusSpawn(Identifiable.Id ID)
+		public VeggiePlantableTemplate AddBonusSpawn(Identifiable.Id ID)
 		{
 			bonusToSpawn.Add(GameContext.Instance.LookupDirector.GetPrefab(ID));
 			return this;
 		}
 
-		public PlantableTemplate AddBonusSpawn(GameObject obj)
+		public VeggiePlantableTemplate AddBonusSpawn(GameObject obj)
 		{
 			bonusToSpawn.Add(obj);
 			return this;
 		}
 
-		public PlantableTemplate SetSpawn(List<GameObject> toSpawn)
+		public VeggiePlantableTemplate SetSpawn(List<GameObject> toSpawn)
 		{
 			this.toSpawn = toSpawn;
 			return this;
 		}
 
-		public PlantableTemplate AddSpawn(Identifiable.Id ID)
+		public VeggiePlantableTemplate AddSpawn(Identifiable.Id ID)
 		{
 			toSpawn.Add(GameContext.Instance.LookupDirector.GetPrefab(ID));
 			return this;
 		}
 
-		public PlantableTemplate AddSpawn(GameObject obj)
+		public VeggiePlantableTemplate AddSpawn(GameObject obj)
 		{
 			toSpawn.Add(obj);
 			return this;
 		}
 
-		public PlantableTemplate SetCustomSprout(Mesh sprout, Material[] sproutMaterials)
+		public VeggiePlantableTemplate SetCustomSprout(Mesh sprout, Material[] sproutMaterials)
 		{
 			this.sprout = sprout;
 			this.sproutMaterials = sproutMaterials;
 			return this;
 		}
 
-		public PlantableTemplate SetCustomSprout(SpawnResource.Id ID)
+		public VeggiePlantableTemplate SetCustomSprout(SpawnResource.Id ID)
 		{
-			this.sproutId = ID;
+			this.sproutID = ID;
 			return this;
 		}
 
-		public PlantableTemplate SetSpawnInfo(int minSpawn, int maxSpawn, float minHours, float maxHours, float minNutrient = 20, float waterHours = 23)
+		public VeggiePlantableTemplate SetSpawnInfo(int minSpawn, int maxSpawn, float minHours, float maxHours, float minNutrient = 20, float waterHours = 23)
 		{
 			this.minSpawn = minSpawn;
 			this.maxSpawn = maxSpawn;
@@ -111,14 +113,26 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		public PlantableTemplate SetModel(Mesh modelMesh, Material[] modelMaterials)
+		public VeggiePlantableTemplate SetModel(Mesh modelMesh, Material[] modelMaterials)
 		{
 			this.modelMesh = modelMesh;
 			this.modelMaterials = modelMaterials;
 			return this;
 		}
 
-		public override PlantableTemplate Create()
+		public VeggiePlantableTemplate SetSpawnJoints(List<ObjectTransformValues> spawnJoints)
+		{
+			if ((spawnJoints.Count < 20 && !isDeluxe) || (spawnJoints.Count < 34 && isDeluxe))
+			{
+				Console.LogError($"Tried to register spawn joints for '<color=white>{mainObject.Name}</color>' but they are of an invalid size (20 for normal; 34 for deluxe)");
+			}
+
+			customSpawnJoints = spawnJoints;
+
+			return this;
+		}
+
+		public override VeggiePlantableTemplate Create()
 		{
 			// Create main object
 			mainObject.AddComponents(
@@ -155,8 +169,8 @@ namespace SRMLExtras.Templates
 			for (int i = 0; i < 20; i++)
 			{
 				mainObject.AddChild(new GameObjectTemplate($"SpawnJoint{(i+1).ToString("00")}",
-					new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.modelMeshs.ContainsKey(ID) ? BaseObjects.modelMeshs[ID] : modelMesh),
-					new Create<MeshRenderer>((render) => render.sharedMaterials = BaseObjects.modelMaterials.ContainsKey(ID) ? BaseObjects.modelMaterials[ID] : modelMaterials),
+					new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.modelMeshs.ContainsKey(ID) ? GardenObjects.modelMeshs[ID] : modelMesh),
+					new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.modelMaterials.ContainsKey(ID) ? GardenObjects.modelMaterials[ID] : modelMaterials),
 					new Create<Rigidbody>((body) =>
 					{
 						body.drag = 0;
@@ -167,23 +181,23 @@ namespace SRMLExtras.Templates
 					}),
 					new FixedJoint(),
 					new HideOnStart()
-				).SetTransform(BaseObjects.gardenSpawnJoints[i])
+				).SetTransform(customSpawnJoints == null ? GardenObjects.spawnJoints[i] : customSpawnJoints[i])
 				.SetDebugMarker(MarkerType.SpawnPoint)
 				);
 			}
 
 			// Add beds
 			GameObjectTemplate sprout = new GameObjectTemplate("Sprout",
-				new Create<MeshFilter>((filter) => filter.sharedMesh = this.sprout ?? (BaseObjects.modelSproutMeshs[sproutId] ?? BaseObjects.modelSproutMeshs[SpawnResource.Id.CARROT_PATCH])),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = this.sprout == null ? (BaseObjects.modelSproutMaterials[sproutId] ?? BaseObjects.modelSproutMaterials[SpawnResource.Id.CARROT_PATCH]) : sproutMaterials)
+				new Create<MeshFilter>((filter) => filter.sharedMesh = this.sprout ?? (GardenObjects.modelSproutMeshs[sproutID] ?? GardenObjects.modelSproutMeshs[SpawnResource.Id.CARROT_PATCH])),
+				new Create<MeshRenderer>((render) => render.sharedMaterials = sproutMaterials == null ? (GardenObjects.modelSproutMaterials[sproutID] ?? GardenObjects.modelSproutMaterials[SpawnResource.Id.CARROT_PATCH]) : sproutMaterials)
 			);
 
 			GameObjectTemplate dirt = new GameObjectTemplate("Dirt",
-				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.gardenDirtMesh),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = BaseObjects.gardenDirtMaterials)
+				new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.dirtMesh),
+				new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.dirtMaterials)
 			).AddChild(new GameObjectTemplate("rocks_long",
-				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.gardenRockMesh),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = BaseObjects.gardenRockMaterials)
+				new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.rockMesh),
+				new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.rockMaterials)
 			)).SetTransform(Vector3.zero, Vector3.up * 90f, new Vector3(0.5f, 0.4f, 0.5f));
 
 			GameObjectTemplate baseBeds = new GameObjectTemplate("BaseBeds");
@@ -206,12 +220,12 @@ namespace SRMLExtras.Templates
 						col.direction = 2;
 						col.contactOffset = 0.01f;
 					})
-				).SetTransform(BaseObjects.gardenBeds[i])
+				).SetTransform(GardenObjects.beds[i])
 				.AddChild(dirt)
-				.AddChild(sprout.SetTransform(BaseObjects.gardenBedSprouts[0]))
-				.AddChild(sprout.SetTransform(BaseObjects.gardenBedSprouts[1]))
-				.AddChild(sprout.SetTransform(BaseObjects.gardenBedSprouts[2]))
-				.AddChild(sprout.SetTransform(BaseObjects.gardenBedSprouts[3]))
+				.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[0]))
+				.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[1]))
+				.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[2]))
+				.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[3]))
 				);
 			}
 
@@ -224,8 +238,8 @@ namespace SRMLExtras.Templates
 				for (int i = 20; i < 34; i++)
 				{
 					mainObject.AddChild(new GameObjectTemplate($"SpawnJoint{(i + 1).ToString("00")}",
-						new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.modelMeshs.ContainsKey(ID) ? BaseObjects.modelMeshs[ID] : modelMesh),
-						new Create<MeshRenderer>((render) => render.sharedMaterials = BaseObjects.modelMaterials.ContainsKey(ID) ? BaseObjects.modelMaterials[ID] : modelMaterials),
+						new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.modelMeshs.ContainsKey(ID) ? GardenObjects.modelMeshs[ID] : modelMesh),
+						new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.modelMaterials.ContainsKey(ID) ? GardenObjects.modelMaterials[ID] : modelMaterials),
 						new Create<Rigidbody>((body) =>
 						{
 							body.drag = 0;
@@ -236,23 +250,23 @@ namespace SRMLExtras.Templates
 						}),
 						new FixedJoint(),
 						new HideOnStart()
-					).SetTransform(BaseObjects.gardenSpawnJoints[i])
+					).SetTransform(customSpawnJoints == null ? GardenObjects.spawnJoints[i] : customSpawnJoints[i])
 					.SetDebugMarker(MarkerType.SpawnPoint)
 					);
 				}
 
 				// Add beds
 				GameObjectTemplate dirtDeluxe = new GameObjectTemplate("Dirt",
-					new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.gardenDeluxeDirtMesh),
-					new Create<MeshRenderer>((render) => render.sharedMaterials = BaseObjects.gardenDeluxeDirtMaterials)
+					new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.deluxeDirtMesh),
+					new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.deluxeDirtMaterials)
 				).AddChild(new GameObjectTemplate("rocks_long",
-					new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.gardenDeluxeRockMesh),
-					new Create<MeshRenderer>((render) => render.sharedMaterials = BaseObjects.gardenDeluxeRockMaterials)
+					new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.deluxeRockMesh),
+					new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.deluxeRockMaterials)
 				)).SetTransform(Vector3.zero, Vector3.up * 90f, new Vector3(0.5f, 0.3f, 0.5f));
 
 				for (int i = 4; i < 6; i++)
 				{
-					(isDeluxe ? baseBeds : mainObject).AddChild(new GameObjectTemplate("Bed",
+					mainObject.AddChild(new GameObjectTemplate("Bed",
 						new Create<LODGroup>((group) =>
 						{
 							group.localReferencePoint = Vector3.one * 0.1f;
@@ -264,11 +278,11 @@ namespace SRMLExtras.Templates
 						{
 							doNotScaleAsReplacement = false
 						}
-					).SetTransform(BaseObjects.gardenBeds[i])
+					).SetTransform(GardenObjects.beds[i])
 					.AddChild(dirtDeluxe)
-					.AddChild(sprout.SetTransform(BaseObjects.gardenBedSprouts[4]))
-					.AddChild(sprout.SetTransform(BaseObjects.gardenBedSprouts[5]))
-					.AddChild(sprout.SetTransform(BaseObjects.gardenBedSprouts[6]))
+					.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[4]))
+					.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[5]))
+					.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[6]))
 					);
 				}
 			}
@@ -276,7 +290,7 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		public void GrabJoints(GameObject obj)
+		protected void GrabJoints(GameObject obj)
 		{
 			obj.GetComponent<SpawnResource>().SpawnJoints = obj.GetComponentsInChildren<FixedJoint>();
 		}

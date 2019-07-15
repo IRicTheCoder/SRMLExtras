@@ -5,10 +5,13 @@ using SRML.Console;
 
 namespace SRMLExtras
 {
-	public static class BaseObjects
+	public static class GardenObjects
 	{
-		// DEFINED STUFF
-		public readonly static ObjectTransformValues[] gardenSpawnJoints = new ObjectTransformValues[]
+		// The Director
+		private static LookupDirector Director => GameContext.Instance.LookupDirector;
+
+		// Garden Positions
+		public readonly static ObjectTransformValues[] spawnJoints = new ObjectTransformValues[]
 		{
 			// NORMAL SPAWN JOINTS
 			new ObjectTransformValues(new Vector3(3.40f, 0.20f, 1.26f), new Vector3(0.00f, 151.60f, 0.00f), Vector3.one * 0.25f),
@@ -50,7 +53,7 @@ namespace SRMLExtras
 			new ObjectTransformValues(new Vector3(3.31f, 0.92f, -3.99f), new Vector3(0.00f, 182.38f, 0.00f), Vector3.one * 0.25f)
 		};
 
-		public readonly static ObjectTransformValues[] gardenBeds = new ObjectTransformValues[]
+		public readonly static ObjectTransformValues[] beds = new ObjectTransformValues[]
 		{
 			// NORMAL BEDS
 			new ObjectTransformValues(new Vector3(-3.15f, 0.00f, 0.00f), new Vector3(0.00f, 0.00f, 0.00f), Vector3.one),
@@ -63,7 +66,7 @@ namespace SRMLExtras
 			new ObjectTransformValues(new Vector3(3.80f, 0.90f, -3.80f), new Vector3(0.00f, 225.00f, 0.00f), Vector3.one),
 		};
 
-		public readonly static ObjectTransformValues[] gardenBedSprouts = new ObjectTransformValues[]
+		public readonly static ObjectTransformValues[] bedSprouts = new ObjectTransformValues[]
 		{
 			// NORMAL SPROUTS
 			new ObjectTransformValues(new Vector3(0.00f, 0.10f, -2.97f), new Vector3(351.24f, 0.00f, 0.00f), Vector3.one * 0.144f),
@@ -77,39 +80,27 @@ namespace SRMLExtras
 			new ObjectTransformValues(new Vector3(0.22f, 0.03f, 1.33f), new Vector3(359.31f, 30.23f, 348.55f), Vector3.one * 0.127224f)
 		};
 
-		public readonly static Material fadeMat = new Material(Shader.Find("Standard")).Initialize((mat) =>
+		public readonly static ObjectTransformValues[] droneNodes = new ObjectTransformValues[]
 		{
-			mat.SetFloat("_Mode", 2);
-			mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-			mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-			mat.SetInt("_ZWrite", 0);
-			mat.DisableKeyword("_ALPHATEST_ON");
-			mat.EnableKeyword("_ALPHABLEND_ON");
-			mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-			mat.renderQueue = 3000;
-		});
-
-		public readonly static Dictionary<MarkerType, Material> markerMaterials = new Dictionary<MarkerType, Material>()
-		{
-			{MarkerType.SpawnPoint, new Material(fadeMat).SetInfo(new Color(1, 0, 0, 0.25f), "Spawn Point Marker")},
-			{MarkerType.Plot, new Material(fadeMat).SetInfo(new Color(0, 1, 1, 0.25f), "Plot Marker")},
-			{MarkerType.GadgetLocation, new Material(fadeMat).SetInfo(new Color(1, 0.5f, 0, 0.25f), "Gadget Location Marker")}
+			// NORMAL NODES
+			new ObjectTransformValues(new Vector3(-2.2f, -0.6f, 0), Vector3.zero, Vector3.one),
+			new ObjectTransformValues(new Vector3(2.2f, -0.6f, 0), Vector3.zero, Vector3.one),
+			new ObjectTransformValues(new Vector3(0, -0.6f, 2.2f), Vector3.zero, Vector3.one),
+			new ObjectTransformValues(new Vector3(0, -0.6f, -2.2f), Vector3.zero, Vector3.one)
 		};
 
 		// STUFF TO BE FOUND OR CREATED
-		public static Mesh cubeMesh;
+		public static Mesh dirtMesh;
+		public static Material[] dirtMaterials;
 
-		public static Mesh gardenDirtMesh;
-		public static Material[] gardenDirtMaterials;
+		public static Mesh rockMesh;
+		public static Material[] rockMaterials;
 
-		public static Mesh gardenRockMesh;
-		public static Material[] gardenRockMaterials;
+		public static Mesh deluxeDirtMesh;
+		public static Material[] deluxeDirtMaterials;
 
-		public static Mesh gardenDeluxeDirtMesh;
-		public static Material[] gardenDeluxeDirtMaterials;
-
-		public static Mesh gardenDeluxeRockMesh;
-		public static Material[] gardenDeluxeRockMaterials;
+		public static Mesh deluxeRockMesh;
+		public static Material[] deluxeRockMaterials;
 
 		public readonly static Dictionary<Identifiable.Id, Mesh> modelMeshs = new Dictionary<Identifiable.Id, Mesh>();
 		public readonly static Dictionary<Identifiable.Id, Material[]> modelMaterials = new Dictionary<Identifiable.Id, Material[]>();
@@ -117,39 +108,40 @@ namespace SRMLExtras
 		public readonly static Dictionary<SpawnResource.Id, Mesh> modelSproutMeshs = new Dictionary<SpawnResource.Id, Mesh>();
 		public readonly static Dictionary<SpawnResource.Id, Material[]> modelSproutMaterials = new Dictionary<SpawnResource.Id, Material[]>();
 
-		// The Director
-		private static LookupDirector Director => GameContext.Instance.LookupDirector;
+		public readonly static Dictionary<SpawnResource.Id, Mesh> modelTreeCols = new Dictionary<SpawnResource.Id, Mesh>();
+		public readonly static Dictionary<SpawnResource.Id, Mesh> modelTreeMeshs = new Dictionary<SpawnResource.Id, Mesh>();
+		public readonly static Dictionary<SpawnResource.Id, Material[]> modelTreeMaterials = new Dictionary<SpawnResource.Id, Material[]>();
 
-		public static void Populate()
+		public readonly static Dictionary<SpawnResource.Id, Mesh> modelLeavesCols = new Dictionary<SpawnResource.Id, Mesh>();
+		public readonly static Dictionary<SpawnResource.Id, Mesh> modelLeavesMeshs = new Dictionary<SpawnResource.Id, Mesh>();
+		public readonly static Dictionary<SpawnResource.Id, Material[]> modelLeavesMaterials = new Dictionary<SpawnResource.Id, Material[]>();
+
+		public readonly static Dictionary<SpawnResource.Id, List<ObjectTransformValues>> treeSpawnJoints = new Dictionary<SpawnResource.Id, List<ObjectTransformValues>>()
 		{
-			// Dumps prefabs
-			foreach (GameObject obj in Director.identifiablePrefabs)
-				PrefabUtils.DumpPrefab(obj, "Identifiables");
+			{SpawnResource.Id.POGO_TREE, new List<ObjectTransformValues>()},
+			{SpawnResource.Id.PEAR_TREE, new List<ObjectTransformValues>()},
+			{SpawnResource.Id.CUBERRY_TREE, new List<ObjectTransformValues>()},
+			{SpawnResource.Id.LEMON_TREE, new List<ObjectTransformValues>()},
+			{SpawnResource.Id.MANGO_TREE, new List<ObjectTransformValues>()}
+		};
 
-			foreach (GameObject obj in Director.plotPrefabs)
-				PrefabUtils.DumpPrefab(obj, "Plots");
-
-			foreach (GameObject obj in Director.resourceSpawnerPrefabs)
-				PrefabUtils.DumpPrefab(obj, "Resource Spawners");
-
+		// Populates required values
+		internal static void Populate()
+		{
 			// Populate Single Objects
-			GameObject cubeObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			cubeMesh = cubeObj.GetComponent<MeshFilter>().sharedMesh;
-			Object.Destroy(cubeObj);
-
 			GameObject carrotPatch = Director.GetResourcePrefab(SpawnResource.Id.CARROT_PATCH);
-			gardenDirtMesh = carrotPatch.FindChild("Bed/Dirt").GetComponent<MeshFilter>().sharedMesh;
-			gardenDirtMaterials = carrotPatch.FindChild("Bed/Dirt").GetComponent<MeshRenderer>().sharedMaterials;
+			dirtMesh = carrotPatch.FindChild("Bed/Dirt").GetComponent<MeshFilter>().sharedMesh;
+			dirtMaterials = carrotPatch.FindChild("Bed/Dirt").GetComponent<MeshRenderer>().sharedMaterials;
 
-			gardenRockMesh = carrotPatch.FindChild("Bed/Dirt/rocks_long").GetComponent<MeshFilter>().sharedMesh;
-			gardenRockMaterials = carrotPatch.FindChild("Bed/Dirt/rocks_long").GetComponent<MeshRenderer>().sharedMaterials;
+			rockMesh = carrotPatch.FindChild("Bed/Dirt/rocks_long").GetComponent<MeshFilter>().sharedMesh;
+			rockMaterials = carrotPatch.FindChild("Bed/Dirt/rocks_long").GetComponent<MeshRenderer>().sharedMaterials;
 
 			carrotPatch = Director.GetResourcePrefab(SpawnResource.Id.CARROT_PATCH_DLX).FindChild("Bed", true);
-			gardenDeluxeDirtMesh = carrotPatch.FindChild("Dirt").GetComponent<MeshFilter>().sharedMesh;
-			gardenDeluxeDirtMaterials = carrotPatch.FindChild("Dirt").GetComponent<MeshRenderer>().sharedMaterials;
+			deluxeDirtMesh = carrotPatch.FindChild("Dirt").GetComponent<MeshFilter>().sharedMesh;
+			deluxeDirtMaterials = carrotPatch.FindChild("Dirt").GetComponent<MeshRenderer>().sharedMaterials;
 
-			gardenDeluxeRockMesh = carrotPatch.FindChild("Dirt/rocks_long").GetComponent<MeshFilter>().sharedMesh;
-			gardenDeluxeRockMaterials = carrotPatch.FindChild("Dirt/rocks_long").GetComponent<MeshRenderer>().sharedMaterials;
+			deluxeRockMesh = carrotPatch.FindChild("Dirt/rocks_long").GetComponent<MeshFilter>().sharedMesh;
+			deluxeRockMaterials = carrotPatch.FindChild("Dirt/rocks_long").GetComponent<MeshRenderer>().sharedMaterials;
 
 			// Populate Lists & Dictionaries
 			foreach (GameObject obj in Director.identifiablePrefabs)
@@ -165,12 +157,22 @@ namespace SRMLExtras
 
 			foreach (GameObject obj in Director.resourceSpawnerPrefabs)
 			{
-				foreach (GameObject child in obj.FindChildrenWithPartialName("SpawnJoint"))
-					child.GetReadyForMarker(MarkerType.SpawnPoint);
-
-				if (!obj.GetComponent<SpawnResource>()?.id.ToString().EndsWith("_DLX") ?? false)
+				if (obj.GetComponent<SpawnResource>() != null)
 				{
 					SpawnResource.Id ID = obj.GetComponent<SpawnResource>().id;
+
+					if (ID.ToString().EndsWith("_DLX"))
+					{
+						SpawnResource.Id trueID = (SpawnResource.Id)System.Enum.Parse(ID.GetType(), ID.ToString().Replace("_DLX", ""));
+						if (treeSpawnJoints.ContainsKey(trueID))
+						{
+							foreach (GameObject joint in obj.FindChildrenWithPartialName("SpawnJoint"))
+								treeSpawnJoints[trueID].Add(new ObjectTransformValues(joint.transform.localPosition, joint.transform.localEulerAngles, joint.transform.localScale));
+						}
+
+						continue;
+					}
+
 					GameObject child = obj.FindChildWithPartialName("Sprout");
 
 					if (child != null)
@@ -178,32 +180,25 @@ namespace SRMLExtras
 						modelSproutMeshs.Add(ID, child.GetComponent<MeshFilter>().sharedMesh);
 						modelSproutMaterials.Add(ID, child.GetComponent<MeshRenderer>().sharedMaterials);
 					}
+
+					child = obj.FindChildWithPartialName("tree_");
+
+					if (child != null)
+					{
+						modelTreeCols.Add(ID, child.GetComponent<MeshCollider>().sharedMesh);
+						modelTreeMeshs.Add(ID, child.GetComponent<MeshFilter>().sharedMesh);
+						modelTreeMaterials.Add(ID, child.GetComponent<MeshRenderer>().sharedMaterials);
+					}
+
+					child = obj.FindChildWithPartialName("leaves_");
+
+					if (child != null)
+					{
+						modelLeavesCols.Add(ID, child.GetComponent<MeshCollider>().sharedMesh);
+						modelLeavesMeshs.Add(ID, child.GetComponent<MeshFilter>().sharedMesh);
+						modelLeavesMaterials.Add(ID, child.GetComponent<MeshRenderer>().sharedMaterials);
+					}
 				}
-			}
-
-			foreach (GameObject obj in Director.plotPrefabs)
-			{
-				obj.GetReadyForMarker(MarkerType.Plot, 8f);
-			}
-		}
-
-		public struct ObjectTransformValues
-		{
-			public Vector3 position;
-			public Vector3 rotation;
-			public Vector3 scale;
-
-			public ObjectTransformValues(Vector3 position, Vector3 rotation, Vector3 scale)
-			{
-				this.position = position;
-				this.rotation = rotation;
-				this.scale = scale;
-			}
-
-			public override string ToString()
-			{
-				//return $"{position.ToString()} | {rotation.ToString()} | {scale.ToString()}";
-				return $"new ObjectTransformValues(new Vector3({position.x.ToString("N2")}f, {position.y.ToString("N2")}f, {position.z.ToString("N2")}f), new Vector3({rotation.x.ToString("N2")}f, {rotation.y.ToString("N2")}f, {rotation.z.ToString("N2")}f), new Vector3({scale.x}f, {scale.y}f, {scale.z}f)),";
 			}
 		}
 	}

@@ -41,15 +41,20 @@
   <ItemGroup>
     <Compile Include="DebugCommand.cs" />
     <Compile Include="Patches\ContentPatcher.cs" />
-    <Compile Include="BaseObjects.cs" />
-    <Compile Include="Templates\Components\AddDebugMarker.cs" />
+    <Compile Include="Templates\Base Objects\BaseObjects.cs" />
+    <Compile Include="Templates\Base Objects\GardenObjects.cs" />
+    <Compile Include="Templates\Base Objects\ObjectTransformValues.cs" />
+    <Compile Include="Markers\AddDebugMarker.cs" />
     <Compile Include="Templates\Components\Create.cs" />
-    <Compile Include="Templates\Components\DebugMarker.cs" />
+    <Compile Include="Markers\DebugMarker.cs" />
     <Compile Include="Templates\Components\ICreateComponent.cs" />
-    <Compile Include="Templates\Components\MarkerType.cs" />
+    <Compile Include="Markers\MarkerRaycast.cs" />
+    <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />
     <Compile Include="Templates\ModPrefab.cs" />
-    <Compile Include="Templates\Plantables\PlantableTemplate.cs" />
+    <Compile Include="Templates\Plantables\BushPlantableTemplate.cs" />
+    <Compile Include="Templates\Plantables\FruitPlantableTemplate.cs" />
+    <Compile Include="Templates\Plantables\VeggiePlantableTemplate.cs" />
     <Compile Include="Utils\GameObjectExtensions.cs" />
     <Compile Include="Utils\ComponentExtensions.cs" />
     <Compile Include="Main.cs" />

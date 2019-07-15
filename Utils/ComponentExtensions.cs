@@ -41,16 +41,34 @@ namespace SRMLExtras
 		public static void CopyAllTo<T>(this T comp, T otherComp) where T : Component
 		{
 			foreach (FieldInfo field in comp.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-				field.SetValue(otherComp, field.GetValue(comp));
+			{
+				try
+				{
+					field.SetValue(otherComp, field.GetValue(comp));
+				}
+				catch { continue; }
+			}
 
 			foreach (FieldInfo field in comp.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 			{
 				if (field.GetCustomAttributes(typeof(SerializeField), false).Length > 0)
-					field.SetValue(otherComp, field.GetValue(comp));
+				{
+					try
+					{
+						field.SetValue(otherComp, field.GetValue(comp));
+					}
+					catch { continue; }
+				}
 			}
 
 			foreach (PropertyInfo field in comp.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-				field.SetValue(otherComp, field.GetValue(comp, null), null);
+			{
+				try
+				{
+					field.SetValue(otherComp, field.GetValue(comp, null), null);
+				}
+				catch { continue; }
+			}
 		}
 	}
 }

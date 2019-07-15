@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SRMLExtras.Templates
+namespace SRMLExtras.Markers
 {
 	public class AddDebugMarker : MonoBehaviour
 	{

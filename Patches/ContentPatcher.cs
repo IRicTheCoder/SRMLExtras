@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
 using SRML.Console;
-using UnityEngine.SceneManagement;
 
 namespace SRMLExtras.Patches
 {
