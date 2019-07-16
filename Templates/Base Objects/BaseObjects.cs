@@ -123,6 +123,7 @@ namespace SRMLExtras.Templates
 			// Populates all other object classes
 			GardenObjects.Populate();
 			TheWildsObjects.Populate();
+			RanchObjects.Populate();
 
 			// Adds Late Populate method
 			SceneManager.sceneLoaded += LatePopulate;
@@ -181,6 +182,7 @@ namespace SRMLExtras.Templates
 
 				GardenObjects.LatePopulate();
 				TheWildsObjects.LatePopulate();
+				RanchObjects.LatePopulate();
 			}
 		}
 	}

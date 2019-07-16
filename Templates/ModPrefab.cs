@@ -35,5 +35,10 @@ namespace SRMLExtras.Templates
 		{
 			return mainObject;
 		}
+
+		public GameObjectTemplate AsClone()
+		{
+			return mainObject.Clone();
+		}
 	}
 }

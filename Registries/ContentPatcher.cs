@@ -4,11 +4,11 @@ using HarmonyLib;
 using UnityEngine;
 using SRML.Console;
 
-namespace SRMLExtras.Patches
+namespace SRMLExtras.Registries
 {
 	public static class ContentPatcher
 	{	
-		internal static Dictionary<string, System.Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>> purchaseUIs = new Dictionary<string, System.Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>>();
+		internal static Dictionary<System.Type, System.Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>> purchaseUIs = new Dictionary<System.Type, System.Func<PurchaseUI.Purchasable[], PurchaseUI.Purchasable[]>>();
 		internal static List<GardenCatcher.PlantSlot> catcherPlantables = new List<GardenCatcher.PlantSlot>();
 
 		// PATCHES THE GARDEN CATCHER
@@ -34,11 +34,11 @@ namespace SRMLExtras.Patches
 		[HarmonyPatch("CreatePurchaseUI")]
 		internal static class UITemplatesPatcher
 		{
-			public static void Prefix(UITemplates __instance, string titleKey, ref PurchaseUI.Purchasable[] purchasables, PurchaseUI.OnClose onClose)
+			public static void Prefix(UITemplates __instance, ref PurchaseUI.Purchasable[] purchasables, PurchaseUI.OnClose onClose)
 			{
-				if (purchaseUIs.ContainsKey(titleKey))
+				if (purchaseUIs.ContainsKey(onClose.Target.GetType()))
 				{
-					purchasables = purchaseUIs[titleKey].Invoke(purchasables);
+					purchasables = purchaseUIs[onClose.Method.ReflectedType].Invoke(purchasables);
 				}
 			}
 		}

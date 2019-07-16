@@ -34,13 +34,6 @@ namespace SRMLExtras
 		{
 			BaseObjects.Populate();
 
-			// TODO: Make new stuff in the Lookup Director
-			/*GameObject gingerSpawnResource = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.GINGER_VEGGIE).CreatePrefabCopy();
-			gingerSpawnResource.GetComponent<ResourceCycle>().unripeGameHours = 12;
-
-			GameObject kookadobaSpawnResource = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.KOOKADOBA_FRUIT).CreatePrefabCopy();
-			kookadobaSpawnResource.GetComponent<ResourceCycle>().unripeGameHours = 6;*/
-
 			// TODO: For SRML 1.8
 			/*try
 			{

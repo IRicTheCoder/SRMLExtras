@@ -28,7 +28,7 @@ namespace SRMLExtras.Templates
 		{
 			// Loads kookadoba plant
 			kookadobaPlant = BaseObjects.originMesh["desert_tree_top"];
-			kookadobaPlantMaterials = new[] { BaseObjects.originMaterial["objKookadobaTreeLeaves01"] };
+			kookadobaPlantMaterials = BaseObjects.originMaterial["objKookadobaTreeLeaves01"].Group();
 		}
 	}
 }

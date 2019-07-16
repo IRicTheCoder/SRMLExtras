@@ -130,10 +130,10 @@ namespace SRMLExtras
 		{
 			// Populate Single Objects
 			dirtMesh = BaseObjects.originMesh["dirt_long"];
-			dirtMaterials = new[] { BaseObjects.originMaterial["veggieDirtClod01"] };
+			dirtMaterials = BaseObjects.originMaterial["veggieDirtClod01"].Group();
 
 			rockMesh = BaseObjects.originMesh["rocks_long"];
-			rockMaterials = new[] { BaseObjects.originMaterial["veggieDirtClod02"] };
+			rockMaterials = BaseObjects.originMaterial["veggieDirtClod02"].Group();
 
 			deluxeDirtMesh = BaseObjects.originMesh["dirt_mid"];
 			deluxeDirtMaterials = dirtMaterials;
@@ -149,22 +149,22 @@ namespace SRMLExtras
 			modelMeshs.Add(Identifiable.Id.ONION_VEGGIE, BaseObjects.originMesh["model_oddOnion"]);
 			modelMeshs.Add(Identifiable.Id.PARSNIP_VEGGIE, BaseObjects.originMesh["model_parsnip"]);
 
-			modelMaterials.Add(Identifiable.Id.BEET_VEGGIE, new[] { BaseObjects.originMaterial["heartbeet"] });
-			modelMaterials.Add(Identifiable.Id.CARROT_VEGGIE, new[] { BaseObjects.originMaterial["carrot"] });
-			modelMaterials.Add(Identifiable.Id.GINGER_VEGGIE, new[] { BaseObjects.originMaterial["ginger"] });
-			modelMaterials.Add(Identifiable.Id.OCAOCA_VEGGIE, new[] { BaseObjects.originMaterial["ocaoca"] });
-			modelMaterials.Add(Identifiable.Id.ONION_VEGGIE, new[] { BaseObjects.originMaterial["onion"] });
-			modelMaterials.Add(Identifiable.Id.PARSNIP_VEGGIE, new[] { BaseObjects.originMaterial["parsnip"] });
+			modelMaterials.Add(Identifiable.Id.BEET_VEGGIE, BaseObjects.originMaterial["heartbeet"].Group());
+			modelMaterials.Add(Identifiable.Id.CARROT_VEGGIE, BaseObjects.originMaterial["carrot"].Group());
+			modelMaterials.Add(Identifiable.Id.GINGER_VEGGIE, BaseObjects.originMaterial["ginger"].Group());
+			modelMaterials.Add(Identifiable.Id.OCAOCA_VEGGIE, BaseObjects.originMaterial["ocaoca"].Group());
+			modelMaterials.Add(Identifiable.Id.ONION_VEGGIE, BaseObjects.originMaterial["onion"].Group());
+			modelMaterials.Add(Identifiable.Id.PARSNIP_VEGGIE, BaseObjects.originMaterial["parsnip"].Group());
 
 			modelSproutMeshs.Add(SpawnResource.Id.BEET_PATCH, BaseObjects.originMesh["sprout_beet"]);
 			modelSproutMeshs.Add(SpawnResource.Id.CARROT_PATCH, BaseObjects.originMesh["sprout_carrot"]);
 			modelSproutMeshs.Add(SpawnResource.Id.OCAOCA_PATCH, BaseObjects.originMesh["sprout_ocaoca"]);
 			modelSproutMeshs.Add(SpawnResource.Id.PARSNIP_PATCH, BaseObjects.originMesh["sprout_parsnip"]);
 
-			modelSproutMaterials.Add(SpawnResource.Id.BEET_PATCH, new[] { BaseObjects.originMaterial["heartbeet NoSway"] });
-			modelSproutMaterials.Add(SpawnResource.Id.CARROT_PATCH, new[] { BaseObjects.originMaterial["carrot NoSway"] });
-			modelSproutMaterials.Add(SpawnResource.Id.OCAOCA_PATCH, new[] { BaseObjects.originMaterial["ocaoca NoSway"] });
-			modelSproutMaterials.Add(SpawnResource.Id.PARSNIP_PATCH, new[] { BaseObjects.originMaterial["parsnip NoSway"] });
+			modelSproutMaterials.Add(SpawnResource.Id.BEET_PATCH, BaseObjects.originMaterial["heartbeet NoSway"].Group());
+			modelSproutMaterials.Add(SpawnResource.Id.CARROT_PATCH, BaseObjects.originMaterial["carrot NoSway"].Group());
+			modelSproutMaterials.Add(SpawnResource.Id.OCAOCA_PATCH, BaseObjects.originMaterial["ocaoca NoSway"].Group());
+			modelSproutMaterials.Add(SpawnResource.Id.PARSNIP_PATCH, BaseObjects.originMaterial["parsnip NoSway"].Group());
 
 			// Gets all models and materials for fruits
 			modelMeshs.Add(Identifiable.Id.CUBERRY_FRUIT, BaseObjects.originMesh["model_cuberry"]);
@@ -174,12 +174,12 @@ namespace SRMLExtras
 			modelMeshs.Add(Identifiable.Id.PEAR_FRUIT, BaseObjects.originMesh["model_pricklepear"]);
 			modelMeshs.Add(Identifiable.Id.POGO_FRUIT, BaseObjects.originMesh["model_pogofruit"]);
 
-			modelMaterials.Add(Identifiable.Id.CUBERRY_FRUIT, new[] { BaseObjects.originMaterial["cuberry"] });
-			modelMaterials.Add(Identifiable.Id.KOOKADOBA_FRUIT, new[] { BaseObjects.originMaterial["kookadoba"] });
-			modelMaterials.Add(Identifiable.Id.LEMON_FRUIT, new[] { BaseObjects.originMaterial["phaseLemon"] });
-			modelMaterials.Add(Identifiable.Id.MANGO_FRUIT, new[] { BaseObjects.originMaterial["mintmango"] });
-			modelMaterials.Add(Identifiable.Id.PEAR_FRUIT, new[] { BaseObjects.originMaterial["pricklepear"] });
-			modelMaterials.Add(Identifiable.Id.POGO_FRUIT, new[] { BaseObjects.originMaterial["pogo"] });
+			modelMaterials.Add(Identifiable.Id.CUBERRY_FRUIT, BaseObjects.originMaterial["cuberry"].Group());
+			modelMaterials.Add(Identifiable.Id.KOOKADOBA_FRUIT, BaseObjects.originMaterial["kookadoba"].Group());
+			modelMaterials.Add(Identifiable.Id.LEMON_FRUIT, BaseObjects.originMaterial["phaseLemon"].Group());
+			modelMaterials.Add(Identifiable.Id.MANGO_FRUIT, BaseObjects.originMaterial["mintmango"].Group());
+			modelMaterials.Add(Identifiable.Id.PEAR_FRUIT, BaseObjects.originMaterial["pricklepear"].Group());
+			modelMaterials.Add(Identifiable.Id.POGO_FRUIT, BaseObjects.originMaterial["pogo"].Group());
 
 			modelTreeMeshs.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMesh["tree_cube"]);
 			modelTreeMeshs.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMesh["tree_pogo"]);
@@ -187,11 +187,11 @@ namespace SRMLExtras
 			modelTreeMeshs.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMesh["tree_pear"]);
 			modelTreeMeshs.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMesh["tree_pogo"]);
 
-			modelTreeMaterials.Add(SpawnResource.Id.CUBERRY_TREE, new[] { BaseObjects.originMaterial["objTreeBark_cube"] });
-			modelTreeMaterials.Add(SpawnResource.Id.LEMON_TREE, new[] { BaseObjects.originMaterial["objTreeBark_lemon_alt"] });
-			modelTreeMaterials.Add(SpawnResource.Id.MANGO_TREE, new[] { BaseObjects.originMaterial["objTreeBark_mango"] });
-			modelTreeMaterials.Add(SpawnResource.Id.PEAR_TREE, new[] { BaseObjects.originMaterial["objTreeBark_pear"] });
-			modelTreeMaterials.Add(SpawnResource.Id.POGO_TREE, new[] { BaseObjects.originMaterial["objTreeBark_pogo"] });
+			modelTreeMaterials.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMaterial["objTreeBark_cube"].Group());
+			modelTreeMaterials.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMaterial["objTreeBark_lemon_alt"].Group());
+			modelTreeMaterials.Add(SpawnResource.Id.MANGO_TREE, BaseObjects.originMaterial["objTreeBark_mango"].Group());
+			modelTreeMaterials.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMaterial["objTreeBark_pear"].Group());
+			modelTreeMaterials.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMaterial["objTreeBark_pogo"].Group());
 
 			modelTreeCols.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMesh["tree_cube_COL"]);
 			modelTreeCols.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMesh["tree_pogo_COL"]);
@@ -205,11 +205,11 @@ namespace SRMLExtras
 			modelLeavesMeshs.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMesh["leaves_pear"]);
 			modelLeavesMeshs.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMesh["leaves_pogo"]);
 
-			modelLeavesMaterials.Add(SpawnResource.Id.CUBERRY_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_cube"] });
-			modelLeavesMaterials.Add(SpawnResource.Id.LEMON_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_lemon_alt"] });
-			modelLeavesMaterials.Add(SpawnResource.Id.MANGO_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_mango"] });
-			modelLeavesMaterials.Add(SpawnResource.Id.PEAR_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_pear"] });
-			modelLeavesMaterials.Add(SpawnResource.Id.POGO_TREE, new[] { BaseObjects.originMaterial["objTreeLeaves_pogo"] });
+			modelLeavesMaterials.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMaterial["objTreeLeaves_cube"].Group());
+			modelLeavesMaterials.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMaterial["objTreeLeaves_lemon_alt"].Group());
+			modelLeavesMaterials.Add(SpawnResource.Id.MANGO_TREE, BaseObjects.originMaterial["objTreeLeaves_mango"].Group());
+			modelLeavesMaterials.Add(SpawnResource.Id.PEAR_TREE, BaseObjects.originMaterial["objTreeLeaves_pear"].Group());
+			modelLeavesMaterials.Add(SpawnResource.Id.POGO_TREE, BaseObjects.originMaterial["objTreeLeaves_pogo"].Group());
 
 			modelLeavesCols.Add(SpawnResource.Id.CUBERRY_TREE, BaseObjects.originMesh["leaves_cube_COL"]);
 			modelLeavesCols.Add(SpawnResource.Id.LEMON_TREE, BaseObjects.originMesh["planeTree"]);

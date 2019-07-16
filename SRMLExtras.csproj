@@ -40,7 +40,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DebugCommand.cs" />
-    <Compile Include="Patches\ContentPatcher.cs" />
+    <Compile Include="GameExtensions\LookupDirectorExtension.cs" />
+    <Compile Include="Registries\ContentPatcher.cs" />
+    <Compile Include="Templates\Base Objects\RanchObjects.cs" />
     <Compile Include="Templates\Base Objects\TheWildsObjects.cs" />
     <Compile Include="Templates\Base Objects\BaseObjects.cs" />
     <Compile Include="Templates\Base Objects\GardenObjects.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="Markers\MarkerRaycast.cs" />
     <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />
+    <Compile Include="Templates\Plots\PlotFrameTemplate.cs" />
     <Compile Include="Templates\Misc\TechActivatorTemplate.cs" />
     <Compile Include="Templates\ModPrefab.cs" />
     <Compile Include="Templates\Plantables\BushPlantableTemplate.cs" />

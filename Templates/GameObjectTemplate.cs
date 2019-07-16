@@ -33,9 +33,9 @@ namespace SRMLExtras.Templates
 			components.AddRange(comps);
 		}
 
-		public GameObjectTemplate Clone(bool cloneChildren = false)
+		public GameObjectTemplate Clone(string name = null, bool cloneChildren = false)
 		{
-			GameObjectTemplate clone = new GameObjectTemplate(Name, components.ToArray());
+			GameObjectTemplate clone = new GameObjectTemplate(name == null ? Name : name, components.ToArray());
 
 			clone.SetTransform(Position, Rotation, Scale);
 			clone.SetDebugMarker(DebugMarker);
