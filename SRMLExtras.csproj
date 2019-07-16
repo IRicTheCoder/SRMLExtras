@@ -53,10 +53,12 @@
     <Compile Include="Markers\MarkerRaycast.cs" />
     <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />
+    <Compile Include="Templates\Misc\TechActivatorTemplate.cs" />
     <Compile Include="Templates\ModPrefab.cs" />
     <Compile Include="Templates\Plantables\BushPlantableTemplate.cs" />
     <Compile Include="Templates\Plantables\FruitPlantableTemplate.cs" />
     <Compile Include="Templates\Plantables\VeggiePlantableTemplate.cs" />
+    <Compile Include="Templates\Plots\CustomPlotTemplate.cs" />
     <Compile Include="Templates\TemplateActions.cs" />
     <Compile Include="Utils\GameObjectExtensions.cs" />
     <Compile Include="Utils\ComponentExtensions.cs" />
@@ -145,6 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Ignore.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Templates\PlotUpgrades\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

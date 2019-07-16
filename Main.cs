@@ -13,7 +13,6 @@ namespace SRMLExtras
 	/// <summary>
 	/// The main class and entry point for the mod
 	/// </summary>
-	[EnumHolder]
 	public class Main : ModEntryPoint
 	{
 		// THE EXECUTING ASSEMBLY
@@ -29,9 +28,6 @@ namespace SRMLExtras
 			execAssembly = Assembly.GetExecutingAssembly();
 			HarmonyInstance.PatchAll(execAssembly);
 		}
-
-		public static SpawnResource.Id KOOKADOBA_BUSH;
-		public static SpawnResource.Id KOOKADOBA_BUSH_DLX;
 
 		// POST LOAD MOD
 		public override void PostLoad()
