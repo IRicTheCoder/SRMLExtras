@@ -71,9 +71,5 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		protected void GrabJoints(GameObject obj)
-		{
-			obj.GetComponent<SpawnResource>().SpawnJoints = obj.GetComponentsInChildren<FixedJoint>();
-		}
 	}
 }

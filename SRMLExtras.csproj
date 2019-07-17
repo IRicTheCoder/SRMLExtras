@@ -63,6 +63,7 @@
     <Compile Include="Templates\Plantables\VeggiePlantableTemplate.cs" />
     <Compile Include="Templates\Plots\CustomPlotTemplate.cs" />
     <Compile Include="Templates\TemplateActions.cs" />
+    <Compile Include="Templates\UIs\ActivatorUITemplate.cs" />
     <Compile Include="Utils\GameObjectExtensions.cs" />
     <Compile Include="Utils\ComponentExtensions.cs" />
     <Compile Include="Main.cs" />
