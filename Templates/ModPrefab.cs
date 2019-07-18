@@ -10,6 +10,8 @@ namespace SRMLExtras.Templates
 		protected GameObjectTemplate mainObject;
 		private GameObject prefabVersion;
 
+		private event System.Action<GameObjectTemplate> prefabFunction;
+
 		public ModPrefab(string name)
 		{
 			mainObject = new GameObjectTemplate(name);
@@ -23,10 +25,27 @@ namespace SRMLExtras.Templates
 			return (T)this;
 		}
 
+		public T AddPrefabFunction(System.Action<GameObjectTemplate> action)
+		{
+			prefabFunction += action;
+			return (T)this;
+		}
+
+		public T AddPrefabFunction(params System.Action<GameObjectTemplate>[] actions)
+		{
+			foreach (System.Action<GameObjectTemplate> action in actions)
+				prefabFunction += action;
+
+			return (T)this;
+		}
+
 		public GameObject ToPrefab()
 		{
 			if (prefabVersion == null)
+			{
+				prefabFunction?.Invoke(mainObject);
 				prefabVersion = mainObject.ToGameObject(null);
+			}
 
 			return prefabVersion;
 		}
@@ -36,7 +55,7 @@ namespace SRMLExtras.Templates
 			return mainObject;
 		}
 
-		public GameObjectTemplate AsClone()
+		public GameObjectTemplate AsTemplateClone()
 		{
 			return mainObject.Clone();
 		}

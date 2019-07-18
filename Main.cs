@@ -33,24 +33,6 @@ namespace SRMLExtras
 		public override void PostLoad()
 		{
 			BaseObjects.Populate();
-
-			// TODO: For SRML 1.8
-			/*try
-			{
-				GameContext.Instance.LookupDirector.GetResourcePrefab(SpawnResource.Id.GINGER_PATCH);
-			}
-			catch (KeyNotFoundException)
-			{
-				Dictionary<SpawnResource.Id, GameObject> resourcePrefabDict = typeof(LookupDirector)
-					.GetField("resourcePrefabDict", BindingFlags.NonPublic | BindingFlags.Instance)
-					.GetValue(GameContext.Instance.LookupDirector) as Dictionary<SpawnResource.Id, GameObject>;
-
-				resourcePrefabDict.Add(SpawnResource.Id.GINGER_PATCH_DLX, prefabTest2.ToPrefab());
-				resourcePrefabDict.Add(SpawnResource.Id.GINGER_PATCH, prefabTest.ToPrefab());
-
-				resourcePrefabDict.Add(KOOKADOBA_BUSH_DLX, prefabTest4.ToPrefab());
-				resourcePrefabDict.Add(KOOKADOBA_BUSH, prefabTest3.ToPrefab());
-			}*/
 		}
 	}
 }
