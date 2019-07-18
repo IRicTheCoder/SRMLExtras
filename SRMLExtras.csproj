@@ -55,6 +55,8 @@
     <Compile Include="Markers\MarkerRaycast.cs" />
     <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />
+    <Compile Include="Templates\Identifiables\FruitTemplate.cs" />
+    <Compile Include="Templates\Identifiables\CrateTemplate.cs" />
     <Compile Include="Templates\Identifiables\CraftResourceTemplate.cs" />
     <Compile Include="Templates\Plots\PlotFrameTemplate.cs" />
     <Compile Include="Templates\Misc\TechActivatorTemplate.cs" />
