@@ -110,6 +110,14 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		public GameObjectTemplate RemoveComponents(params Component[] comps)
+		{
+			foreach (Component comp in comps)
+				components.Remove(comp);
+
+			return this;
+		}
+
 		public Component[] GetComponents()
 		{
 			return components.ToArray();

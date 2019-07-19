@@ -32,7 +32,7 @@ namespace SRMLExtras
 		{
 			try
 			{
-				FieldInfo field = comp.GetType().GetField(name, BindingFlags.NonPublic);
+				FieldInfo field = comp.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance);
 				field.SetValue(comp, value);
 			}
 			catch { }
@@ -44,12 +44,36 @@ namespace SRMLExtras
 		{
 			try
 			{
-				PropertyInfo field = comp.GetType().GetProperty(name, BindingFlags.NonPublic);
+				PropertyInfo field = comp.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance);
 				field.SetValue(comp, value, null);
 			}
 			catch { }
 
 			return comp;
+		}
+
+		public static E GetPrivateField<E>(this Component comp, string name)
+		{
+			try
+			{
+				FieldInfo field = comp.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance);
+				return (E)field.GetValue(comp);
+			}
+			catch { }
+
+			return default;
+		}
+
+		public static E GetPrivateProperty<E>(this Component comp, string name)
+		{
+			try
+			{
+				PropertyInfo field = comp.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance);
+				return (E)field.GetValue(comp, null);
+			}
+			catch { }
+
+			return default;
 		}
 
 		public static void CopyAllTo<T>(this T comp, T otherComp) where T : Component

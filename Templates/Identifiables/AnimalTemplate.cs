@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
-	public class FruitTemplate : ModPrefab<FruitTemplate>
+	// TODO: Finish this
+	public class AnimalTemplate : ModPrefab<AnimalTemplate>
 	{
 		protected Identifiable.Id ID;
 
@@ -15,40 +16,52 @@ namespace SRMLExtras.Templates
 
 		protected Material rottenMaterial;
 
-		protected int unripeHours = 6;
-		protected int ripeHours = 6;
+		protected Component moveComponent;
+
+		protected int minRepHours = 8;
+		protected int maxRepHours = 16;
 		protected int edibleHours = 36;
 		protected int rottenHours = 6;
 
-		public FruitTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials) : base(name)
+		protected Identifiable mate;
+
+		public AnimalTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, Identifiable mate) : base(name)
 		{
 			this.ID = ID;
 			this.mesh = mesh;
 			this.materials = materials;
+			this.mate = mate;
+
+			moveComponent = new ChickenRandomMove()
+			{
+				maxJump = 1f,
+				walkForwardForce = 3.333f,
+				flapCue = EffectObjects.flapCue
+			};
 		}
 
-		public FruitTemplate SetVacSize(Vacuumable.Size vacSize)
+		public AnimalTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
 			return this;
 		}
 
-		public FruitTemplate SetResourceInfo(int unripeGameHours, int ripeGameHours, int edibleGameHours = 36, int rottenGameHours = 6)
+		public AnimalTemplate SetResourceInfo(int unripeGameHours, int ripeGameHours, int edibleGameHours = 36, int rottenGameHours = 6)
 		{
-			unripeHours = unripeGameHours;
+			/*unripeHours = unripeGameHours;
 			ripeHours = ripeGameHours;
 			edibleHours = edibleGameHours;
-			rottenHours = rottenGameHours;
+			rottenHours = rottenGameHours;*/
 			return this;
 		}
 
-		public FruitTemplate SetRottenMaterial(Material rotten)
+		public AnimalTemplate SetRottenMaterial(Material rotten)
 		{
 			rottenMaterial = rotten;
 			return this;
 		}
 
-		public override FruitTemplate Create()
+		public override AnimalTemplate Create()
 		{
 			// Create main object
 			mainObject.AddComponents(
@@ -83,19 +96,6 @@ namespace SRMLExtras.Templates
 				{
 					canHibernate = true
 				},
-				new ResourceCycle()
-				{
-					unripeGameHours = unripeHours,
-					ripeGameHours = ripeHours,
-					edibleGameHours = edibleHours,
-					rottenGameHours = rottenHours,
-					rottenMat = rottenMaterial,
-					destroyFX = EffectObjects.rottenDespawn,
-					releaseCue = EffectObjects.releaseCue,
-					vacuumableWhenRipe = true,
-					addEjectionForce = false,
-					releasePrepTime = 0.5f
-				},
 				new Create<SECTR_PointSource>((source) =>
 				{
 					source.Loop = false;
@@ -111,8 +111,31 @@ namespace SRMLExtras.Templates
 					minTimeBetween = 0.2f,
 					minForce = 1,
 					includeControllerCollisions = false
+				},
+				new SlimeSubbehaviourPlexer()
+				{
+
+				},
+				moveComponent,
+				new Create<SphereCollider>((col) =>
+				{
+					col.center = Vector3.zero;
+					col.radius = 0.5f;
+					col.isTrigger = true;
+				}),
+				new SlimeAudio()
+				{
+					slimeSounds = BaseObjects.originSounds["HenHen"]
+				},
+				new Reproduce()
+				{
+					nearMateId = mate,
+					maxDistToMate = 10f,
+					densityDist = 10,
+					maxDensity = 12,
+					deluxeDensityFactor = 2
 				}
-			).AddAfterChildren(AddShakeTransform);
+			);
 
 			// Create delaunch trigger
 			mainObject.AddChild(new GameObjectTemplate("DelaunchTrigger",
@@ -138,11 +161,6 @@ namespace SRMLExtras.Templates
 			));
 
 			return this;
-		}
-
-		internal void AddShakeTransform(GameObject obj)
-		{
-			obj.GetComponent<ResourceCycle>().toShake = obj.FindChild("model_fruit").transform;
 		}
 	}
 }

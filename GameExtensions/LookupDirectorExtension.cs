@@ -10,9 +10,15 @@ namespace SRMLExtras.GameExtensions
 		internal readonly static Dictionary<Identifiable.Id, GameObject> gardenResources = new Dictionary<Identifiable.Id, GameObject>();
 
 		// Get Prefab Methods
-		public static GameObject GetGardenResourcePrefab(Identifiable.Id ID)
+		public static GameObject GetGardenResourcePrefab(this LookupDirector director, Identifiable.Id ID)
 		{
 			return gardenResources.ContainsKey(ID) ? gardenResources[ID] : null;
+		}
+
+		// Get Component Methods
+		public static Identifiable GetIdentifiable(this LookupDirector director, Identifiable.Id ID)
+		{
+			return director.GetPrefab(ID).GetComponent<Identifiable>();
 		}
 
 		// Initializes the Extension

@@ -10,10 +10,6 @@ namespace SRMLExtras.Templates
 {
 	public static class RanchObjects
 	{
-		// The Director
-		private static LookupDirector Director => GameContext.Instance.LookupDirector;
-		private static GameModel GameModel => SceneContext.Instance.GameModel;
-
 		// Base Plots
 		public static Mesh techActivator;
 		public static Material[] techActivatorMaterials;

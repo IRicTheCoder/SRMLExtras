@@ -52,6 +52,9 @@ namespace SRMLExtras.Templates
 		public readonly static Dictionary<string, Texture> originTexture = new Dictionary<string, Texture>();
 		public readonly static Dictionary<string, Sprite> originSprite = new Dictionary<string, Sprite>();
 		public readonly static Dictionary<string, AudioClip> originClips = new Dictionary<string, AudioClip>();
+		public readonly static Dictionary<string, SECTR_AudioCue> originCues = new Dictionary<string, SECTR_AudioCue>();
+		public readonly static Dictionary<string, SlimeSounds> originSounds = new Dictionary<string, SlimeSounds>();
+		public readonly static Dictionary<string, GameObject> originFXs = new Dictionary<string, GameObject>();
 
 		private readonly static List<string> materialBlacklist = new List<string>()
 		{
@@ -63,6 +66,9 @@ namespace SRMLExtras.Templates
 			"Gadget Location Area",
 			"Standard"
 		};
+
+		// Populate blocker
+		private static bool populated = false;
 
 		// Populates required values
 		internal static void Populate()
@@ -99,6 +105,27 @@ namespace SRMLExtras.Templates
 					originClips.Add(clip.name.Replace("(Instance)", ""), clip);
 			}
 
+			foreach (SECTR_AudioCue cue in Resources.FindObjectsOfTypeAll<SECTR_AudioCue>())
+			{
+				if (!cue.name.Equals(string.Empty) && !originCues.ContainsKey(cue.name.Replace("(Instance)", "")))
+					originCues.Add(cue.name.Replace("(Instance)", ""), cue);
+			}
+
+			foreach (SlimeSounds sound in Resources.FindObjectsOfTypeAll<SlimeSounds>())
+			{
+				if (!sound.name.Equals(string.Empty) && !originSounds.ContainsKey(sound.name.Replace("(Instance)", "")))
+					originSounds.Add(sound.name.Replace("(Instance)", ""), sound);
+			}
+
+			foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
+			{
+				if (!(obj.name.StartsWith("FX ") || obj.name.StartsWith("fx")))
+					continue;
+
+				if (!obj.name.Equals(string.Empty) && !originFXs.ContainsKey(obj.name.Replace("(Instance)", "")))
+					originFXs.Add(obj.name.Replace("(Instance)", ""), obj);
+			}
+
 			// Gets the cube for the markers
 			cubeMesh = originMesh["Cube"];
 
@@ -131,6 +158,9 @@ namespace SRMLExtras.Templates
 
 		internal static void LatePopulate(Scene sceneLoaded, LoadSceneMode mode)
 		{
+			if (populated)
+				return;
+
 			if (sceneLoaded.name.Equals("worldGenerated"))
 			{
 				// Obtains objects loaded into the game that might be useful
@@ -170,6 +200,30 @@ namespace SRMLExtras.Templates
 						originClips.Add(clip.name.Replace("(Instance)", ""), clip);
 				}
 
+				foreach (SECTR_AudioCue cue in Resources.FindObjectsOfTypeAll<SECTR_AudioCue>())
+				{
+					if (!cue.name.Equals(string.Empty) && !originCues.ContainsKey(cue.name.Replace("(Instance)", "")) &&
+						!(!cue.name.EndsWith("(Instance)") && Regex.IsMatch(cue.name, @".*\(.*\)")))
+						originCues.Add(cue.name.Replace("(Instance)", ""), cue);
+				}
+
+				foreach (SlimeSounds sound in Resources.FindObjectsOfTypeAll<SlimeSounds>())
+				{
+					if (!sound.name.Equals(string.Empty) && !originSounds.ContainsKey(sound.name.Replace("(Instance)", "")) &&
+						!(!sound.name.EndsWith("(Instance)") && Regex.IsMatch(sound.name, @".*\(.*\)")))
+						originSounds.Add(sound.name.Replace("(Instance)", ""), sound);
+				}
+
+				foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
+				{
+					if (!(obj.name.StartsWith("FX ") || obj.name.StartsWith("fx")))
+						continue;
+
+					if (!obj.name.Equals(string.Empty) && !originFXs.ContainsKey(obj.name.Replace("(Instance)", "")) &&
+						!(!obj.name.EndsWith("(Instance)") && Regex.IsMatch(obj.name, @".*\(.*\)")))
+						originFXs.Add(obj.name.Replace("(Instance)", ""), obj);
+				}
+
 				// Adds markers for world objects
 				foreach (GadgetSiteModel obj in GameModel.AllGadgetSites().Values)
 					obj.transform.gameObject.GetReadyForMarker(MarkerType.GadgetLocation, 4f);
@@ -183,6 +237,8 @@ namespace SRMLExtras.Templates
 				GardenObjects.LatePopulate();
 				TheWildsObjects.LatePopulate();
 				RanchObjects.LatePopulate();
+
+				populated = true;
 			}
 		}
 	}

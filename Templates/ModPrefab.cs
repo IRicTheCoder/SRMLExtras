@@ -10,7 +10,7 @@ namespace SRMLExtras.Templates
 		protected GameObjectTemplate mainObject;
 		private GameObject prefabVersion;
 
-		private event System.Action<GameObjectTemplate> prefabFunction;
+		private event System.Action<GameObjectTemplate> PrefabFunction;
 
 		public ModPrefab(string name)
 		{
@@ -27,14 +27,14 @@ namespace SRMLExtras.Templates
 
 		public T AddPrefabFunction(System.Action<GameObjectTemplate> action)
 		{
-			prefabFunction += action;
+			PrefabFunction += action;
 			return (T)this;
 		}
 
 		public T AddPrefabFunction(params System.Action<GameObjectTemplate>[] actions)
 		{
 			foreach (System.Action<GameObjectTemplate> action in actions)
-				prefabFunction += action;
+				PrefabFunction += action;
 
 			return (T)this;
 		}
@@ -43,7 +43,7 @@ namespace SRMLExtras.Templates
 		{
 			if (prefabVersion == null)
 			{
-				prefabFunction?.Invoke(mainObject);
+				PrefabFunction?.Invoke(mainObject);
 				prefabVersion = mainObject.ToGameObject(null);
 			}
 

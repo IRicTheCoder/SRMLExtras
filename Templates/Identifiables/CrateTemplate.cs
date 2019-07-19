@@ -10,7 +10,6 @@ namespace SRMLExtras.Templates
 
 		protected Vacuumable.Size vacSize = Vacuumable.Size.LARGE;
 
-		protected Mesh mesh;
 		protected Material[] materials;
 
 		protected List<BreakOnImpact.SpawnOption> spawnOptions = new List<BreakOnImpact.SpawnOption>();
@@ -20,8 +19,7 @@ namespace SRMLExtras.Templates
 		public CrateTemplate(string name, Identifiable.Id ID, Material[] materials = null) : base(name)
 		{
 			this.ID = ID;
-			this.mesh = BaseObjects.originMesh["objCrate"];
-			this.materials = materials == null ? BaseObjects.originMaterial["objWoodKit01"].Group() : materials;
+			this.materials = materials ?? BaseObjects.originMaterial["objWoodKit01"].Group();
 		}
 
 		public CrateTemplate SetVacSize(Vacuumable.Size vacSize)
@@ -46,6 +44,8 @@ namespace SRMLExtras.Templates
 		{
 			// Create main object
 			mainObject.AddComponents(
+				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.originMesh["objCrate"]),
+				new Create<MeshRenderer>((render) => render.sharedMaterials = materials),
 				new Identifiable()
 				{
 					id = ID
@@ -79,8 +79,8 @@ namespace SRMLExtras.Templates
 				{
 					minSpawns = 4,
 					maxSpawns = 6,
-					//breakFX = // TODO: add this stuff to the BaseObjects
-
+					breakFX = EffectObjects.crateBrake,
+					spawnOptions = spawnOptions
 				}
 			);
 
