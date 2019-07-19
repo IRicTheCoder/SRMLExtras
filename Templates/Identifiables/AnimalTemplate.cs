@@ -14,30 +14,49 @@ namespace SRMLExtras.Templates
 		protected Mesh mesh;
 		protected Material[] materials;
 
-		protected Material rottenMaterial;
-
 		protected Component moveComponent;
 
 		protected int minRepHours = 8;
 		protected int maxRepHours = 16;
-		protected int edibleHours = 36;
-		protected int rottenHours = 6;
 
 		protected Identifiable mate;
+		protected GameObject child;
+		protected GameObject elder;
 
-		public AnimalTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, Identifiable mate) : base(name)
+		protected Animator animator;
+
+		protected GameObjectTemplate bones;
+
+		public AnimalTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, Animator animator) : base(name)
 		{
 			this.ID = ID;
 			this.mesh = mesh;
 			this.materials = materials;
-			this.mate = mate;
-
+			this.animator = animator;
+			
 			moveComponent = new ChickenRandomMove()
 			{
 				maxJump = 1f,
 				walkForwardForce = 3.333f,
 				flapCue = EffectObjects.flapCue
 			};
+
+			// TODO: Add default bones
+			//bones = 
+		}
+
+		public AnimalTemplate SetReproduceObjects(Identifiable mate, GameObject child, GameObject elder)
+		{
+			this.mate = mate;
+			this.child = child;
+			this.elder = elder;
+			return this;
+		}
+
+		public AnimalTemplate SetMoveComponent(Component comp)
+		{
+			moveComponent = comp;
+			return this;
 		}
 
 		public AnimalTemplate SetVacSize(Vacuumable.Size vacSize)
@@ -46,18 +65,16 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		public AnimalTemplate SetResourceInfo(int unripeGameHours, int ripeGameHours, int edibleGameHours = 36, int rottenGameHours = 6)
+		public AnimalTemplate SetReproduceInfo(int minReproduceGameHours, int maxReproduceGameHours)
 		{
-			/*unripeHours = unripeGameHours;
-			ripeHours = ripeGameHours;
-			edibleHours = edibleGameHours;
-			rottenHours = rottenGameHours;*/
+			minRepHours = minReproduceGameHours;
+			maxRepHours = maxReproduceGameHours;
 			return this;
 		}
 
-		public AnimalTemplate SetRottenMaterial(Material rotten)
+		public AnimalTemplate SetBones(GameObjectTemplate bones)
 		{
-			rottenMaterial = rotten;
+			this.bones = bones;
 			return this;
 		}
 
@@ -65,8 +82,6 @@ namespace SRMLExtras.Templates
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new Create<MeshFilter>((filter) => filter.sharedMesh = mesh),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = materials),
 				new Identifiable()
 				{
 					id = ID
@@ -100,14 +115,13 @@ namespace SRMLExtras.Templates
 				{
 					source.Loop = false;
 					source.PlayOnStart = false;
-					source.RestartLoopsOnEnabled = true;
-					//source.SetPrivateField("instance", EffectObjects.fruitCueInstance);
+					source.RestartLoopsOnEnabled = false;
 					source.Volume = 1;
 					source.Pitch = 1;
 				}),
 				new PlaySoundOnHit()
 				{
-					hitCue = EffectObjects.hitFruit,
+					hitCue = EffectObjects.hitChicken,
 					minTimeBetween = 0.2f,
 					minForce = 1,
 					includeControllerCollisions = false
@@ -133,9 +147,35 @@ namespace SRMLExtras.Templates
 					maxDistToMate = 10f,
 					densityDist = 10,
 					maxDensity = 12,
-					deluxeDensityFactor = 2
+					deluxeDensityFactor = 2,
+					minReproduceGameHours = minRepHours,
+					maxReproduceGameHours = maxRepHours,
+					produceFX = EffectObjects.stars,
+					childPrefab = child
+				},
+				new KeepUpright()
+				{
+					stability = 0.9f,
+					speed = 2
+				},
+				new TransformChanceOnReproduce()
+				{
+					transformChance = 0.05f,
+					targetPrefab = elder,
+					transformFX = EffectObjects.stars
+				},
+				new DestroyOnIgnite(),
+				new AttachFashions()
+				{
+					gordoMode = false,
 				}
-			);
+			).AddAfterChildren(ConfigBones);
+
+			// Create body
+			mainObject.AddChild(new GameObjectTemplate("Body",
+				new Create<MeshFilter>((filter) => filter.sharedMesh = mesh),
+				new Create<MeshRenderer>((render) => render.sharedMaterials = materials)
+			).SetTransform(Vector3.zero, Vector3.zero, Vector3.one * 0.5f));
 
 			// Create delaunch trigger
 			mainObject.AddChild(new GameObjectTemplate("DelaunchTrigger",
@@ -146,21 +186,25 @@ namespace SRMLExtras.Templates
 					col.isTrigger = true;
 				}),
 				new VacDelaunchTrigger()
-			));
+			).SetTransform(Vector3.zero, Vector3.zero, Vector3.one * 1.4f));
 
-			// Create model
-			mainObject.AddChild(new GameObjectTemplate("model_fruit",
-				new Create<MeshFilter>((filter) => filter.sharedMesh = mesh),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = materials)
-			).SetTransform(Vector3.zero, Vector3.zero, Vector3.one * 0.3f));
-
-			// Create shadow
-			mainObject.AddChild(new GameObjectTemplate("Shadow",
-				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.originMesh["sphere48"]),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = BaseObjects.originMaterial["Default-Material"].Group())
-			));
+			// Create animal
+			mainObject.AddChild(new GameObjectTemplate("Animal",
+				animator,
+				new Create<LODGroup>((lod) =>
+				{
+					lod.localReferencePoint = new Vector3(0, 0.5f, -0.1f);
+					lod.size = 1.893546f;
+				})
+			).SetTransform(Vector3.up * -0.5f, Vector3.zero, Vector3.one)
+			.AddChild(bones));
 
 			return this;
+		}
+
+		internal static void ConfigBones(GameObject obj)
+		{
+			obj.GetComponent<AttachFashions>().attachmentFront = obj.FindChild("bone_attachment_front").transform;
 		}
 	}
 }

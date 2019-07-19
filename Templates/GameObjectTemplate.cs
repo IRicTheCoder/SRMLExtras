@@ -123,6 +123,17 @@ namespace SRMLExtras.Templates
 			return components.ToArray();
 		}
 
+		public T GetComponent<T>() where T : Component
+		{
+			foreach (Component comp in components)
+			{
+				if (comp is T)
+					return (T)comp;
+			}
+
+			return null;
+		}
+
 		public GameObject ToGameObject(GameObject parent)
 		{
 			GameObject obj;
@@ -149,6 +160,9 @@ namespace SRMLExtras.Templates
 
 			foreach (Component comp in components)
 			{
+				if (comp == null)
+					continue;
+
 				if (comp is ICreateComponent)
 				{
 					((ICreateComponent)comp).AddComponent(obj);

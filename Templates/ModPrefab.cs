@@ -19,6 +19,12 @@ namespace SRMLExtras.Templates
 
 		public abstract T Create();
 
+		public T Create(System.Action<T> action)
+		{
+			action?.Invoke((T)this);
+			return Create();
+		}
+
 		public T AddStartAction(string actionID)
 		{
 			mainObject.AddStartAction(actionID);

@@ -16,11 +16,12 @@ namespace SRMLExtras.Templates
 		// Identifiable Effects
 		public static GameObject crateBrake;
 		public static GameObject rottenDespawn;
-		public static GameObject reproduce;
+		public static GameObject stars;
 
 		// Audio Cues
 		public static SECTR_AudioCue releaseCue;
 		public static SECTR_AudioCue hitFruit;
+		public static SECTR_AudioCue hitChicken;
 		public static SECTR_AudioCue flapCue;
 
 		// Audio Cue Instances
@@ -34,12 +35,13 @@ namespace SRMLExtras.Templates
 			// Identifiable Effects
 			crateBrake = BaseObjects.originFXs["fxCrateBurst"];
 			rottenDespawn = BaseObjects.originFXs["FX RottenDespawn"];
-			reproduce = BaseObjects.originFXs["FX Stars"];
+			stars = BaseObjects.originFXs["FX Stars"];
 
 			// Audio Cues
-			releaseCue = Director.GetPrefab(Identifiable.Id.CUBERRY_FRUIT).GetComponent<ResourceCycle>().releaseCue;
-			hitFruit = Director.GetPrefab(Identifiable.Id.CUBERRY_FRUIT).GetComponent<PlaySoundOnHit>().hitCue;
-			flapCue = Director.GetPrefab(Identifiable.Id.HEN).GetComponent<ChickenRandomMove>().flapCue;
+			releaseCue = BaseObjects.originCues["Fruit Rustle"];
+			hitFruit = BaseObjects.originCues["HitFruit"];
+			hitChicken = BaseObjects.originCues["HitChicken"];
+			flapCue = BaseObjects.originCues["ChickenFlap"];
 
 			// Audio Cue Instances
 			// TODO: Check this

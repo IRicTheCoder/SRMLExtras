@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace SRMLExtras.Templates
 {
+	// TODO: Add animator controllers
 	public static class BaseObjects
 	{
 		// The Director
