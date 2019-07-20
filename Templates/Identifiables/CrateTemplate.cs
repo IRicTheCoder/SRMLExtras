@@ -14,8 +14,6 @@ namespace SRMLExtras.Templates
 
 		protected List<BreakOnImpact.SpawnOption> spawnOptions = new List<BreakOnImpact.SpawnOption>();
 
-		protected ObjectTransformValues modelTrans = new ObjectTransformValues(Vector3.up * -0.2f, Vector3.zero, Vector3.one * 0.7f);
-
 		public CrateTemplate(string name, Identifiable.Id ID, Material[] materials = null) : base(name)
 		{
 			this.ID = ID;
@@ -25,12 +23,6 @@ namespace SRMLExtras.Templates
 		public CrateTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
-			return this;
-		}
-
-		public CrateTemplate SetModelTrans(ObjectTransformValues trans)
-		{
-			modelTrans = trans;
 			return this;
 		}
 

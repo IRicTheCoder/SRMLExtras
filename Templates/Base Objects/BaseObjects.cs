@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 
 namespace SRMLExtras.Templates
 {
-	// TODO: Add animator controllers
 	public static class BaseObjects
 	{
 		// The Director
@@ -56,6 +55,10 @@ namespace SRMLExtras.Templates
 		public readonly static Dictionary<string, SECTR_AudioCue> originCues = new Dictionary<string, SECTR_AudioCue>();
 		public readonly static Dictionary<string, SlimeSounds> originSounds = new Dictionary<string, SlimeSounds>();
 		public readonly static Dictionary<string, GameObject> originFXs = new Dictionary<string, GameObject>();
+		public readonly static Dictionary<string, RuntimeAnimatorController> originAnimators = new Dictionary<string, RuntimeAnimatorController>();
+
+		public readonly static Dictionary<string, GameObject> originSkinnedMesh = new Dictionary<string, GameObject>();
+		public readonly static Dictionary<string, GameObject> originBones = new Dictionary<string, GameObject>();
 
 		private readonly static List<string> materialBlacklist = new List<string>()
 		{
@@ -67,6 +70,8 @@ namespace SRMLExtras.Templates
 			"Gadget Location Area",
 			"Standard"
 		};
+
+		// Single Objects
 
 		// Populate blocker
 		private static bool populated = false;
@@ -118,6 +123,12 @@ namespace SRMLExtras.Templates
 					originSounds.Add(sound.name.Replace("(Instance)", ""), sound);
 			}
 
+			foreach (RuntimeAnimatorController animator in Resources.FindObjectsOfTypeAll<RuntimeAnimatorController>())
+			{
+				if (!animator.name.Equals(string.Empty) && !originAnimators.ContainsKey(animator.name.Replace("(Instance)", "")))
+					originAnimators.Add(animator.name.Replace("(Instance)", ""), animator);
+			}
+
 			foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
 			{
 				if (!(obj.name.StartsWith("FX ") || obj.name.StartsWith("fx")))
@@ -126,6 +137,10 @@ namespace SRMLExtras.Templates
 				if (!obj.name.Equals(string.Empty) && !originFXs.ContainsKey(obj.name.Replace("(Instance)", "")))
 					originFXs.Add(obj.name.Replace("(Instance)", ""), obj);
 			}
+
+			// Load Bones
+			originSkinnedMesh.Add("HenSkinned", Director.GetPrefab(Identifiable.Id.HEN).FindChild("mesh_body1"));
+			originBones.Add("HenBones", Director.GetPrefab(Identifiable.Id.HEN).FindChild("root"));
 
 			// Gets the cube for the markers
 			cubeMesh = originMesh["Cube"];
@@ -147,6 +162,8 @@ namespace SRMLExtras.Templates
 				foreach (GameObject child in obj.FindChildrenWithPartialName("NodeLoc"))
 					child.GetReadyForMarker(MarkerType.DroneNode, 3f);
 			}
+
+			// Single Objects
 
 			// Populates all other object classes
 			GardenObjects.Populate();
@@ -213,6 +230,13 @@ namespace SRMLExtras.Templates
 					if (!sound.name.Equals(string.Empty) && !originSounds.ContainsKey(sound.name.Replace("(Instance)", "")) &&
 						!(!sound.name.EndsWith("(Instance)") && Regex.IsMatch(sound.name, @".*\(.*\)")))
 						originSounds.Add(sound.name.Replace("(Instance)", ""), sound);
+				}
+
+				foreach (RuntimeAnimatorController animator in Resources.FindObjectsOfTypeAll<RuntimeAnimatorController>())
+				{
+					if (!animator.name.Equals(string.Empty) && !originAnimators.ContainsKey(animator.name.Replace("(Instance)", "")) &&
+						!(!animator.name.EndsWith("(Instance)") && Regex.IsMatch(animator.name, @".*\(.*\)")))
+						originAnimators.Add(animator.name.Replace("(Instance)", ""), animator);
 				}
 
 				foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())

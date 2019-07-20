@@ -17,11 +17,18 @@ namespace SRMLExtras.Templates
 		public static GameObject crateBrake;
 		public static GameObject rottenDespawn;
 		public static GameObject stars;
+		public static GameObject fashionApply;
+		public static GameObject fashionBurst;
+		public static GameObject waterSplat;
+		public static GameObject plortDespawn;
+		public static GameObject explosion;
 
 		// Audio Cues
 		public static SECTR_AudioCue releaseCue;
 		public static SECTR_AudioCue hitFruit;
 		public static SECTR_AudioCue hitChicken;
+		public static SECTR_AudioCue hitChick;
+		public static SECTR_AudioCue hitPlort;
 		public static SECTR_AudioCue flapCue;
 
 		// Audio Cue Instances
@@ -30,17 +37,22 @@ namespace SRMLExtras.Templates
 		// Populates required values
 		internal static void Populate()
 		{
-			// TODO: Remake this to use BaseObjects
-
 			// Identifiable Effects
 			crateBrake = BaseObjects.originFXs["fxCrateBurst"];
 			rottenDespawn = BaseObjects.originFXs["FX RottenDespawn"];
 			stars = BaseObjects.originFXs["FX Stars"];
+			fashionApply = BaseObjects.originFXs["FX FashionApply"];
+			fashionBurst = BaseObjects.originFXs["FX FashionBurst"];
+			waterSplat = BaseObjects.originFXs["FX waterSplat"];
+			plortDespawn = BaseObjects.originFXs["FX PlortDespawn"];
+			explosion = BaseObjects.originFXs["FX Explosion"];
 
 			// Audio Cues
 			releaseCue = BaseObjects.originCues["Fruit Rustle"];
 			hitFruit = BaseObjects.originCues["HitFruit"];
 			hitChicken = BaseObjects.originCues["HitChicken"];
+			hitChick = BaseObjects.originCues["HitChick"];
+			hitPlort = BaseObjects.originCues["HitPlort"];
 			flapCue = BaseObjects.originCues["ChickenFlap"];
 
 			// Audio Cue Instances

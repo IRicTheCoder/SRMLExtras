@@ -57,6 +57,13 @@
     <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />
     <Compile Include="Templates\Identifiables\AnimalTemplate.cs" />
+    <Compile Include="Templates\Identifiables\ToyTemplate.cs" />
+    <Compile Include="Templates\Identifiables\PlortTemplate.cs" />
+    <Compile Include="Templates\Identifiables\OrnamentTemplate.cs" />
+    <Compile Include="Templates\Identifiables\LiquidTemplate.cs" />
+    <Compile Include="Templates\Identifiables\FashionTemplate.cs" />
+    <Compile Include="Templates\Identifiables\EchoNoteTemplate.cs" />
+    <Compile Include="Templates\Identifiables\EchoTemplate.cs" />
     <Compile Include="Templates\Identifiables\FruitTemplate.cs" />
     <Compile Include="Templates\Identifiables\CrateTemplate.cs" />
     <Compile Include="Templates\Identifiables\CraftResourceTemplate.cs" />

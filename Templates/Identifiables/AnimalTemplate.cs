@@ -4,15 +4,16 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
-	// TODO: Finish this
 	public class AnimalTemplate : ModPrefab<AnimalTemplate>
 	{
 		protected Identifiable.Id ID;
 
-		protected Vacuumable.Size vacSize = Vacuumable.Size.LARGE;
+		protected Vacuumable.Size vacSize = Vacuumable.Size.NORMAL;
 
 		protected Mesh mesh;
 		protected Material[] materials;
+
+		protected GameObject skinnedMesh;
 
 		protected Component moveComponent;
 
@@ -25,24 +26,31 @@ namespace SRMLExtras.Templates
 
 		protected Animator animator;
 
-		protected GameObjectTemplate bones;
+		protected GameObject bones;
 
-		public AnimalTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, Animator animator) : base(name)
+		protected bool isChild;
+		protected int childHours;
+
+		protected float eggPeriod;
+		protected GameObject egg;
+
+		public AnimalTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, Animator animator, bool isChild = false) : base(name)
 		{
 			this.ID = ID;
 			this.mesh = mesh;
 			this.materials = materials;
 			this.animator = animator;
+			this.isChild = isChild;
 			
 			moveComponent = new ChickenRandomMove()
 			{
-				maxJump = 1f,
-				walkForwardForce = 3.333f,
+				maxJump = isChild ? 0.7f : 1f,
+				walkForwardForce = isChild ? 2.5f : 3.333f,
 				flapCue = EffectObjects.flapCue
 			};
 
-			// TODO: Add default bones
-			//bones = 
+			skinnedMesh = BaseObjects.originSkinnedMesh["HenSkinned"];
+			bones = BaseObjects.originBones["HenBones"];
 		}
 
 		public AnimalTemplate SetReproduceObjects(Identifiable mate, GameObject child, GameObject elder)
@@ -72,9 +80,18 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		public AnimalTemplate SetBones(GameObjectTemplate bones)
+		public AnimalTemplate SetBones(GameObject skinnedMesh, GameObject bones)
 		{
+			this.skinnedMesh = skinnedMesh;
 			this.bones = bones;
+			return this;
+		}
+
+		public AnimalTemplate SetChildInfo(int delayGameHours, float eggPeriod, GameObject egg)
+		{
+			childHours = delayGameHours;
+			this.eggPeriod = eggPeriod;
+			this.egg = egg;
 			return this;
 		}
 
@@ -121,7 +138,7 @@ namespace SRMLExtras.Templates
 				}),
 				new PlaySoundOnHit()
 				{
-					hitCue = EffectObjects.hitChicken,
+					hitCue = isChild ? EffectObjects.hitChick : EffectObjects.hitChicken,
 					minTimeBetween = 0.2f,
 					minForce = 1,
 					includeControllerCollisions = false
@@ -141,28 +158,10 @@ namespace SRMLExtras.Templates
 				{
 					slimeSounds = BaseObjects.originSounds["HenHen"]
 				},
-				new Reproduce()
-				{
-					nearMateId = mate,
-					maxDistToMate = 10f,
-					densityDist = 10,
-					maxDensity = 12,
-					deluxeDensityFactor = 2,
-					minReproduceGameHours = minRepHours,
-					maxReproduceGameHours = maxRepHours,
-					produceFX = EffectObjects.stars,
-					childPrefab = child
-				},
 				new KeepUpright()
 				{
 					stability = 0.9f,
 					speed = 2
-				},
-				new TransformChanceOnReproduce()
-				{
-					transformChance = 0.05f,
-					targetPrefab = elder,
-					transformFX = EffectObjects.stars
 				},
 				new DestroyOnIgnite(),
 				new AttachFashions()
@@ -170,6 +169,51 @@ namespace SRMLExtras.Templates
 					gordoMode = false,
 				}
 			).AddAfterChildren(ConfigBones);
+
+			if (mate != null)
+			{
+				mainObject.AddComponents(
+					new Reproduce()
+					{
+						nearMateId = mate,
+						maxDistToMate = 10f,
+						densityDist = 10,
+						maxDensity = 12,
+						deluxeDensityFactor = 2,
+						minReproduceGameHours = minRepHours,
+						maxReproduceGameHours = maxRepHours,
+						produceFX = EffectObjects.stars,
+						childPrefab = child
+					}
+				);
+			}
+
+			if (isChild)
+			{
+				mainObject.AddComponents(
+					new TransformAfterTime()
+					{
+						delayGameHours = childHours,
+						transformFX = EffectObjects.stars,
+					},
+					new EggActivator()
+					{
+						eggPeriod = eggPeriod,
+						activateObj = egg
+					}
+				);
+			}
+			else
+			{
+				mainObject.AddComponents(
+					new TransformChanceOnReproduce()
+					{
+						transformChance = 0.05f,
+						targetPrefab = elder,
+						transformFX = EffectObjects.stars
+					}
+				);
+			}
 
 			// Create body
 			mainObject.AddChild(new GameObjectTemplate("Body",
@@ -196,14 +240,33 @@ namespace SRMLExtras.Templates
 					lod.localReferencePoint = new Vector3(0, 0.5f, -0.1f);
 					lod.size = 1.893546f;
 				})
-			).SetTransform(Vector3.up * -0.5f, Vector3.zero, Vector3.one)
-			.AddChild(bones));
+			).SetTransform(Vector3.up * -0.5f, Vector3.zero, Vector3.one));
 
 			return this;
 		}
 
-		internal static void ConfigBones(GameObject obj)
+		internal void ConfigBones(GameObject obj)
 		{
+			// Setup Bones
+			GameObject sm = skinnedMesh.CreatePrefabCopy();
+			sm.name = "mesh_body";
+			sm.transform.parent = obj.transform;
+
+			GameObject b = bones.CreatePrefabCopy();
+			b.name = "root";
+			b.transform.parent = obj.transform;
+
+			// Read all bones to the skinned mesh
+			SkinnedMeshRenderer render = sm.GetComponent<SkinnedMeshRenderer>();
+			render.rootBone = b.FindChild("bone_spine").transform;
+
+			List<Transform> addBones = new List<Transform>();
+			foreach (GameObject bone in b.FindChildrenWithPartialName("bone_"))
+				addBones.Add(bone.transform);
+
+			render.bones = addBones.ToArray();
+
+			// Add bones to other components
 			obj.GetComponent<AttachFashions>().attachmentFront = obj.FindChild("bone_attachment_front").transform;
 		}
 	}
