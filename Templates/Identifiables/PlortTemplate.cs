@@ -4,26 +4,43 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
+	/// <summary>
+	/// A template to create new plorts
+	/// </summary>
 	public class PlortTemplate : ModPrefab<PlortTemplate>
 	{
+		// Base for Identifiables
 		protected Identifiable.Id ID;
-
 		protected Vacuumable.Size vacSize = Vacuumable.Size.NORMAL;
 
+		// The Material
 		protected Material[] materials;
 
+		/// <summary>
+		/// Template to create new plorts
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="ID">The Identifiable ID for this plort</param>
+		/// <param name="materials">The materials that compose this plort's model</param>
 		public PlortTemplate(string name, Identifiable.Id ID, Material[] materials) : base(name)
 		{
 			this.ID = ID;
 			this.materials = materials;
 		}
 
+		/// <summary>
+		/// Sets the vacuumable size
+		/// </summary>
+		/// <param name="vacSize">The vac size to set</param>
 		public PlortTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
 			return this;
 		}
 
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override PlortTemplate Create()
 		{
 			// Create main object
@@ -62,15 +79,6 @@ namespace SRMLExtras.Templates
 				new PlortInvulnerability()
 				{
 					invulnerabilityPeriod = 3
-				},
-				new PlortInstability()
-				{
-					lifetimeHours = 0.5f,
-					explodePower = 400,
-					explodeRadius = 7,
-					explodeFX = EffectObjects.explosion,
-					minPlayerDamage = 10,
-					maxPlayerDamage = 10
 				},
 				new PlaySoundOnHit()
 				{

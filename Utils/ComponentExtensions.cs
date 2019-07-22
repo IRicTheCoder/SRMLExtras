@@ -21,14 +21,16 @@ namespace SRMLExtras
 
 		public static Material[] Group(this Material mat, params Material[] others)
 		{
-			List<Material> mats = new List<Material>();
-			mats.Add(mat);
+			List<Material> mats = new List<Material>
+			{
+				mat
+			};
 			mats.AddRange(others);
 			return mats.ToArray();
 		}
 
 		// PRIVATE FIELDS STUFF
-		public static T SetPrivateField<T>(this T comp, string name, object value) where T : Component
+		/*public static T SetPrivateField<T>(this T comp, string name, object value) where T : Component
 		{
 			try
 			{
@@ -74,7 +76,7 @@ namespace SRMLExtras
 			catch { }
 
 			return default;
-		}
+		}*/
 
 		public static void CopyAllTo<T>(this T comp, T otherComp) where T : Component
 		{

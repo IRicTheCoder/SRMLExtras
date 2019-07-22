@@ -9,7 +9,7 @@ namespace SRMLExtras
 	public static class GameObjectExtensions
 	{
 		// INITIALIZE STUFF
-		public static T Initialize<T>(this T obj, System.Action<T> action) where T : Object
+		public static T InitializeNew<T>(this T obj, System.Action<T> action) where T : Object
 		{
 			action(obj);
 			return obj;

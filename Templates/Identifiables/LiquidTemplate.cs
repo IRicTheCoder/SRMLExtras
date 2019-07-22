@@ -4,26 +4,54 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
+	/// <summary>
+	/// A template to create new liquids
+	/// </summary>
 	public class LiquidTemplate : ModPrefab<LiquidTemplate>
 	{
+		// Base for Identifiables
 		protected Identifiable.Id ID;
-
 		protected Vacuumable.Size vacSize = Vacuumable.Size.NORMAL;
 
+		// The Materials and Color
 		protected Material[] materials;
+		protected Color color = Color.clear;
 
+		/// <summary>
+		/// Template to create new liquids
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="ID">The Identifiable ID for this liquid</param>
+		/// <param name="materials">The materials that compose this liquid's model</param>
 		public LiquidTemplate(string name, Identifiable.Id ID, Material[] materials = null) : base(name)
 		{
 			this.ID = ID;
 			this.materials = materials ?? BaseObjects.originMaterial["Depth Water Ball"].Group();
 		}
 
+		/// <summary>
+		/// Sets the vacuumable size
+		/// </summary>
+		/// <param name="vacSize">The vac size to set</param>
 		public LiquidTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the color for the material (only if you want to use the default material for water and change the color)
+		/// </summary>
+		/// <param name="color">New color to set</param>
+		public LiquidTemplate SetColor(Color color)
+		{
+			this.color = color;
+			return this;
+		}
+
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override LiquidTemplate Create()
 		{
 			// Create main object
@@ -67,6 +95,14 @@ namespace SRMLExtras.Templates
 			);
 
 			// Create sphere
+			if (color != Color.clear)
+			{
+				Material mat = new Material(BaseObjects.originMaterial["Depth Water Ball"]);
+				mat.SetColor("_Color", color);
+
+				materials = mat.Group();
+			}
+
 			mainObject.AddChild(new GameObjectTemplate("Sphere",
 				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.originMesh["slimeglop"]),
 				new Create<MeshRenderer>((render) => render.sharedMaterials = materials)

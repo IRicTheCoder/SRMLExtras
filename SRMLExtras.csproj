@@ -18,7 +18,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\Jogos\Steam\SteamApps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
+    <OutputPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -59,12 +59,8 @@
     <Compile Include="Templates\Identifiables\AnimalTemplate.cs" />
     <Compile Include="Templates\Identifiables\ToyTemplate.cs" />
     <Compile Include="Templates\Identifiables\PlortTemplate.cs" />
-    <Compile Include="Templates\Identifiables\OrnamentTemplate.cs" />
     <Compile Include="Templates\Identifiables\LiquidTemplate.cs" />
     <Compile Include="Templates\Identifiables\FashionTemplate.cs" />
-    <Compile Include="Templates\Identifiables\EchoNoteTemplate.cs" />
-    <Compile Include="Templates\Identifiables\EchoTemplate.cs" />
-    <Compile Include="Templates\Identifiables\FruitTemplate.cs" />
     <Compile Include="Templates\Identifiables\CrateTemplate.cs" />
     <Compile Include="Templates\Identifiables\CraftResourceTemplate.cs" />
     <Compile Include="Templates\Plots\PlotFrameTemplate.cs" />
@@ -124,6 +120,7 @@
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

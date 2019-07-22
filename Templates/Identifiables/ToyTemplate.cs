@@ -4,38 +4,62 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
+	/// <summary>
+	/// A template to create new toys
+	/// </summary>
 	public class ToyTemplate : ModPrefab<ToyTemplate>
 	{
+		// Base for Identifiables
 		protected Identifiable.Id ID;
-
 		protected Vacuumable.Size vacSize = Vacuumable.Size.LARGE;
 
+		// The Mesh and Materials
 		protected Mesh mesh;
 		protected Material[] materials;
-		protected SECTR_AudioCue cue;
 
+		// Toy Specific
+		protected SECTR_AudioCue hitCue;
 		protected Identifiable.Id fashion = Identifiable.Id.NONE;
 
-		public ToyTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, SECTR_AudioCue cue) : base(name)
+		/// <summary>
+		/// Template to create new toys
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="ID">The Identifiable ID for this toy</param>
+		/// <param name="mesh">The model's mesh for this toy</param>
+		/// <param name="materials">The materials that compose this toy's model</param>
+		/// <param name="hitCue">The audio cue when this toy hits something</param>
+		public ToyTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, SECTR_AudioCue hitCue) : base(name)
 		{
 			this.ID = ID;
 			this.mesh = mesh;
 			this.materials = materials;
-			this.cue = cue;
+			this.hitCue = hitCue;
 		}
 
+		/// <summary>
+		/// Sets the vacuumable size
+		/// </summary>
+		/// <param name="vacSize">The vac size to set</param>
 		public ToyTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
 			return this;
 		}
 
+		/// <summary>
+		/// Sets what fashion is required to react with this toy
+		/// </summary>
+		/// <param name="ID">The ID of said fashion (NONE to remove the required fashion)</param>
 		public ToyTemplate SetRequiredFashion(Identifiable.Id ID)
 		{
 			fashion = ID;
 			return this;
 		}
 
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override ToyTemplate Create()
 		{
 			// Create main object
@@ -76,7 +100,7 @@ namespace SRMLExtras.Templates
 				new TotemLinkerHelper(),
 				new PlaySoundOnHit()
 				{
-					hitCue = cue,
+					hitCue = hitCue,
 					minTimeBetween = 0.3f,
 					minForce = 0.1f,
 					includeControllerCollisions = false

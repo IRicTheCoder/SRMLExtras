@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 
 namespace SRMLExtras.Templates
 {
+	// TODO: Recheck all DelaunchTriggers, Shadows
+
 	public static class BaseObjects
 	{
 		// The Director
@@ -16,7 +18,7 @@ namespace SRMLExtras.Templates
 		private static GameModel GameModel => SceneContext.Instance.GameModel;
 
 		// Markers
-		public readonly static Material fadeMat = new Material(Shader.Find("Standard")).Initialize((mat) =>
+		public readonly static Material fadeMat = new Material(Shader.Find("Standard")).InitializeNew((mat) =>
 		{
 			mat.SetFloat("_Mode", 2);
 			mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -139,8 +141,8 @@ namespace SRMLExtras.Templates
 			}
 
 			// Load Bones
-			originSkinnedMesh.Add("HenSkinned", Director.GetPrefab(Identifiable.Id.HEN).FindChild("mesh_body1"));
-			originBones.Add("HenBones", Director.GetPrefab(Identifiable.Id.HEN).FindChild("root"));
+			//originSkinnedMesh.Add("HenSkinned", Director.GetPrefab(Identifiable.Id.HEN).FindChild("mesh_body1"));
+			//originBones.Add("HenBones", Director.GetPrefab(Identifiable.Id.HEN).FindChild("root"));
 
 			// Gets the cube for the markers
 			cubeMesh = originMesh["Cube"];

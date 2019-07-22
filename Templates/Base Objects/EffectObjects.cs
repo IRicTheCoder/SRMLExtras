@@ -24,8 +24,10 @@ namespace SRMLExtras.Templates
 		public static GameObject explosion;
 
 		// Audio Cues
-		public static SECTR_AudioCue releaseCue;
+		public static SECTR_AudioCue fruitRelease;
+		public static SECTR_AudioCue veggieRelease;
 		public static SECTR_AudioCue hitFruit;
+		public static SECTR_AudioCue hitVeggie;
 		public static SECTR_AudioCue hitChicken;
 		public static SECTR_AudioCue hitChick;
 		public static SECTR_AudioCue hitPlort;
@@ -48,8 +50,10 @@ namespace SRMLExtras.Templates
 			explosion = BaseObjects.originFXs["FX Explosion"];
 
 			// Audio Cues
-			releaseCue = BaseObjects.originCues["Fruit Rustle"];
+			fruitRelease = BaseObjects.originCues["Fruit Rustle"];
+			veggieRelease = BaseObjects.originCues["Veggie Rustle"];
 			hitFruit = BaseObjects.originCues["HitFruit"];
+			hitVeggie = BaseObjects.originCues["HitVeggie"];
 			hitChicken = BaseObjects.originCues["HitChicken"];
 			hitChick = BaseObjects.originCues["HitChick"];
 			hitPlort = BaseObjects.originCues["HitPlort"];

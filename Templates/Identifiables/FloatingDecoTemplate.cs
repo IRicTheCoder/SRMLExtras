@@ -1,0 +1,174 @@
+﻿using System.Collections.Generic;
+using MonomiPark.SlimeRancher.Regions;
+using UnityEngine;
+
+namespace SRMLExtras.Templates
+{
+	/// <summary>
+	/// A template to create floating decorations like ornaments or echos
+	/// </summary>
+	public class  FloatingDecoTemplate : ModPrefab<FloatingDecoTemplate>
+	{
+		// The Type Enum
+		public enum Type
+		{
+			ECHO,
+			ECHO_NOTE,
+			ORNAMENT,
+			CUSTOM
+		}
+
+		// Base for Identifiables
+		protected Identifiable.Id ID;
+		protected Vacuumable.Size vacSize = Vacuumable.Size.NORMAL;
+
+		// The Mesh and Materials
+		protected Mesh mesh;
+		protected Material[] materials;
+
+		// Specific to the Type
+		protected Type decoType = Type.CUSTOM;
+		protected int clip;
+		protected ObjectTransformValues trans;
+
+		/// <summary>
+		/// Template to create floating decorations
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="ID">The Identifiable ID for this decoration</param>
+		/// <param name="type">The type of decoration</param>
+		/// <param name="mesh">The model's mesh for this decoration</param>
+		/// <param name="materials">The materials that compose this decoration's model</param>
+		public FloatingDecoTemplate(string name, Identifiable.Id ID, Type type, Material[] materials = null, Mesh mesh = null) : base(name)
+		{
+			this.ID = ID;
+			decoType = type;
+
+			if (type == Type.ECHO)
+			{
+				this.materials = materials ?? BaseObjects.originMaterial["EchoBlue"].Group();
+				this.mesh = BaseObjects.originMesh["Quad"];
+				trans = new ObjectTransformValues(Vector3.zero, Vector3.zero, Vector3.one * 1.7f);
+			}
+			else if (type == Type.ECHO_NOTE)
+			{
+				this.materials = materials ?? BaseObjects.originMaterial["EchoNote1"].Group();
+				this.mesh = BaseObjects.originMesh["Quad"];
+				trans = new ObjectTransformValues(Vector3.zero, Vector3.zero, Vector3.one * 0.7f);
+			}
+			else if (type == Type.ORNAMENT)
+			{
+				this.materials = materials ?? BaseObjects.originMaterial["ornament_7z"].Group();
+				this.mesh = BaseObjects.originMesh["quad_ornament"];
+				trans = new ObjectTransformValues(Vector3.zero, Vector3.up * 180, Vector3.one * 0.8f);
+			}
+			else
+			{
+				this.materials = materials;
+				this.mesh = mesh;
+			}
+		}
+
+		/// <summary>
+		/// Sets the vacuumable size
+		/// </summary>
+		/// <param name="vacSize">The vac size to set</param>
+		public FloatingDecoTemplate SetVacSize(Vacuumable.Size vacSize)
+		{
+			this.vacSize = vacSize;
+			return this;
+		}
+
+		/// <summary>
+		/// Sets the clip (For the type ECHO_NOTE)
+		/// </summary>
+		/// <param name="clip">The number of clip to set</param>
+		public FloatingDecoTemplate SetClip(int clip)
+		{
+			this.clip = clip;
+			return this;
+		}
+
+		/// <summary>
+		/// Sets the transform values
+		/// </summary>
+		/// <param name="trans">New values to set</param>
+		public FloatingDecoTemplate SetTransValues(ObjectTransformValues trans)
+		{
+			this.trans = trans;
+			return this;
+		}
+
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
+		public override FloatingDecoTemplate Create()
+		{
+			// Create main object
+			mainObject.AddComponents(
+				new Identifiable()
+				{
+					id = ID
+				},
+				new Vacuumable()
+				{
+					size = vacSize
+				},
+				new Create<Rigidbody>((body) =>
+				{
+					body.drag = 5f;
+					body.angularDrag = 0.5f;
+					body.mass = 0.3f;
+					body.useGravity = false;
+				}),
+				new Create<SphereCollider>((col) =>
+				{
+					col.center = Vector3.zero;
+					col.radius = 0.25f;
+				}),
+				new CollisionAggregator(),
+				new RegionMember()
+				{
+					canHibernate = true
+				},
+				new StopOnCollision()
+				{
+					distFromCol = 0.25f
+				}
+			);
+
+			// Create model
+			mainObject.AddChild(new GameObjectTemplate("model",
+				new Create<MeshFilter>((filter) => filter.sharedMesh = mesh),
+				new Create<MeshRenderer>((render) => render.sharedMaterials = materials)
+			).SetTransform(trans));
+
+			// Create Note
+			if (decoType == Type.ECHO_NOTE)
+			{
+				mainObject.AddAfterChildren(SetNoteRenderer);
+
+				mainObject.AddChild(new GameObjectTemplate("echo_note",
+					new Create<SphereCollider>((col) =>
+					{
+						col.center = Vector3.zero;
+						col.radius = 0.75f;
+						col.isTrigger = true;
+					}),
+					new EchoNote()
+					{
+						clip = clip
+					},
+					new ResetLayerChanges()
+				));
+			}
+
+			return this;
+		}
+
+		internal void SetNoteRenderer(GameObject obj)
+		{
+			obj.FindChild("echo_note").GetComponent<EchoNote>().renderer = obj.FindChild("model").GetComponent<MeshRenderer>();
+		}
+	}
+}

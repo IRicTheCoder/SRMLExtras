@@ -6,7 +6,8 @@ namespace SRMLExtras.Templates
 	/// <summary>
 	/// A template to create new Craft Resources
 	/// </summary>
-	public class CraftResourceTemplate : ModPrefab<CraftResourceTemplate>
+	// TODO: FINISH THIS ONE
+	public class FashionAttachTemplate : ModPrefab<FashionAttachTemplate>
 	{
 		// Base for Identifiables
 		protected Identifiable.Id ID;
@@ -29,7 +30,7 @@ namespace SRMLExtras.Templates
 		/// <param name="ID">The Identifiable ID for this resource</param>
 		/// <param name="mesh">The model's mesh for this resource</param>
 		/// <param name="materials">The materials that compose this resource's model</param>
-		public CraftResourceTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials) : base(name)
+		public FashionAttachTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials) : base(name)
 		{
 			this.ID = ID;
 			this.mesh = mesh;
@@ -40,7 +41,7 @@ namespace SRMLExtras.Templates
 		/// Sets the vacuumable size
 		/// </summary>
 		/// <param name="vacSize">The vac size to set</param>
-		public CraftResourceTemplate SetVacSize(Vacuumable.Size vacSize)
+		public FashionAttachTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
 			return this;
@@ -50,7 +51,7 @@ namespace SRMLExtras.Templates
 		/// Sets the transform values for the model
 		/// </summary>
 		/// <param name="trans">New values to set</param>
-		public CraftResourceTemplate SetModelTrans(ObjectTransformValues trans)
+		public FashionAttachTemplate SetModelTrans(ObjectTransformValues trans)
 		{
 			modelTrans = trans;
 			return this;
@@ -60,7 +61,7 @@ namespace SRMLExtras.Templates
 		/// Sets the scale for the Delaunch Trigger (do not change if you don't know what you are doing)
 		/// </summary>
 		/// <param name="delaunchScale">The new scale to set</param>
-		public CraftResourceTemplate SetDelaunchScale(Vector3 delaunchScale)
+		public FashionAttachTemplate SetDelaunchScale(Vector3 delaunchScale)
 		{
 			this.delaunchScale = delaunchScale;
 			return this;
@@ -69,7 +70,7 @@ namespace SRMLExtras.Templates
 		/// <summary>
 		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
 		/// </summary>
-		public override CraftResourceTemplate Create()
+		public override FashionAttachTemplate Create()
 		{
 			// Create main object
 			mainObject.AddComponents(

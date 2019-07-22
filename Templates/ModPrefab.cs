@@ -5,10 +5,10 @@ namespace SRMLExtras.Templates
 	/// <summary>
 	/// Simple prefab like class, used to make the structure for templates
 	/// </summary>
-	public abstract class ModPrefab<T> where T : ModPrefab<T>
+	public class ModPrefab<T> where T : ModPrefab<T>
 	{
 		protected GameObjectTemplate mainObject;
-		private GameObject prefabVersion;
+		private GameObject prefabVersion = null;
 
 		private event System.Action<GameObjectTemplate> PrefabFunction;
 
@@ -17,13 +17,7 @@ namespace SRMLExtras.Templates
 			mainObject = new GameObjectTemplate(name);
 		}
 
-		public abstract T Create();
-
-		public T Create(System.Action<T> action)
-		{
-			action?.Invoke((T)this);
-			return Create();
-		}
+		public virtual T Create() { return (T)this; }
 
 		public T AddStartAction(string actionID)
 		{

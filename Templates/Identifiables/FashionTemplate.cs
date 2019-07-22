@@ -5,18 +5,29 @@ using UnityEngine.UI;
 
 namespace SRMLExtras.Templates
 {
-	// TODO: To Finish
+	/// <summary>
+	/// A template to create new fashions (the actual fashion not the pod)
+	/// </summary>
 	public class FashionTemplate : ModPrefab<FashionTemplate>
 	{
+		// Base for Identifiables
 		protected Identifiable.Id ID;
-
 		protected Vacuumable.Size vacSize = Vacuumable.Size.NORMAL;
 
+		// Fashion Info
 		protected Fashion.Slot slot;
 		protected GameObject attachPrefab;
 
 		protected Sprite icon;
 
+		/// <summary>
+		/// Template to create new fashions
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="ID">The Identifiable ID for this fashion</param>
+		/// <param name="attachPrefab">The prefab to attach to the target</param>
+		/// <param name="icon">The icon for this fashion</param>
+		/// <param name="slot">The slot it occupied when attached</param>
 		public FashionTemplate(string name, Identifiable.Id ID, GameObject attachPrefab, Sprite icon, Fashion.Slot slot = Fashion.Slot.FRONT) : base(name)
 		{
 			this.ID = ID;
@@ -25,12 +36,19 @@ namespace SRMLExtras.Templates
 			this.slot = slot;
 		}
 
+		/// <summary>
+		/// Sets the vacuumable size
+		/// </summary>
+		/// <param name="vacSize">The vac size to set</param>
 		public FashionTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
 			return this;
 		}
 
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override FashionTemplate Create()
 		{
 			// Create main object
@@ -104,8 +122,8 @@ namespace SRMLExtras.Templates
 					img.fillOrigin = 0;
 
 					img.material = BaseObjects.originMaterial["Digital Icon Medium"];
-					img.SetPrivateProperty("preferredWidth", 1024);
-					img.SetPrivateProperty("preferredHeight", 1024);
+					//img.SetPrivateProperty("preferredWidth", 1024);
+					//img.SetPrivateProperty("preferredHeight", 1024);
 				})
 			);
 
@@ -133,8 +151,8 @@ namespace SRMLExtras.Templates
 					img.fillOrigin = 0;
 
 					img.material = BaseObjects.originMaterial["Digital Icon Medium"];
-					img.SetPrivateProperty("preferredWidth", 1024);
-					img.SetPrivateProperty("preferredHeight", 1024);
+					//img.SetPrivateProperty("preferredWidth", 1024);
+					//img.SetPrivateProperty("preferredHeight", 1024);
 				})
 			);
 

@@ -11,6 +11,7 @@ namespace SRMLExtras.Templates
 	public class GameObjectTemplate
 	{
 		private readonly List<Component> components = new List<Component>();
+		private readonly List<ICreateComponent> components2 = new List<ICreateComponent>();
 
 		public readonly List<GameObjectTemplate> children = new List<GameObjectTemplate>();
 
@@ -24,8 +25,8 @@ namespace SRMLExtras.Templates
 
 		public MarkerType DebugMarker { get; private set; } = MarkerType.None;
 
-		private event System.Action<GameObject> afterChildren;
-		private List<string> actionOnStart = new List<string>();
+		private event System.Action<GameObject> AfterChildren;
+		private readonly List<string> actionOnStart = new List<string>();
 
 		public GameObjectTemplate(string name, params Component[] comps)
 		{
@@ -35,7 +36,7 @@ namespace SRMLExtras.Templates
 
 		public GameObjectTemplate Clone(string name = null, bool cloneChildren = false)
 		{
-			GameObjectTemplate clone = new GameObjectTemplate(name == null ? Name : name, components.ToArray());
+			GameObjectTemplate clone = new GameObjectTemplate(name ?? Name, components.ToArray());
 
 			clone.SetTransform(Position, Rotation, Scale);
 			clone.SetDebugMarker(DebugMarker);
@@ -88,7 +89,7 @@ namespace SRMLExtras.Templates
 
 		public GameObjectTemplate AddAfterChildren(System.Action<GameObject> action)
 		{
-			afterChildren += action;
+			AfterChildren += action;
 			return this;
 		}
 
@@ -110,12 +111,29 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		public GameObjectTemplate AddComponents(string n, params ICreateComponent[] comps)
+		{
+			components2.AddRange(comps);
+			return this;
+		}
+
 		public GameObjectTemplate RemoveComponents(params Component[] comps)
 		{
 			foreach (Component comp in comps)
 				components.Remove(comp);
 
 			return this;
+		}
+
+		public GameObjectTemplate FindChild(string name, bool parcial = false)
+		{
+			foreach (GameObjectTemplate child in children)
+			{
+				if ((child.Name.StartsWith(name) && parcial) || (child.Name.Equals(name) && !parcial))
+					return child;
+			}
+
+			return null;
 		}
 
 		public Component[] GetComponents()
@@ -158,10 +176,14 @@ namespace SRMLExtras.Templates
 				comp.actions = actionOnStart;
 			}
 
-			foreach (Component comp in components)
+			foreach (Component comp in components2)
 			{
+				SRML.Console.Console.Log("test comp: " + comp);
+
 				if (comp == null)
 					continue;
+
+				SRML.Console.Console.Log("enter");
 
 				if (comp is ICreateComponent)
 				{
@@ -180,7 +202,7 @@ namespace SRMLExtras.Templates
 			foreach (GameObjectTemplate child in children)
 				child.ToGameObject(obj);
 
-			afterChildren?.Invoke(obj);
+			AfterChildren?.Invoke(obj);
 
 			return obj;
 		}
