@@ -53,14 +53,8 @@ namespace SRMLExtras.Templates
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0;
@@ -73,28 +67,25 @@ namespace SRMLExtras.Templates
 					col.center = Vector3.zero;
 					col.radius = 0.5f;
 				}),
-				new CollisionAggregator(),
-				new RegionMember()
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
+				new Create<Fashion>((fash) =>
 				{
-					canHibernate = true
-				},
-				new Fashion()
+					fash.slot = slot;
+					fash.attachPrefab = attachPrefab;
+					fash.attachFX = EffectObjects.fashionApply;
+				}),
+				new Create<DestroyOnTouching>((dest) =>
 				{
-					slot = slot,
-					attachPrefab = attachPrefab,
-					attachFX = EffectObjects.fashionApply
-				},
-				new DestroyOnTouching()
-				{
-					hoursOfContactAllowed = 0,
-					wateringRadius = 0,
-					wateringUnits = 0,
-					destroyFX = EffectObjects.fashionBurst,
-					touchingWaterOkay = false,
-					touchingAshOkay = false,
-					reactToActors = false,
-					liquidType = Identifiable.Id.WATER_LIQUID
-				}
+					dest.hoursOfContactAllowed = 0;
+					dest.wateringRadius = 0;
+					dest.wateringUnits = 0;
+					dest.destroyFX = EffectObjects.fashionBurst;
+					dest.touchingWaterOkay = false;
+					dest.touchingAshOkay = false;
+					dest.reactToActors = false;
+					dest.liquidType = Identifiable.Id.WATER_LIQUID;
+				})
 			).SetTransform(Vector3.zero, Vector3.zero, Vector3.one * 0.7f);
 
 			// Create Icon UI content
@@ -108,7 +99,7 @@ namespace SRMLExtras.Templates
 					trans.pivot = Vector2.one * 0.5f;
 					trans.localEulerAngles = new Vector3(0, 180, 0);
 				}),
-				new CanvasRenderer(),
+				new Create<CanvasRenderer>(null),
 				new Create<Image>((img) =>
 				{
 					img.sprite = icon;
@@ -122,8 +113,8 @@ namespace SRMLExtras.Templates
 					img.fillOrigin = 0;
 
 					img.material = BaseObjects.originMaterial["Digital Icon Medium"];
-					//img.SetPrivateProperty("preferredWidth", 1024);
-					//img.SetPrivateProperty("preferredHeight", 1024);
+					img.SetPrivateProperty("preferredWidth", 1024);
+					img.SetPrivateProperty("preferredHeight", 1024);
 				})
 			);
 
@@ -137,7 +128,7 @@ namespace SRMLExtras.Templates
 					trans.pivot = Vector2.one * 0.5f;
 					trans.localEulerAngles = Vector3.zero;
 				}),
-				new CanvasRenderer(),
+				new Create<CanvasRenderer>(null),
 				new Create<Image>((img) =>
 				{
 					img.sprite = icon;
@@ -151,8 +142,8 @@ namespace SRMLExtras.Templates
 					img.fillOrigin = 0;
 
 					img.material = BaseObjects.originMaterial["Digital Icon Medium"];
-					//img.SetPrivateProperty("preferredWidth", 1024);
-					//img.SetPrivateProperty("preferredHeight", 1024);
+					img.SetPrivateProperty("preferredWidth", 1024);
+					img.SetPrivateProperty("preferredHeight", 1024);
 				})
 			);
 
@@ -180,7 +171,7 @@ namespace SRMLExtras.Templates
 
 			// Create Icon Pivot
 			mainObject.AddChild(new GameObjectTemplate("Icon Pivot",
-				new CameraFacingBillboard()
+				new Create<CameraFacingBillboard>(null)
 			).AddChild(iconUI));
 
 			// Create Surround Sphere
@@ -197,7 +188,7 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new VacDelaunchTrigger()
+				new Create<VacDelaunchTrigger>(null)
 			));
 
 			return this;

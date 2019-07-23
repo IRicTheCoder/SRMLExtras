@@ -4,37 +4,52 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
+	/// <summary>
+	/// A template to create new animals
+	/// </summary>
 	public class AnimalTemplate : ModPrefab<AnimalTemplate>
 	{
+		// Base for Identifiables
 		protected Identifiable.Id ID;
-
 		protected Vacuumable.Size vacSize = Vacuumable.Size.NORMAL;
 
+		// The Model and Materials
 		protected Mesh mesh;
 		protected Material[] materials;
 
-		protected GameObject skinnedMesh;
+		// Move component to add
+		protected ICreateComponent moveComponent;
 
-		protected Component moveComponent;
+		protected float minRepHours = 8;
+		protected float maxRepHours = 16;
 
-		protected int minRepHours = 8;
-		protected int maxRepHours = 16;
-
+		// Reproduction stuff
 		protected Identifiable mate;
 		protected GameObject child;
 		protected GameObject elder;
 
-		protected Animator animator;
-
+		// The game object with the skinned mesh
+		protected GameObject skinnedMesh;
+		protected Create<Animator> animator;
 		protected GameObject bones;
 
+		// Child Control
 		protected bool isChild;
-		protected int childHours;
+		protected float childHours;
 
 		protected float eggPeriod;
 		protected GameObject egg;
 
-		public AnimalTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, Animator animator, bool isChild = false) : base(name)
+		/// <summary>
+		/// Template to create new animals
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="ID">The Identifiable ID for this animal</param>
+		/// <param name="mesh">The model's mesh for this animal</param>
+		/// <param name="materials">The materials that compose this animal's model</param>
+		/// <param name="animator">The animator used by the animal</param>
+		/// <param name="isChild">Is this animal a child?</param>
+		public AnimalTemplate(string name, Identifiable.Id ID, Mesh mesh, Material[] materials, Create<Animator> animator, bool isChild = false) : base(name)
 		{
 			this.ID = ID;
 			this.mesh = mesh;
@@ -42,44 +57,76 @@ namespace SRMLExtras.Templates
 			this.animator = animator;
 			this.isChild = isChild;
 			
-			moveComponent = new ChickenRandomMove()
+			moveComponent = new Create<ChickenRandomMove>((move) =>
 			{
-				maxJump = isChild ? 0.7f : 1f,
-				walkForwardForce = isChild ? 2.5f : 3.333f,
-				flapCue = EffectObjects.flapCue
-			};
+				move.maxJump = isChild ? 0.7f : 1f;
+				move.walkForwardForce = isChild ? 2.5f : 3.333f;
+				move.flapCue = EffectObjects.flapCue;
+			});
 
 			skinnedMesh = BaseObjects.originSkinnedMesh["HenSkinned"];
 			bones = BaseObjects.originBones["HenBones"];
 		}
 
-		public AnimalTemplate SetReproduceObjects(Identifiable mate, GameObject child, GameObject elder)
+		/// <summary>
+		/// Sets the reproduction objects (not needed for childs or males)
+		/// </summary>
+		/// <param name="mate">The male mate of this female</param>
+		/// <param name="child">The resulting child</param>
+		public AnimalTemplate SetReproduceObjects(Identifiable mate, GameObject child)
 		{
 			this.mate = mate;
 			this.child = child;
+			return this;
+		}
+
+		/// <summary>
+		/// Sets the elder version of this (not needed for childs)
+		/// </summary>
+		/// <param name="elder">The elder version</param>
+		public AnimalTemplate SetElder(GameObject elder)
+		{
 			this.elder = elder;
 			return this;
 		}
 
-		public AnimalTemplate SetMoveComponent(Component comp)
+		/// <summary>
+		/// Sets the movement component to a new one (Default is the Chicken Movement)
+		/// </summary>
+		/// <param name="comp">New component to use</param>
+		public AnimalTemplate SetMoveComponent(ICreateComponent comp)
 		{
 			moveComponent = comp;
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the vacuumable size
+		/// </summary>
+		/// <param name="vacSize">The vac size to set</param>
 		public AnimalTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
 			return this;
 		}
 
-		public AnimalTemplate SetReproduceInfo(int minReproduceGameHours, int maxReproduceGameHours)
+		/// <summary>
+		/// Sets the reproduction infos (not needed for childs or males)
+		/// </summary>
+		/// <param name="minReproduceGameHours">Min. Reproduction hours</param>
+		/// <param name="maxReproduceGameHours">Max. Reproduction hours</param>
+		public AnimalTemplate SetReproduceInfo(float minReproduceGameHours, float maxReproduceGameHours)
 		{
 			minRepHours = minReproduceGameHours;
 			maxRepHours = maxReproduceGameHours;
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the bones and skinned mesh of this animal (default are the ones from the Chicken/Hen)
+		/// </summary>
+		/// <param name="skinnedMesh">The new skinned mesh to use for the animal</param>
+		/// <param name="bones">The new bones to use for the animal</param>
 		public AnimalTemplate SetBones(GameObject skinnedMesh, GameObject bones)
 		{
 			this.skinnedMesh = skinnedMesh;
@@ -87,7 +134,13 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		public AnimalTemplate SetChildInfo(int delayGameHours, float eggPeriod, GameObject egg)
+		/// <summary>
+		/// Sets the child info (only needed for childs)
+		/// </summary>
+		/// <param name="delayGameHours">The number of hours before becoming an adult</param>
+		/// <param name="eggPeriod">The number of hours before hatching the egg</param>
+		/// <param name="egg">The egg object</param>
+		public AnimalTemplate SetChildInfo(float delayGameHours, float eggPeriod, GameObject egg)
 		{
 			childHours = delayGameHours;
 			this.eggPeriod = eggPeriod;
@@ -95,18 +148,15 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override AnimalTemplate Create()
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0.2f;
@@ -114,20 +164,14 @@ namespace SRMLExtras.Templates
 					body.mass = 0.3f;
 					body.useGravity = true;
 				}),
-				new DragFloatReactor()
-				{
-					floatDragMultiplier = 10
-				},
+				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 10),
 				new Create<BoxCollider>((col) =>
 				{
 					col.center = Vector3.zero;
 					col.size = Vector3.one * 0.5f;
 				}),
-				new CollisionAggregator(),
-				new RegionMember()
-				{
-					canHibernate = true
-				},
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
 				new Create<SECTR_PointSource>((source) =>
 				{
 					source.Loop = false;
@@ -136,17 +180,14 @@ namespace SRMLExtras.Templates
 					source.Volume = 1;
 					source.Pitch = 1;
 				}),
-				new PlaySoundOnHit()
+				new Create<PlaySoundOnHit>((hit) =>
 				{
-					hitCue = isChild ? EffectObjects.hitChick : EffectObjects.hitChicken,
-					minTimeBetween = 0.2f,
-					minForce = 1,
-					includeControllerCollisions = false
-				},
-				new SlimeSubbehaviourPlexer()
-				{
-
-				},
+					hit.hitCue = isChild ? EffectObjects.hitChick : EffectObjects.hitChicken;
+					hit.minTimeBetween = 0.2f;
+					hit.minForce = 1;
+					hit.includeControllerCollisions = false;
+				}),
+				new Create<SlimeSubbehaviourPlexer>(null),
 				moveComponent,
 				new Create<SphereCollider>((col) =>
 				{
@@ -154,64 +195,58 @@ namespace SRMLExtras.Templates
 					col.radius = 0.5f;
 					col.isTrigger = true;
 				}),
-				new SlimeAudio()
+				new Create<SlimeAudio>((audio) => audio.slimeSounds = BaseObjects.originSounds["HenHen"]),
+				new Create<KeepUpright>((keep) =>
 				{
-					slimeSounds = BaseObjects.originSounds["HenHen"]
-				},
-				new KeepUpright()
-				{
-					stability = 0.9f,
-					speed = 2
-				},
-				new DestroyOnIgnite(),
-				new AttachFashions()
-				{
-					gordoMode = false,
-				}
+					keep.stability = 0.9f;
+					keep.speed = 2;
+				}),
+				new Create<DestroyOnIgnite>(null),
+				new Create<AttachFashions>((fash) => fash.gordoMode = false)
 			).AddAfterChildren(ConfigBones);
 
 			if (mate != null)
 			{
 				mainObject.AddComponents(
-					new Reproduce()
+					new Create<Reproduce>((rep) =>
 					{
-						nearMateId = mate,
-						maxDistToMate = 10f,
-						densityDist = 10,
-						maxDensity = 12,
-						deluxeDensityFactor = 2,
-						minReproduceGameHours = minRepHours,
-						maxReproduceGameHours = maxRepHours,
-						produceFX = EffectObjects.stars,
-						childPrefab = child
-					}
+						rep.nearMateId = mate;
+						rep.maxDistToMate = 10f;
+						rep.densityDist = 10;
+						rep.maxDensity = 12;
+						rep.deluxeDensityFactor = 2;
+						rep.minReproduceGameHours = minRepHours;
+						rep.maxReproduceGameHours = maxRepHours;
+						rep.produceFX = EffectObjects.stars;
+						rep.childPrefab = child;
+					})
 				);
 			}
 
 			if (isChild)
 			{
 				mainObject.AddComponents(
-					new TransformAfterTime()
+					new Create<TransformAfterTime>((trans) =>
 					{
-						delayGameHours = childHours,
-						transformFX = EffectObjects.stars,
-					},
-					new EggActivator()
+						trans.delayGameHours = childHours;
+						trans.transformFX = EffectObjects.stars;
+					}),
+					new Create<EggActivator>((egg) =>
 					{
-						eggPeriod = eggPeriod,
-						activateObj = egg
-					}
+						egg.eggPeriod = eggPeriod;
+						egg.activateObj = this.egg;
+					})
 				);
 			}
 			else
 			{
 				mainObject.AddComponents(
-					new TransformChanceOnReproduce()
+					new Create<TransformChanceOnReproduce>((trans) =>
 					{
-						transformChance = 0.05f,
-						targetPrefab = elder,
-						transformFX = EffectObjects.stars
-					}
+						trans.transformChance = 0.05f;
+						trans.targetPrefab = elder;
+						trans.transformFX = EffectObjects.stars;
+					})
 				);
 			}
 
@@ -229,7 +264,7 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new VacDelaunchTrigger()
+				new Create<VacDelaunchTrigger>(null)
 			).SetTransform(Vector3.zero, Vector3.zero, Vector3.one * 1.4f));
 
 			// Create animal
@@ -245,7 +280,7 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		internal void ConfigBones(GameObject obj)
+		protected void ConfigBones(GameObject obj)
 		{
 			// Setup Bones
 			GameObject sm = skinnedMesh.CreatePrefabCopy();

@@ -25,7 +25,7 @@ namespace SRMLExtras.Templates
 		/// <summary>
 		/// Template to create new Craft Resources
 		/// </summary>
-		/// <param name="name">The name of the object (prefixes are recommend, but not needed</param>
+		/// <param name="name">The name of the object (prefixes are recommend, but not needed)</param>
 		/// <param name="ID">The Identifiable ID for this resource</param>
 		/// <param name="mesh">The model's mesh for this resource</param>
 		/// <param name="materials">The materials that compose this resource's model</param>
@@ -73,14 +73,8 @@ namespace SRMLExtras.Templates
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0.2f;
@@ -88,20 +82,14 @@ namespace SRMLExtras.Templates
 					body.mass = 0.3f;
 					body.useGravity = true;
 				}),
-				new DragFloatReactor()
-				{
-					floatDragMultiplier = 10
-				},
+				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 10),
 				new Create<SphereCollider>((col) =>
 				{
 					col.center = Vector3.zero;
 					col.radius = 0.25f;
 				}),
-				new CollisionAggregator(),
-				new RegionMember()
-				{
-					canHibernate = true
-				}
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true)
 			);
 
 			// Create model
@@ -118,7 +106,7 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new VacDelaunchTrigger()
+				new Create<VacDelaunchTrigger>(null)
 			).SetTransform(Vector3.zero, Vector3.zero, delaunchScale));
 
 			return this;

@@ -1,28 +1,32 @@
-﻿using System.Collections.Generic;
-using SRML.Console;
-using SRMLExtras.Markers;
-using UnityEngine;
-
-namespace SRMLExtras.Templates
+﻿namespace SRMLExtras.Templates
 {
+	/// <summary>
+	/// A template to create new activator UIs
+	/// </summary>
 	public class ActivatorUITemplate : ModPrefab<ActivatorUITemplate>
 	{
-		protected BaseUI baseUI;
+		// The UI component
+		protected Create<BaseUI> baseUI;
 
-		public ActivatorUITemplate(string name, BaseUI baseUI) : base(name)
+		/// <summary>
+		/// Template to create new activator UIs
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="baseUI">The UI component to add</param>
+		public ActivatorUITemplate(string name, Create<BaseUI> baseUI) : base(name)
 		{
 			this.baseUI = baseUI;
 		}
 
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override ActivatorUITemplate Create()
 		{
 			// Create main object
 			mainObject.AddComponents(
 				baseUI,
-				new UIInputLocker()
-				{
-					lockEvenSpecialScenes = false
-				}
+				new Create<UIInputLocker>((locker) => locker.lockEvenSpecialScenes = false)
 			);
 
 			return this;

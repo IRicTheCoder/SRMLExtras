@@ -56,14 +56,8 @@ namespace SRMLExtras.Templates
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0.2f;
@@ -76,22 +70,19 @@ namespace SRMLExtras.Templates
 					col.center = Vector3.zero;
 					col.radius = 1f;
 				}),
-				new CollisionAggregator(),
-				new RegionMember()
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
+				new Create<DestroyOnTouching>((dest) =>
 				{
-					canHibernate = true
-				},
-				new DestroyOnTouching()
-				{
-					hoursOfContactAllowed = 0,
-					wateringRadius = 4,
-					wateringUnits = 3,
-					destroyFX = EffectObjects.waterSplat,
-					touchingWaterOkay = false,
-					touchingAshOkay = false,
-					reactToActors = false,
-					liquidType = ID
-				}
+					dest.hoursOfContactAllowed = 0;
+					dest.wateringRadius = 4;
+					dest.wateringUnits = 3;
+					dest.destroyFX = EffectObjects.waterSplat;
+					dest.touchingWaterOkay = false;
+					dest.touchingAshOkay = false;
+					dest.reactToActors = false;
+					dest.liquidType = ID;
+				})
 			);
 
 			// Create sphere
@@ -117,13 +108,13 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new VacDelaunchTrigger()
+				new Create<VacDelaunchTrigger>(null)
 			));
 
 			return this;
 		}
 
-		internal void AddEffects(GameObject obj)
+		protected void AddEffects(GameObject obj)
 		{
 			GameObject fx1 = BaseObjects.originFXs["FX Sprinkler 1"].CreatePrefabCopy();
 			GameObject fx2 = BaseObjects.originFXs["FX Water Glops"].CreatePrefabCopy();

@@ -64,14 +64,8 @@ namespace SRMLExtras.Templates
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0.2f;
@@ -84,27 +78,18 @@ namespace SRMLExtras.Templates
 					col.center = Vector3.zero;
 					col.radius = 0.5f;
 				}),
-				new DragFloatReactor()
+				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 25f),
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
+				new Create<StopOnCollision>((stop) => stop.distFromCol = 0.25f),
+				new Create<TotemLinkerHelper>(null),
+				new Create<PlaySoundOnHit>((hit) =>
 				{
-					floatDragMultiplier = 25f
-				},
-				new CollisionAggregator(),
-				new RegionMember()
-				{
-					canHibernate = true
-				},
-				new StopOnCollision()
-				{
-					distFromCol = 0.25f
-				},
-				new TotemLinkerHelper(),
-				new PlaySoundOnHit()
-				{
-					hitCue = hitCue,
-					minTimeBetween = 0.3f,
-					minForce = 0.1f,
-					includeControllerCollisions = false
-				}
+					hit.hitCue = hitCue;
+					hit.minTimeBetween = 0.3f;
+					hit.minForce = 0.1f;
+					hit.includeControllerCollisions = false;
+				})
 			).SetTransform(Vector3.zero, Vector3.zero, Vector3.one * 1.3f);
 
 			// Create Totem Linker
@@ -115,13 +100,13 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new TotemLinker()
+				new Create<TotemLinker>((totem) =>
 				{
-					receptivenessProb = 0.25f,
-					rethinkReceptivenessMin = 6,
-					rethinkReceptivenessMax = 12,
-					gravFactorWhileTotemed = 0.5f
-				}
+					totem.receptivenessProb = 0.25f;
+					totem.rethinkReceptivenessMin = 6;
+					totem.rethinkReceptivenessMax = 12;
+					totem.gravFactorWhileTotemed = 0.5f;
+				})
 			));
 
 			// Create delaunch
@@ -132,7 +117,7 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new VacDelaunchTrigger()
+				new Create<VacDelaunchTrigger>(null)
 			));
 
 			// Create influence
@@ -143,10 +128,7 @@ namespace SRMLExtras.Templates
 					col.radius = 5f;
 					col.isTrigger = true;
 				}),
-				new ToyProximityTrigger()
-				{
-					fashion = fashion
-				}
+				new Create<ToyProximityTrigger>((toy) => toy.fashion = fashion)
 			));
 
 			// Create model

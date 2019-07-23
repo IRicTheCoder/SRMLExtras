@@ -152,14 +152,8 @@ namespace SRMLExtras.Templates
 			// Create main object
 			mainObject.AddComponents(
 				new Create<MeshFilter>((filter) => filter.sharedMesh = mesh),
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0.2f;
@@ -167,33 +161,27 @@ namespace SRMLExtras.Templates
 					body.mass = 0.3f;
 					body.useGravity = true;
 				}),
-				new DragFloatReactor()
-				{
-					floatDragMultiplier = 10
-				},
+				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 10),
 				new Create<MeshCollider>((col) =>
 				{
 					col.sharedMesh = mesh;
 					col.convex = true;
 				}),
-				new CollisionAggregator(),
-				new RegionMember()
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
+				new Create<ResourceCycle>((res) =>
 				{
-					canHibernate = true
-				},
-				new ResourceCycle()
-				{
-					unripeGameHours = unripeHours,
-					ripeGameHours = ripeHours,
-					edibleGameHours = edibleHours,
-					rottenGameHours = rottenHours,
-					rottenMat = rottenMaterial,
-					destroyFX = EffectObjects.rottenDespawn,
-					releaseCue = releaseCue,
-					vacuumableWhenRipe = true,
-					addEjectionForce = ejectWhenMature,
-					releasePrepTime = 0.5f
-				},
+					res.unripeGameHours = unripeHours;
+					res.ripeGameHours = ripeHours;
+					res.edibleGameHours = edibleHours;
+					res.rottenGameHours = rottenHours;
+					res.rottenMat = rottenMaterial;
+					res.destroyFX = EffectObjects.rottenDespawn;
+					res.releaseCue = releaseCue;
+					res.vacuumableWhenRipe = true;
+					res.addEjectionForce = ejectWhenMature;
+					res.releasePrepTime = 0.5f;
+				}),
 				new Create<SECTR_PointSource>((source) =>
 				{
 					source.Loop = false;
@@ -202,13 +190,13 @@ namespace SRMLExtras.Templates
 					source.Volume = 1;
 					source.Pitch = 1;
 				}),
-				new PlaySoundOnHit()
+				new Create<PlaySoundOnHit>((hit) =>
 				{
-					hitCue = hitCue,
-					minTimeBetween = 0.2f,
-					minForce = 1,
-					includeControllerCollisions = false
-				}
+					hit.hitCue = hitCue;
+					hit.minTimeBetween = 0.2f;
+					hit.minForce = 1;
+					hit.includeControllerCollisions = false;
+				})
 			).AddAfterChildren(AddShakeTransform);
 
 			// Create delaunch trigger
@@ -219,7 +207,7 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new VacDelaunchTrigger()
+				new Create<VacDelaunchTrigger>(null)
 			).SetTransform(Vector3.zero, Vector3.zero, delaunchScale));
 
 			// Create model
@@ -236,7 +224,7 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
-		internal void AddShakeTransform(GameObject obj)
+		protected void AddShakeTransform(GameObject obj)
 		{
 			obj.GetComponent<ResourceCycle>().toShake = obj.FindChild("model_food").transform;
 		}

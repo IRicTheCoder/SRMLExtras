@@ -47,14 +47,8 @@ namespace SRMLExtras.Templates
 			mainObject.AddComponents(
 				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.originMesh["plort"]),
 				new Create<MeshRenderer>((render) => render.sharedMaterials = materials),
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0.2f;
@@ -67,35 +61,23 @@ namespace SRMLExtras.Templates
 					col.center = Vector3.zero;
 					col.radius = 1;
 				}),
-				new DragFloatReactor()
+				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 10),
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
+				new Create<PlortInvulnerability>((plort) => plort.invulnerabilityPeriod = 3),
+				new Create<PlaySoundOnHit>((hit) =>
 				{
-					floatDragMultiplier = 10
-				},
-				new CollisionAggregator(),
-				new RegionMember()
+					hit.hitCue = EffectObjects.hitPlort;
+					hit.minTimeBetween = 0.2f;
+					hit.minForce = 1;
+					hit.includeControllerCollisions = false;
+				}),
+				new Create<DestroyOnIgnite>((dest) => dest.igniteFX = EffectObjects.plortDespawn),
+				new Create<DestroyPlortAfterTime>((dest) =>
 				{
-					canHibernate = true
-				},
-				new PlortInvulnerability()
-				{
-					invulnerabilityPeriod = 3
-				},
-				new PlaySoundOnHit()
-				{
-					hitCue = EffectObjects.hitPlort,
-					minTimeBetween = 0.2f,
-					minForce = 1,
-					includeControllerCollisions = false
-				},
-				new DestroyOnIgnite()
-				{
-					igniteFX = EffectObjects.plortDespawn
-				},
-				new DestroyPlortAfterTime()
-				{
-					lifeTimeHours = 24,
-					destroyFX = EffectObjects.plortDespawn
-				}
+					dest.lifeTimeHours = 24;
+					dest.destroyFX = EffectObjects.plortDespawn;
+				})
 			);
 
 			// Create model
@@ -112,13 +94,13 @@ namespace SRMLExtras.Templates
 					col.radius = 0.1f;
 					col.isTrigger = true;
 				}),
-				new VacDelaunchTrigger()
+				new Create<VacDelaunchTrigger>(null)
 			));
 
 			return this;
 		}
 
-		internal void SetShield(GameObject obj)
+		protected void SetShield(GameObject obj)
 		{
 			obj.GetComponent<PlortInvulnerability>().activateObj = obj.FindChild("Shield");
 		}

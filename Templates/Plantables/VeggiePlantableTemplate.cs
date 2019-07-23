@@ -5,13 +5,18 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
+	/// <summary>
+	/// A template to create new veggie plantables
+	/// </summary>
 	public class VeggiePlantableTemplate : ModPrefab<VeggiePlantableTemplate>
 	{
+		// Base for plantables
 		protected readonly bool isDeluxe = false;
 
 		protected readonly Identifiable.Id ID;
 		protected readonly SpawnResource.Id resID;
 
+		// Growth values
 		protected int minSpawn = 15;
 		protected int maxSpawn = 20;
 		protected float minHours = 18;
@@ -19,21 +24,34 @@ namespace SRMLExtras.Templates
 		protected float minNutrient = 20;
 		protected float waterHours = 23;
 
+		// Bonus values
 		protected int minBonusSelection = 4;
 		protected float bonusChance = 0.01f;
 
+		// Spawning list
 		protected List<GameObject> toSpawn = new List<GameObject>();
 		protected List<GameObject> bonusToSpawn = new List<GameObject>();
 
+		// Sprouts
 		protected SpawnResource.Id sproutID = SpawnResource.Id.CARROT_PATCH;
 		protected Mesh sprout;
 		protected Material[] sproutMaterials;
 
+		// Actual model and materials (to display when growing)
 		protected Mesh modelMesh;
 		protected Material[] modelMaterials;
 
+		// Custom joints if needed
 		protected List<ObjectTransformValues> customSpawnJoints = null;
 
+		/// <summary>
+		/// Template to create new veggie plantables
+		/// </summary>
+		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
+		/// <param name="isDeluxe">Is this plantable for the deluxe version of the garden?</param>
+		/// <param name="ID">The ID of the identifiable spawned by this plantable</param>
+		/// <param name="resID">The spawn resource id for this plantable</param>
+		/// <param name="toSpawn">The list of things to spawn (null to get it from the ID provided)</param>
 		public VeggiePlantableTemplate(string name, bool isDeluxe, Identifiable.Id ID, SpawnResource.Id resID, List<GameObject> toSpawn = null) : base(name)
 		{
 			this.isDeluxe = isDeluxe;
@@ -46,6 +64,11 @@ namespace SRMLExtras.Templates
 				this.toSpawn = toSpawn;
 		}
 
+		/// <summary>
+		/// Sets the bonus info
+		/// </summary>
+		/// <param name="minBonusSelection">The min. amount selected from the bonus list</param>
+		/// <param name="bonusChance">The change to select extras</param>
 		public VeggiePlantableTemplate SetBonusInfo(int minBonusSelection, float bonusChance = 0.01f)
 		{
 			this.minBonusSelection = minBonusSelection;
@@ -53,42 +76,71 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the list of bonus spawns
+		/// </summary>
+		/// <param name="bonusToSpawn">The list to set</param>
 		public VeggiePlantableTemplate SetBonusSpawn(List<GameObject> bonusToSpawn)
 		{
 			this.bonusToSpawn = bonusToSpawn;
 			return this;
 		}
 
+		/// <summary>
+		/// Adds a new bonus spawn to the list
+		/// </summary>
+		/// <param name="ID">The ID for the spawnable</param>
 		public VeggiePlantableTemplate AddBonusSpawn(Identifiable.Id ID)
 		{
 			bonusToSpawn.Add(GameContext.Instance.LookupDirector.GetPrefab(ID));
 			return this;
 		}
 
+		/// <summary>
+		/// Adds a new bonus spawwn to the list
+		/// </summary>
+		/// <param name="obj">The game object of the identifiable to spawn</param>
 		public VeggiePlantableTemplate AddBonusSpawn(GameObject obj)
 		{
 			bonusToSpawn.Add(obj);
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the list of spawns
+		/// </summary>
+		/// <param name="toSpawn">The list to set</param>
 		public VeggiePlantableTemplate SetSpawn(List<GameObject> toSpawn)
 		{
 			this.toSpawn = toSpawn;
 			return this;
 		}
 
+		/// <summary>
+		/// Adds a spawn to the list
+		/// </summary>
+		/// <param name="ID">The ID for the spawnable</param>
 		public VeggiePlantableTemplate AddSpawn(Identifiable.Id ID)
 		{
 			toSpawn.Add(GameContext.Instance.LookupDirector.GetPrefab(ID));
 			return this;
 		}
 
+		/// <summary>
+		/// Adds a spawn to the list
+		/// </summary>
+		/// <param name="obj">The game object of the identifiable to spawn</param>
 		public VeggiePlantableTemplate AddSpawn(GameObject obj)
 		{
 			toSpawn.Add(obj);
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the sprout to be used (null can also be provided to use the default one)
+		/// </summary>
+		/// <param name="sprout">The sprout's mesh</param>
+		/// <param name="sproutMaterials">The material for that sprout</param>
 		public VeggiePlantableTemplate SetCustomSprout(Mesh sprout, Material[] sproutMaterials)
 		{
 			this.sprout = sprout;
@@ -96,6 +148,10 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the sprout to be used based on the SpawnResource ID (only works for those already in the game)
+		/// </summary>
+		/// <param name="ID">The ID to get the sprout from</param>
 		public VeggiePlantableTemplate SetCustomSprout(SpawnResource.Id ID)
 		{
 			if (GardenObjects.modelSproutMeshs.ContainsKey(ID))
@@ -104,6 +160,15 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the spawn info
+		/// </summary>
+		/// <param name="minSpawn">Min. number of items to spawn</param>
+		/// <param name="maxSpawn">Max. number of items to spawn</param>
+		/// <param name="minHours">Min. hours to be ready to spawn</param>
+		/// <param name="maxHours">Max. hours to be ready to spawn</param>
+		/// <param name="minNutrient">Min. value of nutrients, related to growth rate</param>
+		/// <param name="waterHours">The number of hours the water lasts in the soil</param>
 		public VeggiePlantableTemplate SetSpawnInfo(int minSpawn, int maxSpawn, float minHours, float maxHours, float minNutrient = 20, float waterHours = 23)
 		{
 			this.minSpawn = minSpawn;
@@ -115,6 +180,11 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the model of the spawn points (used to display the growth of the items)
+		/// </summary>
+		/// <param name="modelMesh">The mesh for the model</param>
+		/// <param name="modelMaterials">The materials for the model</param>
 		public VeggiePlantableTemplate SetModel(Mesh modelMesh, Material[] modelMaterials)
 		{
 			this.modelMesh = modelMesh;
@@ -122,6 +192,10 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		/// <summary>
+		/// Sets the spawn joints (the list needs to have 20 for non-deluxe and 34 for deluxe)
+		/// </summary>
+		/// <param name="spawnJoints">New spawn joints to set</param>
 		public VeggiePlantableTemplate SetSpawnJoints(List<ObjectTransformValues> spawnJoints)
 		{
 			if ((spawnJoints.Count < 20 && !isDeluxe) || (spawnJoints.Count < 34 && isDeluxe))
@@ -134,37 +208,37 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override VeggiePlantableTemplate Create()
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new SpawnResource()
+				new Create<SpawnResource>((spawn) =>
 				{
-					BonusChance = bonusChance,
-					forceDestroyLeftoversOnSpawn = false,
-					id = resID,
-					MaxActiveSpawns = 0,
-					MaxObjectsSpawned = maxSpawn,
-					MaxSpawnIntervalGameHours = maxHours,
-					MaxTotalSpawns = 0,
-					minBonusSelections = minBonusSelection,
-					MinNutrientObjectsSpawned = minNutrient,
-					MinObjectsSpawned = minSpawn,
-					MinSpawnIntervalGameHours = minHours,
-					wateringDurationHours = waterHours,
-					ObjectsToSpawn = toSpawn.ToArray(),
-					BonusObjectsToSpawn = bonusToSpawn.ToArray()
-				},
+					spawn.BonusChance = bonusChance;
+					spawn.forceDestroyLeftoversOnSpawn = false;
+					spawn.id = resID;
+					spawn.MaxActiveSpawns = 0;
+					spawn.MaxObjectsSpawned = maxSpawn;
+					spawn.MaxSpawnIntervalGameHours = maxHours;
+					spawn.MaxTotalSpawns = 0;
+					spawn.minBonusSelections = minBonusSelection;
+					spawn.MinNutrientObjectsSpawned = minNutrient;
+					spawn.MinObjectsSpawned = minSpawn;
+					spawn.MinSpawnIntervalGameHours = minHours;
+					spawn.wateringDurationHours = waterHours;
+					spawn.ObjectsToSpawn = toSpawn.ToArray();
+					spawn.BonusObjectsToSpawn = bonusToSpawn.ToArray();
+				}),
 				new Create<BoxCollider>((col) =>
 				{
 					col.size = new Vector3(8, 0.1f, 8);
 					col.center = new Vector3(0, 0, 0.1f);
 					col.isTrigger = true;
 				}),
-				new ScaleYOnlyMarker()
-				{
-					doNotScaleAsReplacement = false
-				}
+				new Create<ScaleYOnlyMarker>((scale) => scale.doNotScaleAsReplacement = false)
 			).AddAfterChildren(GrabJoints);
 
 			// Add spawn joints
@@ -181,8 +255,8 @@ namespace SRMLExtras.Templates
 						body.useGravity = false;
 						body.isKinematic = true;
 					}),
-					new FixedJoint(),
-					new HideOnStart()
+					new Create<FixedJoint>(null),
+					new Create<HideOnStart>(null)
 				).SetTransform(customSpawnJoints == null ? GardenObjects.spawnJoints[i] : customSpawnJoints[i])
 				.SetDebugMarker(MarkerType.SpawnPoint)
 				);
@@ -250,8 +324,8 @@ namespace SRMLExtras.Templates
 							body.useGravity = false;
 							body.isKinematic = true;
 						}),
-						new FixedJoint(),
-						new HideOnStart()
+						new Create<FixedJoint>(null),
+						new Create<HideOnStart>(null)
 					).SetTransform(customSpawnJoints == null ? GardenObjects.spawnJoints[i] : customSpawnJoints[i])
 					.SetDebugMarker(MarkerType.SpawnPoint)
 					);
@@ -276,10 +350,7 @@ namespace SRMLExtras.Templates
 							group.fadeMode = LODFadeMode.None;
 							group.animateCrossFading = false;
 						}),
-						new ScaleYOnlyMarker()
-						{
-							doNotScaleAsReplacement = false
-						}
+						new Create<ScaleYOnlyMarker>((scale) => scale.doNotScaleAsReplacement = false)
 					).SetTransform(GardenObjects.beds[i])
 					.AddChild(dirtDeluxe)
 					.AddChild(sprout.Clone().SetTransform(GardenObjects.bedSprouts[4]))

@@ -30,7 +30,7 @@ namespace SRMLExtras
 		}
 
 		// PRIVATE FIELDS STUFF
-		/*public static T SetPrivateField<T>(this T comp, string name, object value) where T : Component
+		public static T SetPrivateField<T>(this T comp, string name, object value) where T : Component
 		{
 			try
 			{
@@ -76,7 +76,7 @@ namespace SRMLExtras
 			catch { }
 
 			return default;
-		}*/
+		}
 
 		public static void CopyAllTo<T>(this T comp, T otherComp) where T : Component
 		{

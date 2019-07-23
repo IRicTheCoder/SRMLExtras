@@ -106,14 +106,8 @@ namespace SRMLExtras.Templates
 		{
 			// Create main object
 			mainObject.AddComponents(
-				new Identifiable()
-				{
-					id = ID
-				},
-				new Vacuumable()
-				{
-					size = vacSize
-				},
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 5f;
@@ -126,15 +120,9 @@ namespace SRMLExtras.Templates
 					col.center = Vector3.zero;
 					col.radius = 0.25f;
 				}),
-				new CollisionAggregator(),
-				new RegionMember()
-				{
-					canHibernate = true
-				},
-				new StopOnCollision()
-				{
-					distFromCol = 0.25f
-				}
+				new Create<CollisionAggregator>(null),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
+				new Create<StopOnCollision>((stop) => stop.distFromCol = 0.25f)
 			);
 
 			// Create model
@@ -155,18 +143,15 @@ namespace SRMLExtras.Templates
 						col.radius = 0.75f;
 						col.isTrigger = true;
 					}),
-					new EchoNote()
-					{
-						clip = clip
-					},
-					new ResetLayerChanges()
+					new Create<EchoNote>((note) => note.clip = clip),
+					new Create<ResetLayerChanges>(null)
 				));
 			}
 
 			return this;
 		}
 
-		internal void SetNoteRenderer(GameObject obj)
+		protected void SetNoteRenderer(GameObject obj)
 		{
 			obj.FindChild("echo_note").GetComponent<EchoNote>().renderer = obj.FindChild("model").GetComponent<MeshRenderer>();
 		}
