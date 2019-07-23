@@ -14,6 +14,7 @@ namespace SRMLExtras
 	/// <summary>
 	/// The main class and entry point for the mod
 	/// </summary>
+	[EnumHolder]
 	public class Main : ModEntryPoint
 	{
 		// THE EXECUTING ASSEMBLY
@@ -30,29 +31,26 @@ namespace SRMLExtras
 			HarmonyInstance.PatchAll(execAssembly);
 		}
 
+		public static Identifiable.Id CRATE_CUSTOM;
+
 		// LOADS MOD
 		public override void Load()
 		{
-			Create<Identifiable> test = new Create<Identifiable>(null);
-			BoxCollider col2 = new BoxCollider();
-
-			Console.Log("" + test);
-			Console.Log("" + col2);
-
 			BaseObjects.Populate();
 
 			// TEST FOR PREFABS
-			CrateTemplate newCrate = new CrateTemplate("crateCustom", Identifiable.Id.CRATE_DESERT_01).Create();
-
-			/*.SetSpawnInfo(10, 15)
+			CrateTemplate newCrate = new CrateTemplate("crateCustom", CRATE_CUSTOM, BaseObjects.originMaterial["spicyTofu"].Group()).SetSpawnInfo(10, 15)
 				.SetSpawnOptions(new List<BreakOnImpact.SpawnOption>() { new BreakOnImpact.SpawnOption()
 				{
 					spawn = GameContext.Instance.LookupDirector.GetPrefab(Identifiable.Id.INDIGONIUM_CRAFT),
 					weight = 1
-				}})*/
-			//LookupRegistry.RegisterIdentifiablePrefab(newCrate.ToPrefab());
+				}}).Create();
+
+			LookupRegistry.RegisterIdentifiablePrefab(newCrate.ToPrefab());
 
 			PrefabUtils.DumpPrefab(newCrate.ToPrefab());
+
+			Console.Log(EffectObjects.crateBrake.name);
 		}
 	}
 }

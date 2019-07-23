@@ -17,8 +17,11 @@ namespace SRMLExtras.Templates
 		private static LookupDirector Director => GameContext.Instance.LookupDirector;
 		private static GameModel GameModel => SceneContext.Instance.GameModel;
 
+		// Really Base Stuff
+		public readonly static Dictionary<string, int> layers = new Dictionary<string, int>();
+
 		// Markers
-		public readonly static Material fadeMat = new Material(Shader.Find("Standard")).InitializeNew((mat) =>
+		public readonly static Material fadeMat = new Material(Shader.Find("Standard")).Initialize((mat) =>
 		{
 			mat.SetFloat("_Mode", 2);
 			mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -81,6 +84,14 @@ namespace SRMLExtras.Templates
 		// Populates required values
 		internal static void Populate()
 		{
+			// Gets unity stuff
+			for (int i = 0; i < 32; i++)
+			{
+				string name = LayerMask.LayerToName(i);
+				if (!name.Equals(string.Empty) && !layers.ContainsKey(name))
+					layers.Add(name, i);
+			}
+
 			// Obtains objects loaded into the game that might be useful
 			foreach (Mesh mesh in Resources.FindObjectsOfTypeAll<Mesh>())
 			{
@@ -171,6 +182,7 @@ namespace SRMLExtras.Templates
 			GardenObjects.Populate();
 			TheWildsObjects.Populate();
 			RanchObjects.Populate();
+			EffectObjects.Populate();
 
 			// Adds Late Populate method
 			SceneManager.sceneLoaded += LatePopulate;
@@ -264,6 +276,7 @@ namespace SRMLExtras.Templates
 				GardenObjects.LatePopulate();
 				TheWildsObjects.LatePopulate();
 				RanchObjects.LatePopulate();
+				EffectObjects.LatePopulate();
 
 				populated = true;
 			}

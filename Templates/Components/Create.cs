@@ -2,9 +2,9 @@
 
 namespace SRMLExtras.Templates
 {
-	public class Create<T> : Component, ICreateComponent where T : Component
+	public class Create<T> : ICreateComponent where T : Component
 	{
-		private System.Action<T> action;
+		private readonly System.Action<T> action;
 
 		public Create(System.Action<T> action)
 		{
@@ -13,7 +13,8 @@ namespace SRMLExtras.Templates
 
 		public void AddComponent(GameObject obj)
 		{
-			action(obj.AddComponent<T>());
+			T comp = obj.AddComponent<T>();
+			action?.Invoke(comp);
 		}
 	}
 }

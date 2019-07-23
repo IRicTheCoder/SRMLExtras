@@ -50,14 +50,14 @@ namespace SRMLExtras.Templates
 			explosion = BaseObjects.originFXs["FX Explosion"];
 
 			// Audio Cues
-			fruitRelease = BaseObjects.originCues["Fruit Rustle"];
+			/*fruitRelease = BaseObjects.originCues["Fruit Rustle"];
 			veggieRelease = BaseObjects.originCues["Veggie Rustle"];
 			hitFruit = BaseObjects.originCues["HitFruit"];
 			hitVeggie = BaseObjects.originCues["HitVeggie"];
 			hitChicken = BaseObjects.originCues["HitChicken"];
 			hitChick = BaseObjects.originCues["HitChick"];
 			hitPlort = BaseObjects.originCues["HitPlort"];
-			flapCue = BaseObjects.originCues["ChickenFlap"];
+			flapCue = BaseObjects.originCues["ChickenFlap"];*/
 
 			// Audio Cue Instances
 			// TODO: Check this

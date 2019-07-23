@@ -71,38 +71,26 @@ namespace SRMLExtras.Templates
 		public override CrateTemplate Create()
 		{
 			// Create main object
-			mainObject.AddComponents("",
-				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.originMesh["objCrate"]),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = materials),
-				new Create<Identifiable>((ident) =>
-				{
-					ident.id = ID;
-				}),
-				new Create<Vacuumable>((vac) =>
-				{
-					vac.size = vacSize;
-				}),
+			mainObject.AddComponents(
 				new Create<Rigidbody>((body) =>
 				{
 					body.drag = 0.2f;
 					body.angularDrag = 0.5f;
 					body.mass = 1f;
 					body.useGravity = true;
-				}),
-				new Create<DragFloatReactor>((drag) =>
-				{
-					drag.floatDragMultiplier = 10;
-				}),
+				}),				
 				new Create<BoxCollider>((col) =>
 				{
 					col.center = Vector3.zero;
 					col.size = Vector3.one;
 				}),
 				new Create<CollisionAggregator>(null),
-				new Create<RegionMember>((rg) =>
-				{
-					rg.canHibernate = true;
-				}),
+				new Create<MeshFilter>((filter) => filter.sharedMesh = BaseObjects.originMesh["objCrate"]),
+				new Create<MeshRenderer>((render) => render.sharedMaterials = materials),
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
+				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 10),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
 				new Create<BreakOnImpact>((imp) =>
 				{
 					imp.minSpawns = minSpawn;
@@ -111,6 +99,8 @@ namespace SRMLExtras.Templates
 					imp.spawnOptions = spawnOptions;
 				})
 			);
+
+			mainObject.Layer = BaseObjects.layers["Actor"];
 
 			return this;
 		}

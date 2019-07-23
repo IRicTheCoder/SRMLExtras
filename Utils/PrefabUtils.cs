@@ -42,7 +42,7 @@ namespace SRMLExtras
 
 			void RunThroughChildren(GameObject parent, StreamWriter writer, string indent)
 			{
-				writer.WriteLine($"{indent}{parent.name.ToUpper()} ({parent.name})");
+				writer.WriteLine($"{indent}{parent.name.ToUpper()} ({parent.name}) - {LayerMask.LayerToName(go.layer)} ({go.layer})");
 
 				foreach (Component comp in parent.GetComponents<Component>())
 				{
