@@ -57,6 +57,7 @@
     <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />
     <Compile Include="Templates\Identifiables\AnimalTemplate.cs" />
+    <Compile Include="Templates\Identifiables\SlimeTemplate.cs" />
     <Compile Include="Templates\Identifiables\CraftResourceTemplate.cs" />
     <Compile Include="Templates\Identifiables\CrateTemplate.cs" />
     <Compile Include="Templates\Identifiables\FashionAttachTemplate.cs" />

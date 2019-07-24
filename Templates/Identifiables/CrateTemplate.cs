@@ -95,7 +95,7 @@ namespace SRMLExtras.Templates
 				{
 					imp.minSpawns = minSpawn;
 					imp.maxSpawns = maxSpawn;
-					imp.breakFX = EffectObjects.crateBrake;
+					imp.breakFX = EffectObjects.fxCrateBrake;
 					imp.spawnOptions = spawnOptions;
 				})
 			);

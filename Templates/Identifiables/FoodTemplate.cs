@@ -60,8 +60,8 @@ namespace SRMLExtras.Templates
 
 			if (type != Type.CUSTOM)
 			{
-				releaseCue = type == Type.VEGGIE ? EffectObjects.veggieRelease : EffectObjects.fruitRelease;
-				hitCue = type == Type.VEGGIE ? EffectObjects.hitVeggie : EffectObjects.hitFruit;
+				releaseCue = type == Type.VEGGIE ? EffectObjects.cueVeggieRelease : EffectObjects.cueFruitRelease;
+				hitCue = type == Type.VEGGIE ? EffectObjects.cueHitVeggie : EffectObjects.cueHitFruit;
 				ejectWhenMature = type == Type.VEGGIE;
 			}
 		}
@@ -176,7 +176,7 @@ namespace SRMLExtras.Templates
 					res.edibleGameHours = edibleHours;
 					res.rottenGameHours = rottenHours;
 					res.rottenMat = rottenMaterial;
-					res.destroyFX = EffectObjects.rottenDespawn;
+					res.destroyFX = EffectObjects.fxRottenDespawn;
 					res.releaseCue = releaseCue;
 					res.vacuumableWhenRipe = true;
 					res.addEjectionForce = ejectWhenMature;

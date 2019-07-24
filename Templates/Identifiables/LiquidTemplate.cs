@@ -77,7 +77,7 @@ namespace SRMLExtras.Templates
 					dest.hoursOfContactAllowed = 0;
 					dest.wateringRadius = 4;
 					dest.wateringUnits = 3;
-					dest.destroyFX = EffectObjects.waterSplat;
+					dest.destroyFX = EffectObjects.fxWaterSplat;
 					dest.touchingWaterOkay = false;
 					dest.touchingAshOkay = false;
 					dest.reactToActors = false;

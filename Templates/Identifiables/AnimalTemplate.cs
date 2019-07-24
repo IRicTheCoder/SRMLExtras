@@ -61,7 +61,7 @@ namespace SRMLExtras.Templates
 			{
 				move.maxJump = isChild ? 0.7f : 1f;
 				move.walkForwardForce = isChild ? 2.5f : 3.333f;
-				move.flapCue = EffectObjects.flapCue;
+				move.flapCue = EffectObjects.cueFlap;
 			});
 
 			skinnedMesh = BaseObjects.originSkinnedMesh["HenSkinned"];
@@ -182,7 +182,7 @@ namespace SRMLExtras.Templates
 				}),
 				new Create<PlaySoundOnHit>((hit) =>
 				{
-					hit.hitCue = isChild ? EffectObjects.hitChick : EffectObjects.hitChicken;
+					hit.hitCue = isChild ? EffectObjects.cueHitChick : EffectObjects.cueHitChicken;
 					hit.minTimeBetween = 0.2f;
 					hit.minForce = 1;
 					hit.includeControllerCollisions = false;
@@ -217,7 +217,7 @@ namespace SRMLExtras.Templates
 						rep.deluxeDensityFactor = 2;
 						rep.minReproduceGameHours = minRepHours;
 						rep.maxReproduceGameHours = maxRepHours;
-						rep.produceFX = EffectObjects.stars;
+						rep.produceFX = EffectObjects.fxStars;
 						rep.childPrefab = child;
 					})
 				);
@@ -229,7 +229,7 @@ namespace SRMLExtras.Templates
 					new Create<TransformAfterTime>((trans) =>
 					{
 						trans.delayGameHours = childHours;
-						trans.transformFX = EffectObjects.stars;
+						trans.transformFX = EffectObjects.fxStars;
 					}),
 					new Create<EggActivator>((egg) =>
 					{
@@ -245,7 +245,7 @@ namespace SRMLExtras.Templates
 					{
 						trans.transformChance = 0.05f;
 						trans.targetPrefab = elder;
-						trans.transformFX = EffectObjects.stars;
+						trans.transformFX = EffectObjects.fxStars;
 					})
 				);
 			}

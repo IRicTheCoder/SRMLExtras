@@ -67,16 +67,16 @@ namespace SRMLExtras.Templates
 				new Create<PlortInvulnerability>((plort) => plort.invulnerabilityPeriod = 3),
 				new Create<PlaySoundOnHit>((hit) =>
 				{
-					hit.hitCue = EffectObjects.hitPlort;
+					hit.hitCue = EffectObjects.cueHitPlort;
 					hit.minTimeBetween = 0.2f;
 					hit.minForce = 1;
 					hit.includeControllerCollisions = false;
 				}),
-				new Create<DestroyOnIgnite>((dest) => dest.igniteFX = EffectObjects.plortDespawn),
+				new Create<DestroyOnIgnite>((dest) => dest.igniteFX = EffectObjects.fxPlortDespawn),
 				new Create<DestroyPlortAfterTime>((dest) =>
 				{
 					dest.lifeTimeHours = 24;
-					dest.destroyFX = EffectObjects.plortDespawn;
+					dest.destroyFX = EffectObjects.fxPlortDespawn;
 				})
 			);
 

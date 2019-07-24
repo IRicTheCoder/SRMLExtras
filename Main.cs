@@ -50,7 +50,7 @@ namespace SRMLExtras
 
 			PrefabUtils.DumpPrefab(newCrate.ToPrefab());
 
-			Console.Log(EffectObjects.crateBrake.name);
+			Console.Log(EffectObjects.fxCrateBrake.name);
 		}
 	}
 }

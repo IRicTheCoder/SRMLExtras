@@ -73,14 +73,14 @@ namespace SRMLExtras.Templates
 				{
 					fash.slot = slot;
 					fash.attachPrefab = attachPrefab;
-					fash.attachFX = EffectObjects.fashionApply;
+					fash.attachFX = EffectObjects.fxFashionApply;
 				}),
 				new Create<DestroyOnTouching>((dest) =>
 				{
 					dest.hoursOfContactAllowed = 0;
 					dest.wateringRadius = 0;
 					dest.wateringUnits = 0;
-					dest.destroyFX = EffectObjects.fashionBurst;
+					dest.destroyFX = EffectObjects.fxFashionBurst;
 					dest.touchingWaterOkay = false;
 					dest.touchingAshOkay = false;
 					dest.reactToActors = false;

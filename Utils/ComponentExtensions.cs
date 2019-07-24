@@ -14,19 +14,20 @@ namespace SRMLExtras
 			return mat;
 		}
 
-		public static Material[] Group(this Material mat)
+		// OBJECT CONTROL
+		public static T[] Group<T>(this T obj) where T : Object
 		{
-			return new[] { mat };
+			return new[] { obj };
 		}
 
-		public static Material[] Group(this Material mat, params Material[] others)
+		public static T[] Group<T>(this T obj, params T[] others) where T : Object
 		{
-			List<Material> mats = new List<Material>
+			List<T> objs = new List<T>
 			{
-				mat
+				obj
 			};
-			mats.AddRange(others);
-			return mats.ToArray();
+			objs.AddRange(others);
+			return objs.ToArray();
 		}
 
 		// PRIVATE FIELDS STUFF
