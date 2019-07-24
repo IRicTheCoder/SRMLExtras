@@ -48,9 +48,7 @@ namespace SRMLExtras
 
 			LookupRegistry.RegisterIdentifiablePrefab(newCrate.ToPrefab());
 
-			PrefabUtils.DumpPrefab(newCrate.ToPrefab());
-
-			Console.Log(EffectObjects.fxCrateBrake.name);
+			PrefabUtils.DumpPrefab(GameContext.Instance.LookupDirector.GetGordo(Identifiable.Id.PINK_GORDO));
 		}
 	}
 }

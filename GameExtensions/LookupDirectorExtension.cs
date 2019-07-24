@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using SRML;
+using SRML.SR;
 using SRMLExtras;
+using SRMLExtras.Templates;
 using UnityEngine;
 
 public static class LookupDirectorExtension
@@ -38,6 +41,26 @@ public static class LookupDirectorExtension
 		return director.GetPrefab(ID).GetComponent<Identifiable>();
 	}
 
+	// Get IDs Methods
+	public static List<Identifiable.Id> GetSlimeIDs(this LookupDirector director, params Identifiable.Id[] exclusions)
+	{
+		List<Identifiable.Id> result = new List<Identifiable.Id>();
+		List<Identifiable.Id> exclude = new List<Identifiable.Id>(exclusions);
+
+		foreach (Identifiable.Id id in Enum.GetValues(typeof(Identifiable.Id)))
+		{
+			if (exclude.Contains(id))
+				continue;
+
+			if (!id.ToString().EndsWith("_SLIME"))
+				continue;
+
+			result.Add(id);
+		}
+
+		return result;
+	}
+
 	// Check Methods
 	public static bool LargoExists(this LookupDirector director, Identifiable.Id slimeA, Identifiable.Id slimeB)
 	{
@@ -50,6 +73,66 @@ public static class LookupDirectorExtension
 		object result = Enum.Parse(typeof(Identifiable.Id), largoA) ?? Enum.Parse(typeof(Identifiable.Id), largoB);
 
 		return result != null;
+	}
+
+	// Largo Creation System
+	public static List<Identifiable.Id> MakeLargos(this LookupDirector director, Identifiable.Id slimeA, Action<SlimeDefinition> extraLargoBehaviour = null, Predicate<Identifiable.Id> canBeTarr = null, Predicate<Identifiable.Id> forceLargo = null)
+	{
+		List<Identifiable.Id> largoIDs = new List<Identifiable.Id>();
+
+		foreach (Identifiable.Id id in GameContext.Instance.LookupDirector.GetSlimeIDs(slimeA))
+			largoIDs.Add(director.CraftLargo(slimeA, id, extraLargoBehaviour, canBeTarr, forceLargo));
+
+		largoIDs.RemoveAll((id) => id == Identifiable.Id.NONE);
+
+		return largoIDs;
+	}
+
+	public static Identifiable.Id CraftLargo(this LookupDirector director, Identifiable.Id slimeA, Identifiable.Id slimeB, Action<SlimeDefinition> extraLargoBehaviour = null, Predicate<Identifiable.Id> canBeTarr = null, Predicate<Identifiable.Id> forceLargo = null)
+	{
+		if (director.LargoExists(slimeA, slimeB))
+			return Identifiable.Id.NONE;
+
+		string prefabName = "slime" + 
+			slimeA.ToString().Replace("_SLIME", "").ToUpper()[0] + slimeA.ToString().Replace("_SLIME", "").ToLower().Substring(1) + 
+			slimeB.ToString().Replace("_SLIME", "").ToUpper()[0] + slimeB.ToString().Replace("_SLIME", "").ToLower().Substring(1);
+
+		string name = slimeA.ToString().Replace("_SLIME", "") + slimeB.ToString().Replace("_SLIME", "") + "_LARGO";
+		Identifiable.Id largoID = IdentifiableRegistry.CreateIdentifiableId(EnumPatcher.GetFirstFreeValue(typeof(Identifiable.Id)), name);
+
+		SlimeDefinitions defs = GameContext.Instance.SlimeDefinitions;
+
+		SlimeDefinition curr = defs.GetSlimeByIdentifiableId(slimeA);
+		SlimeDefinition other = defs.GetSlimeByIdentifiableId(slimeB);
+
+		bool largofyState = curr.CanLargofy;
+		curr.CanLargofy = true;
+
+		if (!other.CanLargofy && !(forceLargo?.Invoke(slimeB) ?? false))
+			return Identifiable.Id.NONE;
+
+		bool largofyStateB = other.CanLargofy;
+		other.CanLargofy = true;
+
+		SlimeDefinition largoDef = defs.GetLargoByBaseSlimes(curr, other);
+		largoDef.IdentifiableId = largoID;
+
+		curr.CanLargofy = largofyState;
+		other.CanLargofy = largofyStateB;
+
+		if (!(canBeTarr?.Invoke(slimeB) ?? true))
+		{
+			largoDef.Diet.EatMap.RemoveAll((entry) => entry.becomesId == Identifiable.Id.TARR_SLIME);
+			largoDef.Diet.EatMap.RemoveAll((entry) => entry.becomesId == Identifiable.Id.GLITCH_TARR_SLIME);
+		}
+
+		extraLargoBehaviour?.Invoke(largoDef);
+
+		SlimeTemplate largoTemplate = new SlimeTemplate(prefabName, largoDef).SetVacSize(Vacuumable.Size.LARGE).Create();
+
+		LookupRegistry.RegisterIdentifiablePrefab(largoTemplate.ToPrefab());
+
+		return largoID;
 	}
 
 	// Initializes the Extension

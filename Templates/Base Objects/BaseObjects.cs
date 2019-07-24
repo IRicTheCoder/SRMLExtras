@@ -77,6 +77,7 @@ namespace SRMLExtras.Templates
 		};
 
 		// Single Objects
+		public static GameObject splatQuad;
 
 		// Populate blocker
 		private static bool populated = false;
@@ -155,6 +156,8 @@ namespace SRMLExtras.Templates
 			//originSkinnedMesh.Add("HenSkinned", Director.GetPrefab(Identifiable.Id.HEN).FindChild("mesh_body1"));
 			//originBones.Add("HenBones", Director.GetPrefab(Identifiable.Id.HEN).FindChild("root"));
 
+			originBones.Add("SlimeBones", Director.GetPrefab(Identifiable.Id.PINK_SLIME).FindChild("Appearance"));
+
 			// Gets the cube for the markers
 			cubeMesh = originMesh["Cube"];
 
@@ -177,6 +180,7 @@ namespace SRMLExtras.Templates
 			}
 
 			// Single Objects
+			splatQuad = Director.GetPrefab(Identifiable.Id.PINK_SLIME).GetComponent<SplatOnImpact>().splatPrefab;
 
 			// Populates all other object classes
 			GardenObjects.Populate();

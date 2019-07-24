@@ -10,9 +10,6 @@ namespace SRMLExtras.Templates
 {
 	public static class EffectObjects
 	{
-		// The Director
-		private static LookupDirector Director => GameContext.Instance.LookupDirector;
-
 		// Identifiable Effects
 		public static GameObject fxCrateBrake;
 		public static GameObject fxRottenDespawn;
@@ -22,6 +19,7 @@ namespace SRMLExtras.Templates
 		public static GameObject fxFashionBurst;
 
 		public static GameObject fxWaterSplat;
+		public static GameObject fxSplat;
 
 		public static GameObject fxPlortDespawn;
 		public static GameObject fxExplosion;
@@ -57,6 +55,7 @@ namespace SRMLExtras.Templates
 			fxFashionBurst = BaseObjects.originFXs["FX FashionBurst"];
 
 			fxWaterSplat = BaseObjects.originFXs["FX waterSplat"];
+			fxSplat = BaseObjects.originFXs["FX Splat"];
 
 			fxPlortDespawn = BaseObjects.originFXs["FX PlortDespawn"];
 			fxExplosion = BaseObjects.originFXs["FX Explosion"];
