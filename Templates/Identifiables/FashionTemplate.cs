@@ -191,6 +191,8 @@ namespace SRMLExtras.Templates
 				new Create<VacDelaunchTrigger>(null)
 			));
 
+			mainObject.Layer = BaseObjects.layers["Actor"];
+
 			return this;
 		}
 	}

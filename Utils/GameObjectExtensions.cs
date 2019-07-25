@@ -136,10 +136,26 @@ namespace SRMLExtras
 			return result.ToArray();
 		}
 
-		// PREFAB COPY STUFF
+		// OBTAIN CHILD
+		public static GameObject GetChildCopy(this GameObject obj, string name)
+		{
+			GameObject copy = obj.CreatePrefabCopy();
+			GameObject child = copy.FindChild(name);
+			child.SetActive(false);
+			child.transform.parent = null;
+
+			SRML.Utils.GameObjectUtils.Prefabitize(child);
+			Object.Destroy(copy);
+
+			return child;
+		}
+
+		// COPY STUFF
 		public static GameObject CreatePrefabCopy(this GameObject obj)
 		{
 			return SRML.Utils.PrefabUtils.CopyPrefab(obj);
 		}
+
+
 	}
 }

@@ -26,6 +26,7 @@ namespace SRMLExtras.Templates
 
 		private event System.Action<GameObject> AfterChildren;
 		private readonly List<string> actionOnStart = new List<string>();
+		private readonly List<string> actionOnAwake = new List<string>();
 
 		public GameObjectTemplate(string name, params ICreateComponent[] comps)
 		{
@@ -98,6 +99,12 @@ namespace SRMLExtras.Templates
 			return this;
 		}
 
+		public GameObjectTemplate AddAwakeAction(string actionID)
+		{
+			actionOnAwake.Add(actionID);
+			return this;
+		}
+
 		public GameObjectTemplate AddChild(GameObjectTemplate template)
 		{
 			children.Add(template);
@@ -107,6 +114,7 @@ namespace SRMLExtras.Templates
 		public GameObjectTemplate AddComponents(params ICreateComponent[] comps)
 		{
 			components.AddRange(comps);
+			components.RemoveAll(c => c == null);
 			return this;
 		}
 
@@ -147,12 +155,6 @@ namespace SRMLExtras.Templates
 			obj.transform.localEulerAngles = Rotation;
 			obj.transform.localScale = Scale;
 
-			if (actionOnStart.Count > 0)
-			{
-				ActionOnStart comp = obj.AddComponent<ActionOnStart>();
-				comp.actions = actionOnStart;
-			}
-
 			foreach (ICreateComponent comp in components)
 			{
 				if (comp == null)
@@ -163,6 +165,18 @@ namespace SRMLExtras.Templates
 
 			if (Tag != null) obj.tag = Tag;
 			if (Layer != LayerMask.NameToLayer("Default")) obj.layer = Layer;
+
+			if (actionOnAwake.Count > 0)
+			{
+				ActionOnAwake comp = obj.AddComponent<ActionOnAwake>();
+				comp.actions = actionOnAwake;
+			}
+
+			if (actionOnStart.Count > 0)
+			{
+				ActionOnStart comp = obj.AddComponent<ActionOnStart>();
+				comp.actions = actionOnStart;
+			}
 
 			foreach (GameObjectTemplate child in children)
 				child.ToGameObject(obj);

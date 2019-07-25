@@ -160,11 +160,11 @@ namespace SRMLExtras.Templates
 			}
 
 			// Load Bones
-			//originSkinnedMesh.Add("HenSkinned", Director.GetPrefab(Identifiable.Id.HEN).FindChild("mesh_body1"));
-			//originBones.Add("HenBones", Director.GetPrefab(Identifiable.Id.HEN).FindChild("root"));
+			originSkinnedMesh.Add("HenSkinned", Director.GetPrefab(Identifiable.Id.HEN).GetChildCopy("Hen Hen/mesh_body1"));
+			originBones.Add("HenBones", Director.GetPrefab(Identifiable.Id.HEN).GetChildCopy("Hen Hen/root"));
 
-			originBones.Add("SlimeBones", Director.GetPrefab(Identifiable.Id.PINK_SLIME).FindChild("Appearance"));
-			originBones.Add("GordoBones", Director.GetGordo(Identifiable.Id.PINK_GORDO).FindChild("Vibrating"));
+			originBones.Add("SlimeBones", Director.GetPrefab(Identifiable.Id.PINK_SLIME).GetChildCopy("Appearance"));
+			originBones.Add("GordoBones", Director.GetGordo(Identifiable.Id.PINK_GORDO).GetChildCopy("Vibrating"));
 
 			// Gets the cube for the markers
 			cubeMesh = originMesh["Cube"];
@@ -189,6 +189,9 @@ namespace SRMLExtras.Templates
 
 			// Single Objects
 			splatQuad = Director.GetPrefab(Identifiable.Id.PINK_SLIME).GetComponent<SplatOnImpact>().splatPrefab;
+
+			// Register Global Template Actions
+			TemplateActions.RegisterAction("buildSlime", AssembleModules);
 
 			// Populates all other object classes
 			GardenObjects.Populate();
@@ -299,6 +302,16 @@ namespace SRMLExtras.Templates
 
 				populated = true;
 			}
+		}
+
+		// TEMPLATE ACTIONS
+		internal static void AssembleModules(GameObject obj)
+		{
+			obj.GetComponent<SlimeVarietyModules>().Assemble();
+
+			bool isGordo = obj.GetComponent<SlimeEat>().slimeDefinition.Name.StartsWith("roamGordo.");
+			SlimeEmotions emo = obj.GetComponent<SlimeEmotions>();
+			emo?.SetEmotionEnabled(SlimeEmotions.Emotion.HUNGER, !isGordo);
 		}
 	}
 }

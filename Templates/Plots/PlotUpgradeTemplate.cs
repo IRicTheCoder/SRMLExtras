@@ -11,6 +11,7 @@ namespace SRMLExtras.Templates
 	public interface IPlotUpgradeTemplate
 	{
 		ICreateComponent GetUpgrader();
+		System.Action<GameObject> GetIdentifyAction();
 	}
 
 	/// <summary>
@@ -22,15 +23,20 @@ namespace SRMLExtras.Templates
 		// Base for Plot Upgrade
 		protected LandPlot.Upgrade upgrade;
 		protected Create<T> upgrader;
+		protected System.Action<GameObject> setupComponent;
 
 		/// <summary>
-		/// Template to create a plot frame
+		/// Template to create a plot upgrade
 		/// </summary>
 		/// <param name="name">The name of the object</param>
-		public PlotUpgradeTemplate(string name, LandPlot.Upgrade upgrade, Create<T> upgrader) : base(name)
+		/// <param name="upgrade">The upgrade for this land plot</param>
+		/// <param name="upgrader">The upgrader component to add to the main object</param>
+		/// <param name="setupComponent">The action to setup the component after creation</param>
+		public PlotUpgradeTemplate(string name, LandPlot.Upgrade upgrade, Create<T> upgrader, System.Action<GameObject> setupComponent) : base(name)
 		{
 			this.upgrade = upgrade;
 			this.upgrader = upgrader;
+			this.setupComponent = setupComponent;
 		}
 
 		/// <summary>
@@ -46,7 +52,7 @@ namespace SRMLExtras.Templates
 		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
 		/// </summary>
 		/// <param name="action">The action to construct the template</param>
-		public PlotUpgradeTemplate<T> Create(System.Action<GameObjectTemplate> action)
+		public virtual PlotUpgradeTemplate<T> Create(System.Action<GameObjectTemplate> action)
 		{
 			action?.Invoke(mainObject);
 			return this;
@@ -55,6 +61,11 @@ namespace SRMLExtras.Templates
 		ICreateComponent IPlotUpgradeTemplate.GetUpgrader()
 		{
 			return upgrader;
+		}
+
+		System.Action<GameObject> IPlotUpgradeTemplate.GetIdentifyAction()
+		{
+			return setupComponent;
 		}
 	}
 }

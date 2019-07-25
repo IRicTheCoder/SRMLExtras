@@ -159,7 +159,7 @@ namespace SRMLExtras.Templates
 		protected void SetValuesAfterBuild(GameObject obj)
 		{
 			// Adds the bones
-			GameObject bones = boneStructure.CreatePrefabCopy() ?? BaseObjects.originBones["GordoBones"].CreatePrefabCopy();
+			GameObject bones = boneStructure?.CreatePrefabCopy() ?? BaseObjects.originBones["GordoBones"].CreatePrefabCopy();
 			bones.transform.parent = obj.transform;
 			bones.transform.localPosition = new Vector3(0, -0.5f, 0);
 			bones.SetActive(true);

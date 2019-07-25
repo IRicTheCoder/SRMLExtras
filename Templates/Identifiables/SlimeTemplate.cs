@@ -19,9 +19,9 @@ namespace SRMLExtras.Templates
 		protected SlimeDefinition definition;
 		protected FearProfile fearProfile;
 
-		protected SlimeEmotions.EmotionState hungerState;
-		protected SlimeEmotions.EmotionState agitationState;
-		protected SlimeEmotions.EmotionState fearState;
+		protected SlimeEmotions.EmotionState hungerState = new SlimeEmotions.EmotionState(SlimeEmotions.Emotion.HUNGER, 0, 0, 0, 0);
+		protected SlimeEmotions.EmotionState agitationState = new SlimeEmotions.EmotionState(SlimeEmotions.Emotion.AGITATION, 0, 0, 0, 0);
+		protected SlimeEmotions.EmotionState fearState = new SlimeEmotions.EmotionState(SlimeEmotions.Emotion.FEAR, 0, 0, 0, 0);
 
 		protected float driveToEat = 0.333f;
 		protected float drivePerEat = 0.333f;
@@ -187,172 +187,157 @@ namespace SRMLExtras.Templates
 		public override SlimeTemplate Create()
 		{
 			// Builds the slime module
-			BuildModule();
+			if (!isGordo) BuildModule();
+
+			// Create conditional components
+			Create<SlimeFeral> slimeFeral = new Create<SlimeFeral>((feral) =>
+			{
+				feral.auraPrefab = EffectObjects.fxFeralAura;
+				feral.dynamicToFeral = false;
+				feral.dynamicFromFeral = true;
+				feral.feralLifetimeHours = 3;
+			});
 
 			// Create main object
-			if (definition.IsLargo)
-			{
-				mainObject.AddComponents(
-					new Create<Identifiable>((ident) => ident.id = ID),
-					new Create<Vacuumable>((vac) => vac.size = vacSize),
-					new Create<SlimeAppearanceApplicator>((app) =>
-					{
-						app.SlimeDefinition = definition;
-						app.SlimeExpression = SlimeFace.SlimeExpression.Happy;
-					}),
-					new Create<SlimeVarietyModules>((modules) => modules.slimeModules = definition.SlimeModules)
-				);
-			}
-			else
-			{
-				mainObject.AddComponents(
-					new Create<Identifiable>((ident) => ident.id = ID),
-					new Create<Vacuumable>((vac) => vac.size = vacSize),
-					new Create<SlimeEat>((eat) =>
-					{
-						eat.slimeDefinition = definition;
-						eat.damagePerAttack = 20;
-						eat.EatFX = EffectObjects.fxSlimeEat;
-						eat.EatFavoriteFX = EffectObjects.fxSlimeFavEat;
-						eat.ProduceFX = EffectObjects.fxSlimeProduce;
-						eat.TransformFX = EffectObjects.fxSlimeTrans;
-						eat.minDriveToEat = driveToEat;
-						eat.drivePerEat = drivePerEat;
-						eat.agitationPerEat = agitPerEat;
-						eat.agitationPerFavEat = agitPerFavEat;
-
-					}),
-					new Create<ReactToToyNearby>((react) => react.slimeDefinition = definition),
-					new Create<GotoConsumable>((goT) =>
-					{
-						goT.maxJump = 10;
-						goT.attemptTime = 10;
-						goT.giveUpTime = 10;
-						goT.minSearchRad = 5;
-						goT.maxSearchRad = 30;
-						goT.facingStability = 1;
-						goT.facingSpeed = 5;
-						goT.pursuitSpeedFactor = 1;
-						goT.minDist = 0;
-					}),
-					new Create<SlimeRandomMove>((move) =>
-					{
-						move.verticalFactor = 1;
-						move.scootSpeedFactor = 1;
-					}),
-					new Create<SlimeHealth>((health) => health.maxHealth = maxHealth),
-					new Create<SlimeEmotions>((emo) =>
-					{
-						emo.initHunger = hungerState;
-						emo.initAgitation = agitationState;
-						emo.initFear = fearState;
-					}),
-					new Create<SlimeSubbehaviourPlexer>(null),
-					new Create<KeepUpright>((keep) =>
-					{
-						keep.stability = 0.7f;
-						keep.speed = 4f;
-					}),
-					new Create<FleeThreats>((flee) =>
-					{
-						flee.fearProfile = fearProfile;
-						flee.driver = SlimeEmotions.Emotion.FEAR;
-						flee.maxJump = 4;
-						flee.facingStability = 0.2f;
-						flee.facingSpeed = 1;
-					}),
-					new Create<SlimeAudio>((audio) => audio.slimeSounds = definition.Sounds),
-					new Create<SECTR_PointSource>(null),
-					new Create<EscapeStuck>(null),
-					new Create<MaybeCullOnReenable>(null),
-					new Create<SplatOnImpact>((splat) =>
-					{
-						splat.splatPrefab = BaseObjects.splatQuad;
-						splat.splatFXPrefab = EffectObjects.fxSplat;
-					}),
-					new Create<AweTowardsLargos>((awe) =>
-					{
-						awe.minSearchRad = 5;
-						awe.maxSearchRad = 15;
-						awe.facingStability = 1;
-						awe.facingSpeed = 5;
-						awe.pursuitSpeedFactor = 1;
-						awe.minDist = 0;
-					}),
-					new Create<SlimeFaceAnimator>(null),
-					new Create<CalmedByWaterSpray>((spray) =>
-					{
-						spray.agitationReduction = 0.1f;
-						spray.calmedHours = 0.3333f;
-					}),
-					new Create<TotemLinkerHelper>(null),
-					new Create<AweTowardsAttractors>((awe) =>
-					{
-						awe.facingSpeed = 2.5f;
-						awe.facingStability = 1;
-					}),
-					new Create<AttachFashions>((fash) => fash.gordoMode = false),
-					new Create<PlayWithToys>((play) =>
-					{
-						play.slimeDefinition = definition;
-						play.onlyFloatingToys = false;
-						play.minSearchRad = 5;
-						play.maxSearchRad = 15;
-						play.facingSpeed = 5;
-						play.facingStability = 1;
-						play.pursuitSpeedFactor = 1;
-						play.minDist = 0;
-					}),
-					new Create<SlimeIgniteReact>((react) => react.igniteFX = EffectObjects.fxStars),
-					new Create<Chomper>((chop) => chop.timePerAttack = 3),
-					new Create<SlimeEyeComponents>(null),
-					new Create<SlimeMouthComponents>(null),
-					new Create<SlimeAppearanceApplicator>((app) =>
-					{
-						app.SlimeDefinition = definition;
-						app.SlimeExpression = SlimeFace.SlimeExpression.Happy;
-					}),
-					new Create<SlimeVarietyModules>((modules) => modules.slimeModules = slimeModule.Group()),
-					new Create<Rigidbody>((body) =>
-					{
-						body.drag = 0.2f;
-						body.angularDrag = 5f;
-						body.mass = 0.5f;
-						body.useGravity = true;
-					}),
-					new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 25f),
-					new Create<SphereCollider>((col) =>
-					{
-						col.center = Vector3.zero;
-						col.radius = 0.5f;
-					}),
-					new Create<CollisionAggregator>(null),
-					new Create<RegionMember>((rg) => rg.canHibernate = true)
-				);
-			}
-
-			if (canBeAGlitch)
-				mainObject.AddComponents(new Create<GlitchSlime>(null));
-
-			if (canBeFeral)
-			{
-				mainObject.AddComponents(
-					new Create<SlimeFeral>((feral) =>
-					{
-						feral.auraPrefab = EffectObjects.fxFeralAura;
-						feral.dynamicToFeral = false;
-						feral.dynamicFromFeral = true;
-						feral.feralLifetimeHours = 3;
-					})
-				);
-			}
+			mainObject.AddComponents(
+				new Create<SlimeAppearanceApplicator>((app) =>
+				{
+					app.SlimeDefinition = definition;
+					app.SlimeExpression = SlimeFace.SlimeExpression.Happy;
+				}),
+				new Create<Identifiable>((ident) => ident.id = ID),
+				new Create<RegionMember>((rg) => rg.canHibernate = true),
+				new Create<SlimeVarietyModules>((modules) =>
+				{
+					modules.baseModule = definition.BaseModule;
+					modules.slimeModules = slimeModule?.Group() ?? definition.SlimeModules;
+				}),				
+				new Create<SlimeEat>((eat) =>
+				{
+					eat.slimeDefinition = definition;
+					eat.damagePerAttack = 20;
+					eat.EatFX = EffectObjects.fxSlimeEat;
+					eat.EatFavoriteFX = EffectObjects.fxSlimeFavEat;
+					eat.ProduceFX = EffectObjects.fxSlimeProduce;
+					eat.TransformFX = EffectObjects.fxSlimeTrans;
+					eat.minDriveToEat = driveToEat;
+					eat.drivePerEat = drivePerEat;
+					eat.agitationPerEat = agitPerEat;
+					eat.agitationPerFavEat = agitPerFavEat;
+					eat.onFinishChompSuccess = (go) => { };
+				}),
+				new Create<ReactToToyNearby>((react) => react.slimeDefinition = definition),
+				new Create<SphereCollider>((col) =>
+				{
+					col.center = Vector3.zero;
+					col.radius = 0.5f;
+				}),
+				new Create<Rigidbody>((body) =>
+				{
+					body.drag = 0.2f;
+					body.angularDrag = 5f;
+					body.mass = 0.5f;
+					body.useGravity = true;
+				}),
+				new Create<Vacuumable>((vac) => vac.size = vacSize),
+				new Create<GotoConsumable>((goT) =>
+				{
+					goT.maxJump = 10;
+					goT.attemptTime = 10;
+					goT.giveUpTime = 10;
+					goT.minSearchRad = 5;
+					goT.maxSearchRad = 30;
+					goT.facingStability = 1;
+					goT.facingSpeed = 5;
+					goT.pursuitSpeedFactor = 1;
+					goT.minDist = 0;
+				}),
+				new Create<SlimeRandomMove>((move) =>
+				{
+					move.verticalFactor = 1;
+					move.scootSpeedFactor = 1;
+				}),
+				new Create<SlimeHealth>((health) => health.maxHealth = maxHealth),
+				new Create<SlimeEmotions>((emo) =>
+				{
+					emo.initHunger = hungerState;
+					emo.initAgitation = agitationState;
+					emo.initFear = fearState;
+				}),
+				new Create<SlimeSubbehaviourPlexer>(null),
+				new Create<KeepUpright>((keep) =>
+				{
+					keep.stability = 0.7f;
+					keep.speed = 4f;
+				}),
+				new Create<FleeThreats>((flee) =>
+				{
+					flee.fearProfile = fearProfile;
+					flee.driver = SlimeEmotions.Emotion.FEAR;
+					flee.maxJump = 4;
+					flee.facingStability = 0.2f;
+					flee.facingSpeed = 1;
+				}),
+				new Create<SlimeAudio>((audio) => audio.slimeSounds = definition.Sounds),
+				new Create<SECTR_PointSource>(null),
+				(canBeFeral ? slimeFeral : null),
+				new Create<EscapeStuck>(null),
+				new Create<MaybeCullOnReenable>(null),
+				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 25f),
+				new Create<SplatOnImpact>((splat) =>
+				{
+					splat.splatPrefab = BaseObjects.splatQuad;
+					splat.splatFXPrefab = EffectObjects.fxSplat;
+				}),
+				new Create<AweTowardsLargos>((awe) =>
+				{
+					awe.minSearchRad = 5;
+					awe.maxSearchRad = 15;
+					awe.facingStability = 1;
+					awe.facingSpeed = 5;
+					awe.pursuitSpeedFactor = 1;
+					awe.minDist = 0;
+				}),
+				new Create<SlimeFaceAnimator>(null),
+				new Create<CalmedByWaterSpray>((spray) =>
+				{
+					spray.agitationReduction = 0.1f;
+					spray.calmedHours = 0.3333f;
+				}),
+				new Create<TotemLinkerHelper>(null),
+				new Create<CollisionAggregator>(null),
+				new Create<AweTowardsAttractors>((awe) =>
+				{
+					awe.facingSpeed = 2.5f;
+					awe.facingStability = 1;
+				}),
+				new Create<AttachFashions>((fash) => fash.gordoMode = false),
+				new Create<SlimeEyeComponents>(null),
+				new Create<SlimeMouthComponents>(null),
+				new Create<PlayWithToys>((play) =>
+				{
+					play.slimeDefinition = definition;
+					play.onlyFloatingToys = false;
+					play.minSearchRad = 5;
+					play.maxSearchRad = 15;
+					play.facingSpeed = 5;
+					play.facingStability = 1;
+					play.pursuitSpeedFactor = 1;
+					play.minDist = 0;
+				}),
+				new Create<SlimeIgniteReact>((react) => react.igniteFX = EffectObjects.fxStars),
+				(canBeAGlitch ? new Create<GlitchSlime>(null) : null),
+				new Create<Chomper>((chop) => chop.timePerAttack = 3)			
+			);
 
 			mainObject
+				.AddComponents(extras.ToArray())
 				.AddAfterChildren(SetValuesAfterBuild)
 				.SetTransform(Vector3.zero, Vector3.zero, Vector3.one * (isGordo ? 4 : definition.PrefabScale))
+				.AddStartAction("buildSlime")
 				.AddStartAction("fixSlime." + mainObject.Name);
 
-			TemplateActions.RegisterAction("fixSlime." + mainObject.Name, ApplyTrueForm);
+			TemplateActions.RegisterAction("fixSlime." + mainObject.Name, ApplyTrueForm);			
 
 			// Create eat trigger
 			mainObject.AddChild(new GameObjectTemplate("EatTrigger",
@@ -401,7 +386,7 @@ namespace SRMLExtras.Templates
 		protected void SetValuesAfterBuild(GameObject obj)
 		{
 			// Adds the bones
-			GameObject bones = boneStructure.CreatePrefabCopy() ?? BaseObjects.originBones["SlimeBones"].CreatePrefabCopy();
+			GameObject bones = boneStructure?.CreatePrefabCopy() ?? BaseObjects.originBones["SlimeBones"].CreatePrefabCopy();
 			bones.transform.parent = obj.transform;
 			bones.transform.localPosition = new Vector3(0, -0.5f, 0);
 			bones.SetActive(true);
@@ -420,9 +405,6 @@ namespace SRMLExtras.Templates
 
 			if (!canBeFeral)
 				Object.Destroy(obj.GetComponent<SlimeFeral>());
-
-			if (isGordo)
-				Object.Destroy(obj.GetComponent<SlimeEat>());
 		}
 
 		/// <summary>
@@ -495,25 +477,26 @@ namespace SRMLExtras.Templates
 			if (isGordo)
 				return null;
 
-			SlimeDefinition gordoDef = new SlimeDefinition()
+			SlimeDefinition gordoDef = ScriptableObject.CreateInstance<SlimeDefinition>();
+			gordoDef.AppearancesDefault = definition.AppearancesDefault;
+			gordoDef.AppearancesDynamic = definition.AppearancesDynamic;
+			gordoDef.BaseModule = definition.BaseModule;
+			gordoDef.BaseSlimes = definition.BaseSlimes;
+			gordoDef.CanLargofy = false;
+			gordoDef.Diet = new SlimeDiet()
 			{
-				AppearancesDefault = definition.AppearancesDefault,
-				AppearancesDynamic = definition.AppearancesDynamic,
-				BaseModule = definition.BaseModule,
-				BaseSlimes = definition.BaseSlimes,
-				CanLargofy = false,
-				Diet = new SlimeDiet(),
-				FavoriteToys = new Identifiable.Id[0],
-				IdentifiableId = gordoID,
-				IsLargo = true,
-				PrefabScale = 4f,
-				SlimeModules = definition.SlimeModules,
-				Sounds = definition.Sounds,
-				Name = "roamGordo." + definition.Name
+				EatMap = new List<SlimeDiet.EatMapEntry>()
 			};
+			gordoDef.FavoriteToys = new Identifiable.Id[0];
+			gordoDef.IdentifiableId = gordoID;
+			gordoDef.IsLargo = true;
+			gordoDef.PrefabScale = 4f;
+			gordoDef.SlimeModules = definition.SlimeModules;
+			gordoDef.Sounds = definition.Sounds;
+			gordoDef.Name = "roamGordo." + definition.Name;
 
 			SlimeTemplate gordo = new SlimeTemplate("gordo" + mainObject.Name.Replace("slime", ""), gordoDef).SetVacSize(Vacuumable.Size.GIANT)
-				.SetHealth(60);
+				.SetHealth(60).SetFeralState(false).SetGlitchState(false);
 
 			gordo.isGordo = true;
 

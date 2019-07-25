@@ -18,7 +18,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\Jogos\Steam\SteamApps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
+    <OutputPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -40,6 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DebugCommand.cs" />
+    <Compile Include="GameExtensions\SlimeDefinitionsExtension.cs" />
     <Compile Include="GameExtensions\LookupDirectorExtension.cs" />
     <Compile Include="Registries\ContentPatcher.cs" />
     <Compile Include="Templates\Base Objects\EffectObjects.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Templates\Base Objects\GardenObjects.cs" />
     <Compile Include="Templates\Base Objects\ObjectTransformValues.cs" />
     <Compile Include="Markers\AddDebugMarker.cs" />
+    <Compile Include="Templates\Components\ActionOnAwake.cs" />
     <Compile Include="Templates\Components\ActionOnStart.cs" />
     <Compile Include="Templates\Components\Create.cs" />
     <Compile Include="Markers\DebugMarker.cs" />

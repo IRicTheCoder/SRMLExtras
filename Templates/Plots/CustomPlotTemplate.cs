@@ -88,8 +88,11 @@ namespace SRMLExtras.Templates
 			// Add Attachments
 			foreach (IModPrefab attach in attachments)
 			{
-				if (attach is IPlotUpgradeTemplate)
-					mainObject.AddComponents(((IPlotUpgradeTemplate)attach).GetUpgrader());
+				if (attach is IPlotUpgradeTemplate upgrade)
+				{
+					mainObject.AddComponents(upgrade.GetUpgrader());
+					mainObject.AddAfterChildren(upgrade.GetIdentifyAction());
+				}
 
 				mainObject.AddChild(attach.AsTemplateClone());
 			}

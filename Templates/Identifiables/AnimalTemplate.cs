@@ -289,11 +289,11 @@ namespace SRMLExtras.Templates
 			// Setup Bones
 			GameObject sm = skinnedMesh.CreatePrefabCopy();
 			sm.name = "mesh_body";
-			sm.transform.parent = obj.transform;
+			sm.transform.parent = obj.transform.Find("Animal");
 
 			GameObject b = bones.CreatePrefabCopy();
 			b.name = "root";
-			b.transform.parent = obj.transform;
+			b.transform.parent = obj.transform.Find("Animal");
 
 			// Read all bones to the skinned mesh
 			SkinnedMeshRenderer render = sm.GetComponent<SkinnedMeshRenderer>();

@@ -35,6 +35,12 @@ namespace SRMLExtras.Templates
 			return (T)this;
 		}
 
+		public T AddAwakeAction(string actionID)
+		{
+			mainObject.AddAwakeAction(actionID);
+			return (T)this;
+		}
+
 		public T AddPrefabFunction(System.Action<GameObjectTemplate> action)
 		{
 			PrefabFunction += action;
