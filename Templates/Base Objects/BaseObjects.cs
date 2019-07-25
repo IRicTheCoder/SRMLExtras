@@ -61,6 +61,7 @@ namespace SRMLExtras.Templates
 		public readonly static Dictionary<string, SlimeSounds> originSounds = new Dictionary<string, SlimeSounds>();
 		public readonly static Dictionary<string, GameObject> originFXs = new Dictionary<string, GameObject>();
 		public readonly static Dictionary<string, RuntimeAnimatorController> originAnimators = new Dictionary<string, RuntimeAnimatorController>();
+		public readonly static Dictionary<string, Avatar> originAvatars = new Dictionary<string, Avatar>();
 
 		public readonly static Dictionary<string, GameObject> originSkinnedMesh = new Dictionary<string, GameObject>();
 		public readonly static Dictionary<string, GameObject> originBones = new Dictionary<string, GameObject>();
@@ -143,6 +144,12 @@ namespace SRMLExtras.Templates
 					originAnimators.Add(animator.name.Replace("(Instance)", ""), animator);
 			}
 
+			foreach (Avatar avatar in Resources.FindObjectsOfTypeAll<Avatar>())
+			{
+				if (!avatar.name.Equals(string.Empty) && !originAvatars.ContainsKey(avatar.name.Replace("(Instance)", "")))
+					originAvatars.Add(avatar.name.Replace("(Instance)", ""), avatar);
+			}
+
 			foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
 			{
 				if (!(obj.name.StartsWith("FX ") || obj.name.StartsWith("fx")))
@@ -157,6 +164,7 @@ namespace SRMLExtras.Templates
 			//originBones.Add("HenBones", Director.GetPrefab(Identifiable.Id.HEN).FindChild("root"));
 
 			originBones.Add("SlimeBones", Director.GetPrefab(Identifiable.Id.PINK_SLIME).FindChild("Appearance"));
+			originBones.Add("GordoBones", Director.GetGordo(Identifiable.Id.PINK_GORDO).FindChild("Vibrating"));
 
 			// Gets the cube for the markers
 			cubeMesh = originMesh["Cube"];
@@ -255,6 +263,13 @@ namespace SRMLExtras.Templates
 					if (!animator.name.Equals(string.Empty) && !originAnimators.ContainsKey(animator.name.Replace("(Instance)", "")) &&
 						!(!animator.name.EndsWith("(Instance)") && Regex.IsMatch(animator.name, @".*\(.*\)")))
 						originAnimators.Add(animator.name.Replace("(Instance)", ""), animator);
+				}
+
+				foreach (Avatar avatar in Resources.FindObjectsOfTypeAll<Avatar>())
+				{
+					if (!avatar.name.Equals(string.Empty) && !originAvatars.ContainsKey(avatar.name.Replace("(Instance)", "")) &&
+						!(!avatar.name.EndsWith("(Instance)") && Regex.IsMatch(avatar.name, @".*\(.*\)")))
+						originAvatars.Add(avatar.name.Replace("(Instance)", ""), avatar);
 				}
 
 				foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())

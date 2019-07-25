@@ -3,9 +3,19 @@
 namespace SRMLExtras.Templates
 {
 	/// <summary>
+	/// Interface used to make lists of Mod Prefabs (as lists can't have different generic constructs)
+	/// </summary>
+	public interface IModPrefab
+	{
+		GameObject ToPrefab();
+		GameObjectTemplate AsTemplate();
+		GameObjectTemplate AsTemplateClone();
+	}
+
+	/// <summary>
 	/// Simple prefab like class, used to make the structure for templates
 	/// </summary>
-	public abstract class ModPrefab<T> where T : ModPrefab<T>
+	public abstract class ModPrefab<T> : IModPrefab where T : ModPrefab<T>
 	{
 		protected GameObjectTemplate mainObject;
 		private GameObject prefabVersion = null;

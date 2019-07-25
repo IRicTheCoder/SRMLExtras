@@ -30,15 +30,24 @@ namespace SRMLExtras.Templates
 		public static GameObject fxSlimeProduce;
 		public static GameObject fxFeralAura;
 
+		public static GameObject fxGordoEat;
+		public static GameObject fxGordoSplat;
+
 		// Audio Cues
 		public static SECTR_AudioCue cueFruitRelease;
 		public static SECTR_AudioCue cueVeggieRelease;
+
 		public static SECTR_AudioCue cueHitFruit;
 		public static SECTR_AudioCue cueHitVeggie;
 		public static SECTR_AudioCue cueHitChicken;
 		public static SECTR_AudioCue cueHitChick;
 		public static SECTR_AudioCue cueHitPlort;
+
 		public static SECTR_AudioCue cueFlap;
+
+		public static SECTR_AudioCue cueGordoGlup;
+		public static SECTR_AudioCue cueGordoStrain;
+		public static SECTR_AudioCue cueGordoBurst;
 
 		// Audio Cue Instances
 		public static SECTR_AudioCueInstance fruitCueInstance;
@@ -65,6 +74,9 @@ namespace SRMLExtras.Templates
 			fxSlimeProduce = BaseObjects.originFXs["FX PlortProduced"];
 			fxSlimeTrans = BaseObjects.originFXs["FX Largo Transform"];
 			fxFeralAura = BaseObjects.originFXs["FX auraFeral"];
+
+			fxGordoEat = BaseObjects.originFXs["FX Gordo Eat"];
+			fxGordoSplat = BaseObjects.originFXs["FX Gordo Splat"];
 
 			// Audio Cues
 			/*fruitRelease = BaseObjects.originCues["Fruit Rustle"];

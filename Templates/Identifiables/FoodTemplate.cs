@@ -221,6 +221,8 @@ namespace SRMLExtras.Templates
 				})
 			).SetTransform(Vector3.zero, Vector3.zero, modelScale));
 
+			mainObject.Layer = BaseObjects.layers["Actor"];
+
 			return this;
 		}
 

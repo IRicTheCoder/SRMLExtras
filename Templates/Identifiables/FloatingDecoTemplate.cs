@@ -148,6 +148,8 @@ namespace SRMLExtras.Templates
 				));
 			}
 
+			mainObject.Layer = BaseObjects.layers["Actor"];
+
 			return this;
 		}
 

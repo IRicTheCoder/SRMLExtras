@@ -33,8 +33,10 @@ namespace SRMLExtras.Templates
 
 		protected bool canBeFeral = true;
 		protected bool canBeAGlitch = true;
+		protected bool isGordo = false;
 
 		protected GameObject slimeModule;
+		protected GameObject boneStructure = null;
 
 		// Component Configs
 		protected Vector3 delaunchScale = Vector3.one;
@@ -44,15 +46,17 @@ namespace SRMLExtras.Templates
 		public GameObject Module => slimeModule;
 
 		/// <summary>
-		/// Template to create new Craft Resources
+		/// Template to create new slimes
 		/// </summary>
 		/// <param name="name">The name of the object (prefixes are recommend, but not needed)</param>
 		/// <param name="definition">The definition for this slime</param>
-		/// <param name="appearance">The appearance for this slime</param>
 		public SlimeTemplate(string name, SlimeDefinition definition) : base(name)
 		{
 			ID = definition.IdentifiableId;
 			this.definition = definition;
+
+			if (definition.Name.StartsWith("roamGordo."))
+				isGordo = true;
 		}
 
 		/// <summary>
@@ -164,6 +168,16 @@ namespace SRMLExtras.Templates
 		{
 			extras.Add(component);
 			extras.AddRange(comps);
+			return this;
+		}
+
+		/// <summary>
+		/// Sets a new bone structure for the slime (Starting at the Appearance part)
+		/// </summary>
+		/// <param name="boneStructure">The new bone structure as a game object (to add to the prefab)</param>
+		public SlimeTemplate SetBoneStructure(GameObject boneStructure)
+		{
+			this.boneStructure = boneStructure;
 			return this;
 		}
 
@@ -335,7 +349,7 @@ namespace SRMLExtras.Templates
 
 			mainObject
 				.AddAfterChildren(SetValuesAfterBuild)
-				.SetTransform(Vector3.zero, Vector3.zero, Vector3.one * definition.PrefabScale)
+				.SetTransform(Vector3.zero, Vector3.zero, Vector3.one * (isGordo ? 4 : definition.PrefabScale))
 				.AddStartAction("fixSlime." + mainObject.Name);
 
 			TemplateActions.RegisterAction("fixSlime." + mainObject.Name, ApplyTrueForm);
@@ -379,16 +393,19 @@ namespace SRMLExtras.Templates
 				new Create<VacDelaunchTrigger>(null)
 			).SetTransform(Vector3.zero, Vector3.zero, delaunchScale));
 
+			mainObject.Layer = BaseObjects.layers["Actor"];
+
 			return this;
 		}
 
 		protected void SetValuesAfterBuild(GameObject obj)
 		{
 			// Adds the bones
-			GameObject bones = BaseObjects.originBones["SlimeBones"].CreatePrefabCopy();
+			GameObject bones = boneStructure.CreatePrefabCopy() ?? BaseObjects.originBones["SlimeBones"].CreatePrefabCopy();
 			bones.transform.parent = obj.transform;
 			bones.transform.localPosition = new Vector3(0, -0.5f, 0);
 			bones.SetActive(true);
+			bones.name = "Appearance";
 
 			// Configures the appearance applicator
 			SlimeAppearanceApplicator app = obj.GetComponent<SlimeAppearanceApplicator>();
@@ -403,6 +420,9 @@ namespace SRMLExtras.Templates
 
 			if (!canBeFeral)
 				Object.Destroy(obj.GetComponent<SlimeFeral>());
+
+			if (isGordo)
+				Object.Destroy(obj.GetComponent<SlimeEat>());
 		}
 
 		/// <summary>
@@ -413,6 +433,9 @@ namespace SRMLExtras.Templates
 		/// <returns>A list of all IDs made for the largos created</returns>
 		public List<Identifiable.Id> MakeLargos(bool canBeTarr = true, System.Action<SlimeDefinition> extraLargoBehaviour = null)
 		{
+			if (isGordo)
+				return null;
+
 			List<Identifiable.Id> largoIDs = new List<Identifiable.Id>();
 
 			definition.CanLargofy = true;
@@ -461,15 +484,53 @@ namespace SRMLExtras.Templates
 		}
 
 		/// <summary>
+		/// Generates a roaming Gordo Slime for this slime (use this if you want the slime to have a Gordo counter part)
+		/// <para>Roaming gordos are normal slimes scaled as a gordo and contains almost no behaviours, also it doesnt eat. Use PrefabFunctions to give it
+		/// behaviours</para>
+		/// </summary>
+		/// <param name="gordoID">The ID for the gordo</param>
+		/// <returns>The slime template for the Roaming Gordo (YOU NEED TO CLASS .Create TO FINISH THE PROCESS)</returns>
+		public SlimeTemplate MakeRoamingGordo(Identifiable.Id gordoID)
+		{
+			if (isGordo)
+				return null;
+
+			SlimeDefinition gordoDef = new SlimeDefinition()
+			{
+				AppearancesDefault = definition.AppearancesDefault,
+				AppearancesDynamic = definition.AppearancesDynamic,
+				BaseModule = definition.BaseModule,
+				BaseSlimes = definition.BaseSlimes,
+				CanLargofy = false,
+				Diet = new SlimeDiet(),
+				FavoriteToys = new Identifiable.Id[0],
+				IdentifiableId = gordoID,
+				IsLargo = true,
+				PrefabScale = 4f,
+				SlimeModules = definition.SlimeModules,
+				Sounds = definition.Sounds,
+				Name = "roamGordo." + definition.Name
+			};
+
+			SlimeTemplate gordo = new SlimeTemplate("gordo" + mainObject.Name.Replace("slime", ""), gordoDef).SetVacSize(Vacuumable.Size.GIANT)
+				.SetHealth(60);
+
+			gordo.isGordo = true;
+
+			return gordo;
+		}
+
+		/// <summary>
 		/// Generates a Gordo Slime for this slime (use this if you want the slime to have a Gordo counter part)
 		/// </summary>
 		/// <param name="gordoID">The ID for the gordo</param>
-		/// <returns>The template for the Gordo</returns>
-		public SlimeTemplate MakeGordo(Identifiable.Id gordoID)
+		/// <returns>The gordo template for the static gordo (YOU NEED TO CLASS .Create TO FINISH THE PROCESS)</returns>
+		public GordoTemplate MakeStaticGordo(Identifiable.Id gordoID, Material[] gordoMaterials)
 		{
-			SlimeTemplate gordo = null;
+			if (isGordo)
+				return null;
 
-			return gordo;
+			return new GordoTemplate("gordo" + mainObject.Name.Replace("slime", ""), gordoID, definition, gordoMaterials);
 		}
 
 		/// <summary>

@@ -109,6 +109,8 @@ namespace SRMLExtras.Templates
 				new Create<VacDelaunchTrigger>(null)
 			).SetTransform(Vector3.zero, Vector3.zero, delaunchScale));
 
+			mainObject.Layer = BaseObjects.layers["Actor"];
+
 			return this;
 		}
 	}

@@ -5,10 +5,20 @@ using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
+	/// <summary>
+	/// A template to create a plot frame (use this if you want to create a custom frame by adding prefab functions to it)
+	/// </summary>
 	public class PlotFrameTemplate : ModPrefab<PlotFrameTemplate>
 	{
+		/// <summary>
+		/// Template to create a plot frame
+		/// </summary>
+		/// <param name="name">The name of the object</param>
 		public PlotFrameTemplate(string name) : base(name) { }
 
+		/// <summary>
+		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
+		/// </summary>
 		public override PlotFrameTemplate Create()
 		{
 			// Create a base post

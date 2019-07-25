@@ -135,6 +135,37 @@ public static class LookupDirectorExtension
 		return largoID;
 	}
 
+	// Gordo Creation System
+	public static SlimeTemplate MakeRoamingGordo(this LookupDirector director, string name, Identifiable.Id gordoID, SlimeDefinition definition)
+	{
+		SlimeDefinition gordoDef = new SlimeDefinition()
+		{
+			AppearancesDefault = definition.AppearancesDefault,
+			AppearancesDynamic = definition.AppearancesDynamic,
+			BaseModule = definition.BaseModule,
+			BaseSlimes = definition.BaseSlimes,
+			CanLargofy = false,
+			Diet = new SlimeDiet(),
+			FavoriteToys = new Identifiable.Id[0],
+			IdentifiableId = gordoID,
+			IsLargo = true,
+			PrefabScale = 4f,
+			SlimeModules = definition.SlimeModules,
+			Sounds = definition.Sounds,
+			Name = "roamGordo." + definition.Name
+		};
+
+		SlimeTemplate gordo = new SlimeTemplate(name, gordoDef).SetVacSize(Vacuumable.Size.GIANT)
+			.SetHealth(60);
+
+		return gordo;
+	}
+
+	public static GordoTemplate MakeStaticGordo(this LookupDirector director, string name, Identifiable.Id gordoID, SlimeDefinition definition, Material[] gordoMaterials)
+	{
+		return new GordoTemplate(name, gordoID, definition, gordoMaterials);
+	}
+
 	// Initializes the Extension
 	internal static void InitExtension(this LookupDirector director)
 	{

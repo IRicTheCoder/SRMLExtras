@@ -57,6 +57,7 @@
     <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />
     <Compile Include="Templates\Identifiables\AnimalTemplate.cs" />
+    <Compile Include="Templates\Identifiables\GordoTemplate.cs" />
     <Compile Include="Templates\Identifiables\SlimeTemplate.cs" />
     <Compile Include="Templates\Identifiables\CraftResourceTemplate.cs" />
     <Compile Include="Templates\Identifiables\CrateTemplate.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Templates\Plantables\FruitPlantableTemplate.cs" />
     <Compile Include="Templates\Plantables\VeggiePlantableTemplate.cs" />
     <Compile Include="Templates\Plots\CustomPlotTemplate.cs" />
+    <Compile Include="Templates\Plots\PlotUpgradeTemplate.cs" />
     <Compile Include="Templates\Plots\PlotFrameTemplate.cs" />
     <Compile Include="Templates\TemplateActions.cs" />
     <Compile Include="Templates\UIs\ActivatorUITemplate.cs" />

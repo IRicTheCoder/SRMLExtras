@@ -124,6 +124,8 @@ namespace SRMLExtras.Templates
 
 		/// <summary>
 		/// Sets the bones and skinned mesh of this animal (default are the ones from the Chicken/Hen)
+		/// <para>The skinned mesh would be an object like mesh_body1 of the Hen's Prefab</para>
+		/// <para>The bones would be an object like root of the Hen's Prefab</para>
 		/// </summary>
 		/// <param name="skinnedMesh">The new skinned mesh to use for the animal</param>
 		/// <param name="bones">The new bones to use for the animal</param>
@@ -276,6 +278,8 @@ namespace SRMLExtras.Templates
 					lod.size = 1.893546f;
 				})
 			).SetTransform(Vector3.up * -0.5f, Vector3.zero, Vector3.one));
+
+			mainObject.Layer = BaseObjects.layers["Actor"];
 
 			return this;
 		}

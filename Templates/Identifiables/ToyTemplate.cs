@@ -137,6 +137,8 @@ namespace SRMLExtras.Templates
 				new Create<MeshRenderer>((render) => render.sharedMaterials = materials)
 			).SetTransform(new Vector3(0, -0.5f, 0), Vector3.zero, Vector3.one * 0.5f));
 
+			mainObject.Layer = BaseObjects.layers["Actor"];
+
 			return this;
 		}
 	}
