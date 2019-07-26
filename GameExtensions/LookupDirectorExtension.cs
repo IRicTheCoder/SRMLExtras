@@ -144,10 +144,7 @@ public static class LookupDirectorExtension
 		gordoDef.BaseModule = definition.BaseModule;
 		gordoDef.BaseSlimes = definition.BaseSlimes;
 		gordoDef.CanLargofy = false;
-		gordoDef.Diet = new SlimeDiet()
-		{
-			EatMap = new List<SlimeDiet.EatMapEntry>()
-		};
+		gordoDef.Diet = definition.Diet;
 		gordoDef.FavoriteToys = new Identifiable.Id[0];
 		gordoDef.IdentifiableId = gordoID;
 		gordoDef.IsLargo = true;

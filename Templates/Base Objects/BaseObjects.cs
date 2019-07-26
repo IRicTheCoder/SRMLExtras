@@ -309,6 +309,8 @@ namespace SRMLExtras.Templates
 		{
 			obj.GetComponent<SlimeVarietyModules>().Assemble();
 
+			obj.GetComponent<SlimeAppearanceApplicator>().SlimeAppearanceDirector = SceneContext.Instance.SlimeAppearanceDirector;
+
 			bool isGordo = obj.GetComponent<SlimeEat>().slimeDefinition.Name.StartsWith("roamGordo.");
 			SlimeEmotions emo = obj.GetComponent<SlimeEmotions>();
 			emo?.SetEmotionEnabled(SlimeEmotions.Emotion.HUNGER, !isGordo);

@@ -186,8 +186,9 @@ namespace SRMLExtras.Templates
 		/// </summary>
 		public override SlimeTemplate Create()
 		{
-			// Builds the slime module
+			// Builds the slime required stuff
 			if (!isGordo) BuildModule();
+			RegisterDefinition();
 
 			// Create conditional components
 			Create<SlimeFeral> slimeFeral = new Create<SlimeFeral>((feral) =>
@@ -396,6 +397,9 @@ namespace SRMLExtras.Templates
 			SlimeAppearanceApplicator app = obj.GetComponent<SlimeAppearanceApplicator>();
 			app.RootAppearanceObject = obj.FindChild("Appearance");
 			app.LODGroup = app.RootAppearanceObject.GetComponent<LODGroup>();
+
+			// Configures the Face Animator
+			obj.GetComponent<SlimeFaceAnimator>().appearanceApplicator = app;
 		}
 
 		protected void ApplyTrueForm(GameObject obj)
@@ -483,10 +487,7 @@ namespace SRMLExtras.Templates
 			gordoDef.BaseModule = definition.BaseModule;
 			gordoDef.BaseSlimes = definition.BaseSlimes;
 			gordoDef.CanLargofy = false;
-			gordoDef.Diet = new SlimeDiet()
-			{
-				EatMap = new List<SlimeDiet.EatMapEntry>()
-			};
+			gordoDef.Diet = definition.Diet;
 			gordoDef.FavoriteToys = new Identifiable.Id[0];
 			gordoDef.IdentifiableId = gordoID;
 			gordoDef.IsLargo = true;
@@ -543,6 +544,14 @@ namespace SRMLExtras.Templates
 
 			slimeModule = module.ToGameObject(null);
 			definition.SlimeModules = slimeModule.Group();
+		}
+
+		/// <summary>
+		/// Builds the definition for this slime
+		/// </summary>
+		protected void RegisterDefinition()
+		{
+			SlimeRegistry.RegisterSlimeDefinition(definition);
 		}
 	}
 }

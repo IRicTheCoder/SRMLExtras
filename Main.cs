@@ -58,7 +58,7 @@ namespace SRMLExtras
 			LookupRegistry.RegisterIdentifiablePrefab(pinkRoamGordo.ToPrefab());
 
 			// DUMP PREFABS
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.TELEPORTER_GOLD).prefab);
+			/*PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.TELEPORTER_GOLD).prefab);
 			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.BLUE_CORAL_COLUMNS).prefab);
 			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.DRONE).prefab);
 			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.DRONE_ADVANCED).prefab);
@@ -73,7 +73,7 @@ namespace SRMLExtras
 			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.WARP_DEPOT_PINK).prefab);
 			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.HYDRO_SHOWER).prefab);
 			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.HYDRO_TURRET).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.SUPER_HYDRO_TURRET).prefab);
+			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.SUPER_HYDRO_TURRET).prefab);*/
 		}
 	}
 }

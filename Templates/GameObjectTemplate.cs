@@ -155,17 +155,6 @@ namespace SRMLExtras.Templates
 			obj.transform.localEulerAngles = Rotation;
 			obj.transform.localScale = Scale;
 
-			foreach (ICreateComponent comp in components)
-			{
-				if (comp == null)
-					continue;
-
-				comp.AddComponent(obj);
-			}
-
-			if (Tag != null) obj.tag = Tag;
-			if (Layer != LayerMask.NameToLayer("Default")) obj.layer = Layer;
-
 			if (actionOnAwake.Count > 0)
 			{
 				ActionOnAwake comp = obj.AddComponent<ActionOnAwake>();
@@ -177,6 +166,17 @@ namespace SRMLExtras.Templates
 				ActionOnStart comp = obj.AddComponent<ActionOnStart>();
 				comp.actions = actionOnStart;
 			}
+
+			foreach (ICreateComponent comp in components)
+			{
+				if (comp == null)
+					continue;
+
+				comp.AddComponent(obj);
+			}
+
+			if (Tag != null) obj.tag = Tag;
+			if (Layer != LayerMask.NameToLayer("Default")) obj.layer = Layer;
 
 			foreach (GameObjectTemplate child in children)
 				child.ToGameObject(obj);
