@@ -15,10 +15,10 @@
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>none</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
+    <OutputPath>G:\Jogos\Steam\SteamApps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -50,11 +50,12 @@
     <Compile Include="Templates\Base Objects\GardenObjects.cs" />
     <Compile Include="Templates\Base Objects\ObjectTransformValues.cs" />
     <Compile Include="Markers\AddDebugMarker.cs" />
+    <Compile Include="Templates\Patches\FixedSlimeEatTrigger.cs" />
     <Compile Include="Templates\Components\ActionOnAwake.cs" />
     <Compile Include="Templates\Components\ActionOnStart.cs" />
-    <Compile Include="Templates\Components\Create.cs" />
+    <Compile Include="Templates\Create.cs" />
     <Compile Include="Markers\DebugMarker.cs" />
-    <Compile Include="Templates\Components\ICreateComponent.cs" />
+    <Compile Include="Templates\ICreateComponent.cs" />
     <Compile Include="Markers\MarkerRaycast.cs" />
     <Compile Include="Markers\MarkerType.cs" />
     <Compile Include="Templates\GameObjectTemplate.cs" />

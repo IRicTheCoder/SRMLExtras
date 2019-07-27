@@ -307,7 +307,7 @@ namespace SRMLExtras.Templates
 		// TEMPLATE ACTIONS
 		internal static void AssembleModules(GameObject obj)
 		{
-			obj.GetComponent<SlimeVarietyModules>().Assemble();
+			//obj.GetComponent<SlimeVarietyModules>().Assemble();
 
 			obj.GetComponent<SlimeAppearanceApplicator>().SlimeAppearanceDirector = SceneContext.Instance.SlimeAppearanceDirector;
 

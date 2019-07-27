@@ -225,7 +225,6 @@ namespace SRMLExtras.Templates
 					eat.drivePerEat = drivePerEat;
 					eat.agitationPerEat = agitPerEat;
 					eat.agitationPerFavEat = agitPerFavEat;
-					eat.onFinishChompSuccess = (go) => { };
 				}),
 				new Create<ReactToToyNearby>((react) => react.slimeDefinition = definition),
 				new Create<SphereCollider>((col) =>

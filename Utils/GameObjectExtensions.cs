@@ -136,6 +136,12 @@ namespace SRMLExtras
 			return result.ToArray();
 		}
 
+		// PARENT STUFF
+		public static T FindComponentInParent<T>(this GameObject obj) where T : Component
+		{
+			return obj == null ? null : obj.transform.parent?.GetComponent<T>() ?? obj.transform.parent?.gameObject.FindComponentInParent<T>();
+		}
+
 		// OBTAIN CHILD
 		public static GameObject GetChildCopy(this GameObject obj, string name)
 		{

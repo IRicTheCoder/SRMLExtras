@@ -42,20 +42,23 @@ namespace SRMLExtras
 			BaseObjects.Populate();
 
 			// TEST FOR PREFABS
-			CrateTemplate newCrate = new CrateTemplate("crateCustom", CRATE_CUSTOM, BaseObjects.originMaterial["spicyTofu"].Group()).SetSpawnInfo(10, 15)
+			/*CrateTemplate newCrate = new CrateTemplate("crateCustom", CRATE_CUSTOM, BaseObjects.originMaterial["spicyTofu"].Group()).SetSpawnInfo(10, 15)
 				.SetSpawnOptions(new List<BreakOnImpact.SpawnOption>() { new BreakOnImpact.SpawnOption()
 				{
 					spawn = Lookup.GetPrefab(Identifiable.Id.INDIGONIUM_CRAFT),
 					weight = 1
 				}}).Create();
 
-			LookupRegistry.RegisterIdentifiablePrefab(newCrate.ToPrefab());
+			LookupRegistry.RegisterIdentifiablePrefab(newCrate.ToPrefab());*/
 
 			SlimeTemplate pinkRoamGordo = Lookup.MakeRoamingGordo("roamGordoPink", ROAMING_PINK_GORDO, GameContext.Instance.SlimeDefinitions.GetSlimeByIdentifiableId(Identifiable.Id.PINK_SLIME));
 			pinkRoamGordo.SetVacSize(Vacuumable.Size.LARGE);
 			pinkRoamGordo.Create();
 
 			LookupRegistry.RegisterIdentifiablePrefab(pinkRoamGordo.ToPrefab());
+
+			Console.Log("" + pinkRoamGordo.ToPrefab().GetComponent<SlimeEat>());
+			Console.Log("" + pinkRoamGordo.ToPrefab().FindChild("EatTrigger").GetComponentInParent<SlimeEat>());
 
 			// DUMP PREFABS
 			/*PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.TELEPORTER_GOLD).prefab);
