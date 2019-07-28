@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MonomiPark.SlimeRancher.Regions;
+using SRML.SR;
 using UnityEngine;
 
 namespace SRMLExtras.Templates
@@ -25,6 +26,7 @@ namespace SRMLExtras.Templates
 		// The Mesh and Materials
 		protected Mesh mesh;
 		protected Material[] materials;
+		protected Color color = Color.clear;
 
 		// Specific to the Type
 		protected Type decoType = Type.CUSTOM;
@@ -58,7 +60,7 @@ namespace SRMLExtras.Templates
 			}
 			else if (type == Type.ORNAMENT)
 			{
-				this.materials = materials ?? BaseObjects.originMaterial["ornament_7z"].Group();
+				this.materials = materials ?? BaseObjects.originMaterial["ornament_pink"].Group();
 				this.mesh = BaseObjects.originMesh["quad_ornament"];
 				trans = new ObjectTransformValues(Vector3.zero, Vector3.up * 180, Vector3.one * 0.8f);
 			}
@@ -100,6 +102,26 @@ namespace SRMLExtras.Templates
 		}
 
 		/// <summary>
+		/// Sets the color for the material (For the type ECHO or ECHO_NOTE) (only if you want to use the default material for echos and change the color)
+		/// </summary>
+		/// <param name="color">New color to set</param>
+		public FloatingDecoTemplate SetColor(Color color)
+		{
+			this.color = color;
+			return this;
+		}
+
+		/// <summary>
+		/// Sets the translation for this deco's name
+		/// </summary>
+		/// <param name="name">The translated name</param>
+		public override FloatingDecoTemplate SetTranslation(string name)
+		{
+			TranslationPatcher.AddActorTranslation("l." + ID.ToString().ToLower(), name);
+			return this;
+		}
+
+		/// <summary>
 		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
 		/// </summary>
 		public override FloatingDecoTemplate Create()
@@ -126,9 +148,22 @@ namespace SRMLExtras.Templates
 			);
 
 			// Create model
+			if (color != Color.clear && (decoType == Type.ECHO || decoType == Type.ECHO_NOTE))
+			{
+				Material mat = new Material(materials[0]);
+				mat.SetColor("_TintColor", color);
+
+				materials = mat.Group();
+			}
+
 			mainObject.AddChild(new GameObjectTemplate("model",
 				new Create<MeshFilter>((filter) => filter.sharedMesh = mesh),
-				new Create<MeshRenderer>((render) => render.sharedMaterials = materials)
+				new Create<MeshRenderer>((render) =>
+				{
+					render.sharedMaterials = materials;
+					render.receiveShadows = false;
+					render.shadowCastingMode = (decoType == Type.ECHO || decoType == Type.ECHO_NOTE) ? UnityEngine.Rendering.ShadowCastingMode.Off : UnityEngine.Rendering.ShadowCastingMode.On;
+				})
 			).SetTransform(trans));
 
 			// Create Note
@@ -148,7 +183,7 @@ namespace SRMLExtras.Templates
 				));
 			}
 
-			mainObject.Layer = BaseObjects.layers["Actor"];
+			mainObject.Layer = BaseObjects.layers["ActorEchoes"];
 
 			return this;
 		}

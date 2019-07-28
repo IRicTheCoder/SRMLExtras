@@ -192,6 +192,7 @@ namespace SRMLExtras.Templates
 
 			// Register Global Template Actions
 			TemplateActions.RegisterAction("buildSlime", AssembleModules);
+			TemplateActions.RegisterAction("populateSlime", PopulateSlimeInfo);
 
 			// Populates all other object classes
 			GardenObjects.Populate();
@@ -307,10 +308,12 @@ namespace SRMLExtras.Templates
 		// TEMPLATE ACTIONS
 		internal static void AssembleModules(GameObject obj)
 		{
-			//obj.GetComponent<SlimeVarietyModules>().Assemble();
-
+			obj.GetComponent<SlimeVarietyModules>().Assemble();
 			obj.GetComponent<SlimeAppearanceApplicator>().SlimeAppearanceDirector = SceneContext.Instance.SlimeAppearanceDirector;
+		}
 
+		internal static void PopulateSlimeInfo(GameObject obj)
+		{
 			bool isGordo = obj.GetComponent<SlimeEat>().slimeDefinition.Name.StartsWith("roamGordo.");
 			SlimeEmotions emo = obj.GetComponent<SlimeEmotions>();
 			emo?.SetEmotionEnabled(SlimeEmotions.Emotion.HUNGER, !isGordo);

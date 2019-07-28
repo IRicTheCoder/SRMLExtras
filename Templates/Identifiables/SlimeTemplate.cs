@@ -182,6 +182,16 @@ namespace SRMLExtras.Templates
 		}
 
 		/// <summary>
+		/// Sets the translation for this slime's name
+		/// </summary>
+		/// <param name="name">The translated name</param>
+		public override SlimeTemplate SetTranslation(string name)
+		{
+			TranslationPatcher.AddActorTranslation("l." + ID.ToString().ToLower(), name);
+			return this;
+		}
+
+		/// <summary>
 		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
 		/// </summary>
 		public override SlimeTemplate Create()
@@ -334,7 +344,8 @@ namespace SRMLExtras.Templates
 				.AddComponents(extras.ToArray())
 				.AddAfterChildren(SetValuesAfterBuild)
 				.SetTransform(Vector3.zero, Vector3.zero, Vector3.one * (isGordo ? 4 : definition.PrefabScale))
-				.AddStartAction("buildSlime")
+				.AddAwakeAction("buildSlime")
+				.AddStartAction("populateSlime")
 				.AddStartAction("fixSlime." + mainObject.Name);
 
 			TemplateActions.RegisterAction("fixSlime." + mainObject.Name, ApplyTrueForm);			
@@ -389,6 +400,7 @@ namespace SRMLExtras.Templates
 			GameObject bones = boneStructure?.CreatePrefabCopy() ?? BaseObjects.originBones["SlimeBones"].CreatePrefabCopy();
 			bones.transform.parent = obj.transform;
 			bones.transform.localPosition = new Vector3(0, -0.5f, 0);
+			bones.transform.localScale = Vector3.one;
 			bones.SetActive(true);
 			bones.name = "Appearance";
 
@@ -396,6 +408,7 @@ namespace SRMLExtras.Templates
 			SlimeAppearanceApplicator app = obj.GetComponent<SlimeAppearanceApplicator>();
 			app.RootAppearanceObject = obj.FindChild("Appearance");
 			app.LODGroup = app.RootAppearanceObject.GetComponent<LODGroup>();
+			app.Bones = BoneMappingUtils.GetMaps(bones).ToArray();
 
 			// Configures the Face Animator
 			obj.GetComponent<SlimeFaceAnimator>().appearanceApplicator = app;
@@ -461,7 +474,7 @@ namespace SRMLExtras.Templates
 			extraLargoBehaviour?.Invoke(largoDef);
 
 			SlimeTemplate largoTemplate = new SlimeTemplate(prefabName, largoDef).SetFeralState(canBeFeral).SetGlitchState(canBeAGlitch)
-				.SetVacSize(Vacuumable.Size.LARGE).Create();
+				.SetVacSize(Vacuumable.Size.LARGE).SetTranslation(definition.Name + " " + other.Name + " Largo").Create();
 
 			LookupRegistry.RegisterIdentifiablePrefab(largoTemplate.ToPrefab());
 
@@ -495,8 +508,12 @@ namespace SRMLExtras.Templates
 			gordoDef.Sounds = definition.Sounds;
 			gordoDef.Name = "roamGordo." + definition.Name;
 
+			FearProfile prof = ScriptableObject.CreateInstance<FearProfile>();
+			prof.threats = new List<FearProfile.ThreatEntry>();
+			prof.GetType().GetMethod("OnEnable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(prof, new object[0]);
+
 			SlimeTemplate gordo = new SlimeTemplate("gordo" + mainObject.Name.Replace("slime", ""), gordoDef).SetVacSize(Vacuumable.Size.GIANT)
-				.SetHealth(60).SetFeralState(false).SetGlitchState(false);
+				.SetHealth(60).SetFeralState(false).SetGlitchState(false).SetFearProfile(prof).SetTranslation(definition.Name + " Gordo");
 
 			gordo.isGordo = true;
 
@@ -510,10 +527,7 @@ namespace SRMLExtras.Templates
 		/// <returns>The gordo template for the static gordo (YOU NEED TO CLASS .Create TO FINISH THE PROCESS)</returns>
 		public GordoTemplate MakeStaticGordo(Identifiable.Id gordoID, Material[] gordoMaterials)
 		{
-			if (isGordo)
-				return null;
-
-			return new GordoTemplate("gordo" + mainObject.Name.Replace("slime", ""), gordoID, definition, gordoMaterials);
+			return isGordo ? null : new GordoTemplate("gordo" + mainObject.Name.Replace("slime", ""), gordoID, definition, gordoMaterials).SetTranslation(definition.Name + " Gordo");
 		}
 
 		/// <summary>

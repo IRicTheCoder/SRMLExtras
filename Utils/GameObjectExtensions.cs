@@ -83,20 +83,30 @@ namespace SRMLExtras
 			return result;
 		}
 
-		public static GameObject FindChild(this GameObject obj, string name, bool noDive = false)
+		public static GameObject FindChild(this GameObject obj, string name, bool dive = false)
 		{
-			if (!noDive)
+			if (!dive)
 				return obj.transform.Find(name).gameObject;
 			else
 			{
 				GameObject result = null;
 
-				foreach (Transform child in obj.transform)
+				foreach (Transform child in obj?.transform)
 				{
+					if (child == null)
+						continue;
+
 					if (child.name.Equals(name))
 					{
 						result = child.gameObject;
 						break;
+					}
+
+					if (child.childCount > 0)
+					{
+						result = child.gameObject.FindChild(name, dive);
+						if (result != null)
+							break;
 					}
 				}
 

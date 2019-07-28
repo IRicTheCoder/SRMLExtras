@@ -128,7 +128,8 @@ public static class LookupDirectorExtension
 
 		extraLargoBehaviour?.Invoke(largoDef);
 
-		SlimeTemplate largoTemplate = new SlimeTemplate(prefabName, largoDef).SetVacSize(Vacuumable.Size.LARGE).Create();
+		SlimeTemplate largoTemplate = new SlimeTemplate(prefabName, largoDef).SetVacSize(Vacuumable.Size.LARGE)
+			.SetTranslation(curr.Name + " " + other.Name + " Largo").Create();
 
 		LookupRegistry.RegisterIdentifiablePrefab(largoTemplate.ToPrefab());
 
@@ -153,8 +154,12 @@ public static class LookupDirectorExtension
 		gordoDef.Sounds = definition.Sounds;
 		gordoDef.Name = "roamGordo." + definition.Name;
 
+		FearProfile prof = ScriptableObject.CreateInstance<FearProfile>();
+		prof.threats = new List<FearProfile.ThreatEntry>();
+		prof.GetType().GetMethod("OnEnable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(prof, new object[0]);
+
 		SlimeTemplate gordo = new SlimeTemplate(name, gordoDef).SetVacSize(Vacuumable.Size.GIANT)
-			.SetHealth(60).SetFeralState(false).SetGlitchState(false);
+			.SetHealth(60).SetFeralState(false).SetGlitchState(false).SetFearProfile(prof).SetTranslation(definition.Name + " Gordo");
 
 		Identifiable.SLIME_CLASS.Add(gordoID);
 
@@ -163,7 +168,7 @@ public static class LookupDirectorExtension
 
 	public static GordoTemplate MakeStaticGordo(this LookupDirector director, string name, Identifiable.Id gordoID, SlimeDefinition definition, Material[] gordoMaterials)
 	{
-		return new GordoTemplate(name, gordoID, definition, gordoMaterials);
+		return new GordoTemplate(name, gordoID, definition, gordoMaterials).SetTranslation(definition.Name + " Gordo");
 	}
 
 	// Initializes the Extension
