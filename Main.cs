@@ -33,9 +33,7 @@ namespace SRMLExtras
 			HarmonyInstance.PatchAll(execAssembly);
 		}
 
-		public static Identifiable.Id TOFU_FRUIT;
-
-		public static Identifiable.Id TOFU_VEGGIE;
+		public static Identifiable.Id GOLD_LIQUID;
 
 		// LOADS MOD
 		public override void Load()
@@ -49,6 +47,9 @@ namespace SRMLExtras
 			- Slime Template
 			- Craft Resource Template
 			- Floating Deco Template
+			- Food Template
+			- Liquid Template (Revisit to fix the coloring)
+			- 
 			
 			*/
 

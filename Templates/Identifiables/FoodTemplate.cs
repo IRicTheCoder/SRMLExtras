@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MonomiPark.SlimeRancher.Regions;
+using SRML.SR;
 using UnityEngine;
 
 namespace SRMLExtras.Templates
@@ -34,6 +35,7 @@ namespace SRMLExtras.Templates
 		protected float rottenHours = 6;
 
 		// Specific to the Type
+		protected PediaDirector.Id pediaID;
 		protected Type foodType = Type.CUSTOM;
 		protected SECTR_AudioCue releaseCue = null;
 		protected SECTR_AudioCue hitCue = null;
@@ -48,10 +50,11 @@ namespace SRMLExtras.Templates
 		/// </summary>
 		/// <param name="name">The name of the object (prefixes are recommended, but not needed)</param>
 		/// <param name="ID">The Identifiable ID for this food</param>
+		/// <param name="pediaID">The pedia ID for this resource</param>
 		/// <param name="type">The type of food</param>
 		/// <param name="mesh">The model's mesh for this food</param>
 		/// <param name="materials">The materials that compose this food's model</param>
-		public FoodTemplate(string name, Identifiable.Id ID, Type type, Mesh mesh, Material[] materials) : base(name)
+		public FoodTemplate(string name, Identifiable.Id ID, PediaDirector.Id pediaID, Type type, Mesh mesh, Material[] materials) : base(name)
 		{
 			this.ID = ID;
 			foodType = type;
@@ -145,10 +148,23 @@ namespace SRMLExtras.Templates
 		}
 
 		/// <summary>
+		/// Sets the translation for this slime's name
+		/// </summary>
+		/// <param name="name">The translated name</param>
+		public override FoodTemplate SetTranslation(string name)
+		{
+			TranslationPatcher.AddActorTranslation("l." + ID.ToString().ToLower(), name);
+			return this;
+		}
+
+		/// <summary>
 		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
 		/// </summary>
 		public override FoodTemplate Create()
 		{
+			// Sets up the stuff for the Pedia Entry
+			PediaRegistry.RegisterIdentifiableMapping(pediaID, ID);
+
 			// Create main object
 			mainObject.AddComponents(
 				new Create<MeshFilter>((filter) => filter.sharedMesh = mesh),

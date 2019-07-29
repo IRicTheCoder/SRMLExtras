@@ -9,8 +9,6 @@ using UnityEngine.SceneManagement;
 
 namespace SRMLExtras.Templates
 {
-	// TODO: Recheck all DelaunchTriggers, Shadows
-
 	public static class BaseObjects
 	{
 		// The Director

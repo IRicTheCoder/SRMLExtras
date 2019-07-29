@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\Jogos\Steam\SteamApps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
+    <OutputPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SRML\Mods\SRMLExtras\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -142,6 +142,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\PrimeMakers\_MyGames\steamapps\common\Slime Rancher\SlimeRancher_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

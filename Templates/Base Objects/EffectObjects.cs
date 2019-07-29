@@ -33,6 +33,10 @@ namespace SRMLExtras.Templates
 		public static GameObject fxGordoEat;
 		public static GameObject fxGordoSplat;
 
+		public static GameObject fxWaterAcquire;
+		public static GameObject fxVacWaterOut;
+		public static GameObject fxWaterVacFail;
+
 		// Audio Cues
 		public static SECTR_AudioCue cueFruitRelease;
 		public static SECTR_AudioCue cueVeggieRelease;
@@ -77,6 +81,10 @@ namespace SRMLExtras.Templates
 
 			fxGordoEat = BaseObjects.originFXs["FX Gordo Eat"];
 			fxGordoSplat = BaseObjects.originFXs["FX Gordo Splat"];
+
+			fxWaterAcquire = BaseObjects.originFXs["fxWaterAcquire"];
+			fxVacWaterOut = BaseObjects.originFXs["FX VacWaterOut"];
+			fxWaterVacFail = BaseObjects.originFXs["FX waterVacFail"];
 
 			// Audio Cues
 			/*fruitRelease = BaseObjects.originCues["Fruit Rustle"];

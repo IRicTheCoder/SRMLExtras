@@ -533,7 +533,7 @@ namespace SRMLExtras.Templates
 		/// <summary>
 		/// Builds the module for this slime
 		/// </summary>
-		protected void BuildModule()
+		protected virtual void BuildModule()
 		{
 			GameObjectTemplate module = new GameObjectTemplate("module" + mainObject.Name);
 			module.AddComponents(extras.ToArray());
@@ -562,7 +562,7 @@ namespace SRMLExtras.Templates
 		/// <summary>
 		/// Builds the definition for this slime
 		/// </summary>
-		protected void RegisterDefinition()
+		protected virtual void RegisterDefinition()
 		{
 			SlimeRegistry.RegisterSlimeDefinition(definition);
 		}
