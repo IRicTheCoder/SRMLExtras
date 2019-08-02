@@ -92,7 +92,9 @@ namespace SRMLExtras.Markers
 				TextAnchor defAnc = GUI.skin.label.alignment;
 				GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 
-				GUI.Label(new Rect(0, 10, Screen.width, 30), $"<size=16><b>Looking at:</b> {objName}</size>");
+				GUI.Label(new Rect(0, 10, Screen.width, 30), $"<size=16><b>MARKER INFO</b></size>");
+				GUI.Label(new Rect(0, 35, Screen.width, 30), $"<size=16><b>Object:</b> {objName}</size>");
+				GUI.Label(new Rect(0, 55, Screen.width, 30), $"<size=16><b>Type:</b> {type}</size>");
 
 				GUI.skin.label.alignment = defAnc;
 			}

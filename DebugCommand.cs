@@ -7,8 +7,8 @@ namespace SRMLExtras
 	{
 		public static bool DebugMode = false;
 
-		public override string ID { get; } = "vdebug";
-		public override string Usage { get; } = "vdebug <mode>";
+		public override string ID { get; } = "debug";
+		public override string Usage { get; } = "debug <mode>";
 		public override string Description { get; } = "Sets the debug mode to <mode>";
 
 		public override bool Execute(string[] args)
