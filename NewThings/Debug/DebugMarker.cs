@@ -1,7 +1,7 @@
 ﻿using SRMLExtras.Templates;
 using UnityEngine;
 
-namespace SRMLExtras.Markers
+namespace SRMLExtras.Debug
 {
 	public class DebugMarker : MonoBehaviour
 	{

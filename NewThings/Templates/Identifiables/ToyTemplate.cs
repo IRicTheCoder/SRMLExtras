@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MonomiPark.SlimeRancher.Regions;
+using SRML.SR;
 using UnityEngine;
 
 namespace SRMLExtras.Templates
@@ -58,6 +59,16 @@ namespace SRMLExtras.Templates
 		}
 
 		/// <summary>
+		/// Sets the translation for this toy's name
+		/// </summary>
+		/// <param name="name">The translated name</param>
+		public override ToyTemplate SetTranslation(string name)
+		{
+			TranslationPatcher.AddActorTranslation("l." + ID.ToString().ToLower(), name);
+			return this;
+		}
+
+		/// <summary>
 		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
 		/// </summary>
 		public override ToyTemplate Create()
@@ -81,7 +92,6 @@ namespace SRMLExtras.Templates
 				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 25f),
 				new Create<CollisionAggregator>(null),
 				new Create<RegionMember>((rg) => rg.canHibernate = true),
-				new Create<StopOnCollision>((stop) => stop.distFromCol = 0.25f),
 				new Create<TotemLinkerHelper>(null),
 				new Create<PlaySoundOnHit>((hit) =>
 				{

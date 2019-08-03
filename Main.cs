@@ -25,17 +25,13 @@ namespace SRMLExtras
 		// PRE LOADS MOD
 		public override void PreLoad()
 		{
-			Console.RegisterCommand(new DebugCommand());
+			Console.RegisterCommand(new Debug.DebugCommand());
 			//DebugCommand.DebugMode = true;
 
 			// Gets the Assembly being executed
 			execAssembly = Assembly.GetExecutingAssembly();
 			HarmonyInstance.PatchAll(execAssembly);
 		}
-
-		public static Identifiable.Id TOFU_PLORT;
-		public static Identifiable.Id KOOKADOBA_PLORT;
-		public static Identifiable.Id GIANT_PINK_PLORT;
 
 		// LOADS MOD
 		public override void Load()
@@ -52,35 +48,18 @@ namespace SRMLExtras
 			- Food Template
 			- Liquid Template (Revisit to fix the coloring)
 			- Plort Template
+			- Toy Template
 			- 
 
 			TO TEST:
-			- Toy
-			- Animal
 			- Fashion
 			- Gordo
+			- Animal
 			
 			*/
 
 			// TEST FOR PREFABS
-
-			// DUMP PREFABS
-			/*PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.TELEPORTER_GOLD).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.BLUE_CORAL_COLUMNS).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.DRONE).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.DRONE_ADVANCED).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.EXTRACTOR_DRILL_TITAN).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.EXTRACTOR_APIARY_ROYAL).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.EXTRACTOR_PUMP_ABYSSAL).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.FASHION_POD_CUTE).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.FASHION_POD_REMOVER).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.GORDO_SNARE_MASTER).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.MARKET_LINK).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.REFINERY_LINK).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.WARP_DEPOT_PINK).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.HYDRO_SHOWER).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.HYDRO_TURRET).prefab);
-			PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.SUPER_HYDRO_TURRET).prefab);*/
+			
 		}
 	}
 }

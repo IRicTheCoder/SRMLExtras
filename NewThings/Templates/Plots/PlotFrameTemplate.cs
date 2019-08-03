@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using SRML.Console;
-using SRMLExtras.Markers;
+using SRMLExtras.Debug;
 using UnityEngine;
 
 namespace SRMLExtras.Templates

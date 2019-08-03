@@ -39,55 +39,56 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DebugCommand.cs" />
-    <Compile Include="GameExtensions\SlimeDefinitionsExtension.cs" />
-    <Compile Include="GameExtensions\LookupDirectorExtension.cs" />
+    <Compile Include="NewThings\Debug\DebugCommand.cs" />
+    <Compile Include="NewThings\Debug\AddDebugMarker.cs" />
+    <Compile Include="NewThings\Debug\DebugGUIConstants.cs" />
+    <Compile Include="NewThings\Debug\DebugMarker.cs" />
+    <Compile Include="NewThings\Debug\DebugSystem.cs" />
+    <Compile Include="NewThings\Debug\MarkerType.cs" />
+    <Compile Include="NewThings\GameExtensions\SlimeDefinitionsExtension.cs" />
+    <Compile Include="NewThings\GameExtensions\LookupDirectorExtension.cs" />
     <Compile Include="Registries\ContentPatcher.cs" />
-    <Compile Include="Templates\Base Objects\EffectObjects.cs" />
-    <Compile Include="Templates\Base Objects\RanchObjects.cs" />
-    <Compile Include="Templates\Base Objects\TheWildsObjects.cs" />
-    <Compile Include="Templates\Base Objects\BaseObjects.cs" />
-    <Compile Include="Templates\Base Objects\GardenObjects.cs" />
-    <Compile Include="Templates\Base Objects\ObjectTransformValues.cs" />
-    <Compile Include="Markers\AddDebugMarker.cs" />
-    <Compile Include="Templates\Patches\FixedFearProfile.cs" />
-    <Compile Include="Templates\Patches\FixedSlimeVariatyModules.cs" />
-    <Compile Include="Templates\Components\ActionOnAwake.cs" />
-    <Compile Include="Templates\Components\ActionOnStart.cs" />
-    <Compile Include="Templates\Create.cs" />
-    <Compile Include="Markers\DebugMarker.cs" />
-    <Compile Include="Templates\ICreateComponent.cs" />
-    <Compile Include="Markers\MarkerRaycast.cs" />
-    <Compile Include="Markers\MarkerType.cs" />
-    <Compile Include="Templates\GameObjectTemplate.cs" />
-    <Compile Include="Templates\Identifiables\AnimalTemplate.cs" />
-    <Compile Include="Templates\Identifiables\GordoTemplate.cs" />
-    <Compile Include="Templates\Identifiables\SlimeTemplate.cs" />
-    <Compile Include="Templates\Identifiables\CraftResourceTemplate.cs" />
-    <Compile Include="Templates\Identifiables\CrateTemplate.cs" />
-    <Compile Include="Templates\Identifiables\FashionAttachTemplate.cs" />
-    <Compile Include="Templates\Identifiables\FashionTemplate.cs" />
-    <Compile Include="Templates\Identifiables\FloatingDecoTemplate.cs" />
-    <Compile Include="Templates\Identifiables\FoodTemplate.cs" />
-    <Compile Include="Templates\Identifiables\LiquidTemplate.cs" />
-    <Compile Include="Templates\Identifiables\PlortTemplate.cs" />
-    <Compile Include="Templates\Identifiables\ToyTemplate.cs" />
-    <Compile Include="Templates\Misc\TechActivatorTemplate.cs" />
-    <Compile Include="Templates\ModPrefab.cs" />
-    <Compile Include="Templates\Plantables\BushPlantableTemplate.cs" />
-    <Compile Include="Templates\Plantables\FruitPlantableTemplate.cs" />
-    <Compile Include="Templates\Plantables\VeggiePlantableTemplate.cs" />
-    <Compile Include="Templates\Plots\CustomPlotTemplate.cs" />
-    <Compile Include="Templates\Plots\PlotUpgradeTemplate.cs" />
-    <Compile Include="Templates\Plots\PlotFrameTemplate.cs" />
-    <Compile Include="Templates\TemplateActions.cs" />
-    <Compile Include="Templates\UIs\ActivatorUITemplate.cs" />
-    <Compile Include="Utils\GameObjectExtensions.cs" />
-    <Compile Include="Utils\ComponentExtensions.cs" />
+    <Compile Include="NewThings\Base Objects\EffectObjects.cs" />
+    <Compile Include="NewThings\Base Objects\RanchObjects.cs" />
+    <Compile Include="NewThings\Base Objects\TheWildsObjects.cs" />
+    <Compile Include="NewThings\Base Objects\BaseObjects.cs" />
+    <Compile Include="NewThings\Base Objects\GardenObjects.cs" />
+    <Compile Include="NewThings\Base Objects\ObjectTransformValues.cs" />
+    <Compile Include="NewThings\Templates\Patches\FixedFearProfile.cs" />
+    <Compile Include="NewThings\Templates\Patches\FixedSlimeVariatyModules.cs" />
+    <Compile Include="NewThings\Templates\Components\ActionOnAwake.cs" />
+    <Compile Include="NewThings\Templates\Components\ActionOnStart.cs" />
+    <Compile Include="NewThings\Templates\Create.cs" />
+    <Compile Include="NewThings\Templates\ICreateComponent.cs" />
+    <Compile Include="NewThings\Templates\GameObjectTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\AnimalTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\GordoTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\SlimeTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\CraftResourceTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\CrateTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\FashionAttachTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\FashionTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\FloatingDecoTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\FoodTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\LiquidTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\PlortTemplate.cs" />
+    <Compile Include="NewThings\Templates\Identifiables\ToyTemplate.cs" />
+    <Compile Include="NewThings\Templates\Misc\TechActivatorTemplate.cs" />
+    <Compile Include="NewThings\Templates\ModPrefab.cs" />
+    <Compile Include="NewThings\Templates\Plantables\BushPlantableTemplate.cs" />
+    <Compile Include="NewThings\Templates\Plantables\FruitPlantableTemplate.cs" />
+    <Compile Include="NewThings\Templates\Plantables\VeggiePlantableTemplate.cs" />
+    <Compile Include="NewThings\Templates\Plots\CustomPlotTemplate.cs" />
+    <Compile Include="NewThings\Templates\Plots\PlotUpgradeTemplate.cs" />
+    <Compile Include="NewThings\Templates\Plots\PlotFrameTemplate.cs" />
+    <Compile Include="NewThings\Templates\TemplateActions.cs" />
+    <Compile Include="NewThings\Templates\UIs\ActivatorUITemplate.cs" />
+    <Compile Include="NewThings\Utils\GameObjectExtensions.cs" />
+    <Compile Include="NewThings\Utils\ComponentExtensions.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
-    <Compile Include="Utils\BoneMappingUtils.cs" />
+    <Compile Include="NewThings\Utils\BoneMappingUtils.cs" />
     <Compile Include="Utils\PrefabUtils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -929,7 +930,7 @@
     <Content Include="_Prefabs\Resource Spawners\treePogo04\treePogo04.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Templates\PlotUpgrades\" />
+    <Folder Include="NewThings\Templates\PlotUpgrades\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="_Prefabs\_Prefabs.zip" />

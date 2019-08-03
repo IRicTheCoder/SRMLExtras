@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SRMLExtras.Markers;
+using SRMLExtras.Debug;
 using UnityEngine;
 
 namespace SRMLExtras.Templates

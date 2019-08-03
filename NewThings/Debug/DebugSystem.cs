@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SRMLExtras.Markers
+namespace SRMLExtras.Debug
 {
 	public class DebugSystem : MonoBehaviour
 	{

@@ -12,7 +12,7 @@ namespace SRMLExtras.Templates
 		{
 			if (actions.ContainsKey(ID))
 			{
-				Debug.LogError($"The template action with id '<color=white>{ID}</color>' is already registered");
+				UnityEngine.Debug.LogError($"The template action with id '<color=white>{ID}</color>' is already registered");
 				return;
 			}
 

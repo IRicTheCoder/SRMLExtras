@@ -1,4 +1,4 @@
-﻿namespace SRMLExtras.Markers
+﻿namespace SRMLExtras.Debug
 {
 	public enum MarkerType
 	{

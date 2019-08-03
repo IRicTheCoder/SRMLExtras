@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SRMLExtras.Markers
+namespace SRMLExtras.Debug
 {
 	public static class DebugGUIConstants
 	{

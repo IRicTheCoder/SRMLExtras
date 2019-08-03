@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using SRML.Console;
-using SRMLExtras.Markers;
+using SRMLExtras.Debug;
 using UnityEngine;
 
 namespace SRMLExtras.Templates
 {
 	/// <summary>
-	/// A template to create new bush plantables
+	/// A template to create new fruit plantables
 	/// </summary>
-	public class BushPlantableTemplate : ModPrefab<BushPlantableTemplate>
+	public class FruitPlantableTemplate : ModPrefab<FruitPlantableTemplate>
 	{
 		// Base for plantables
 		protected readonly bool isDeluxe = false;
@@ -45,20 +45,20 @@ namespace SRMLExtras.Templates
 		protected Material[] leavesMaterials;
 
 		// The position for the leaves
-		protected Vector3 leavesPosition = new Vector3(0, 2.45f, 0);
-		protected Vector3 leavesDeluxePosition = new Vector3(0, 2.25f, 0);
+		protected Vector3 leavesPosition = new Vector3(0, 3.2f, 0);
+		protected Vector3 leavesDeluxePosition = new Vector3(0, 3.1f, 0);
 
 		// The leave scale
 		protected bool customLeavesScale = false;
 
 		protected Vector3 leavesScale = Vector3.one;
-		protected Vector3 leavesDeluxeScale = Vector3.one;
+		protected Vector3 leavesDeluxeScale  = Vector3.one;
 
 		// The tree scale
 		protected bool customTreeScale = false;
 
-		protected Vector3 treeScale = Vector3.one * 0.5f;
-		protected Vector3 treeDeluxeScale = Vector3.one * 0.5f;
+		protected Vector3 treeScale = Vector3.one * 0.7f;
+		protected Vector3 treeDeluxeScale = Vector3.one * 0.7f;
 
 		// Actual model and materials (to display when growing)
 		protected Mesh modelMesh;
@@ -75,7 +75,7 @@ namespace SRMLExtras.Templates
 		/// <param name="ID">The ID of the identifiable spawned by this plantable</param>
 		/// <param name="resID">The spawn resource id for this plantable</param>
 		/// <param name="toSpawn">The list of things to spawn (null to get it from the ID provided)</param>
-		public BushPlantableTemplate(string name, bool isDeluxe, Identifiable.Id ID, SpawnResource.Id resID, List<GameObject> toSpawn = null) : base(name)
+		public FruitPlantableTemplate(string name, bool isDeluxe, Identifiable.Id ID, SpawnResource.Id resID, List<GameObject> toSpawn = null) : base(name)
 		{
 			this.isDeluxe = isDeluxe;
 			this.ID = ID;
@@ -92,7 +92,7 @@ namespace SRMLExtras.Templates
 		/// </summary>
 		/// <param name="minBonusSelection">The min. amount selected from the bonus list</param>
 		/// <param name="bonusChance">The change to select extras</param>
-		public BushPlantableTemplate SetBonusInfo(int minBonusSelection, float bonusChance = 0.01f)
+		public FruitPlantableTemplate SetBonusInfo(int minBonusSelection, float bonusChance = 0.01f)
 		{
 			this.minBonusSelection = minBonusSelection;
 			this.bonusChance = bonusChance;
@@ -103,7 +103,7 @@ namespace SRMLExtras.Templates
 		/// Sets the list of bonus spawns
 		/// </summary>
 		/// <param name="bonusToSpawn">The list to set</param>
-		public BushPlantableTemplate SetBonusSpawn(List<GameObject> bonusToSpawn)
+		public FruitPlantableTemplate SetBonusSpawn(List<GameObject> bonusToSpawn)
 		{
 			this.bonusToSpawn = bonusToSpawn;
 			return this;
@@ -113,7 +113,7 @@ namespace SRMLExtras.Templates
 		/// Adds a new bonus spawn to the list
 		/// </summary>
 		/// <param name="ID">The ID for the spawnable</param>
-		public BushPlantableTemplate AddBonusSpawn(Identifiable.Id ID)
+		public FruitPlantableTemplate AddBonusSpawn(Identifiable.Id ID)
 		{
 			bonusToSpawn.Add(GameContext.Instance.LookupDirector.GetPrefab(ID));
 			return this;
@@ -123,7 +123,7 @@ namespace SRMLExtras.Templates
 		/// Adds a new bonus spawwn to the list
 		/// </summary>
 		/// <param name="obj">The game object of the identifiable to spawn</param>
-		public BushPlantableTemplate AddBonusSpawn(GameObject obj)
+		public FruitPlantableTemplate AddBonusSpawn(GameObject obj)
 		{
 			bonusToSpawn.Add(obj);
 			return this;
@@ -133,7 +133,7 @@ namespace SRMLExtras.Templates
 		/// Sets the list of spawns
 		/// </summary>
 		/// <param name="toSpawn">The list to set</param>
-		public BushPlantableTemplate SetSpawn(List<GameObject> toSpawn)
+		public FruitPlantableTemplate SetSpawn(List<GameObject> toSpawn)
 		{
 			this.toSpawn = toSpawn;
 			return this;
@@ -143,7 +143,7 @@ namespace SRMLExtras.Templates
 		/// Adds a spawn to the list
 		/// </summary>
 		/// <param name="ID">The ID for the spawnable</param>
-		public BushPlantableTemplate AddSpawn(Identifiable.Id ID)
+		public FruitPlantableTemplate AddSpawn(Identifiable.Id ID)
 		{
 			toSpawn.Add(GameContext.Instance.LookupDirector.GetPrefab(ID));
 			return this;
@@ -153,7 +153,7 @@ namespace SRMLExtras.Templates
 		/// Adds a spawn to the list
 		/// </summary>
 		/// <param name="obj">The game object of the identifiable to spawn</param>
-		public BushPlantableTemplate AddSpawn(GameObject obj)
+		public FruitPlantableTemplate AddSpawn(GameObject obj)
 		{
 			toSpawn.Add(obj);
 			return this;
@@ -165,7 +165,7 @@ namespace SRMLExtras.Templates
 		/// <param name="tree">The tree's mesh</param>
 		/// <param name="treeMaterials">The materials for that tree</param>
 		/// <param name="treeCol">The tree's mesh for the collider</param>
-		public BushPlantableTemplate SetCustomTree(Mesh tree, Material[] treeMaterials, Mesh treeCol = null)
+		public FruitPlantableTemplate SetCustomTree(Mesh tree, Material[] treeMaterials, Mesh treeCol = null)
 		{
 			this.treeCol = treeCol ?? tree;
 			this.tree = tree;
@@ -177,7 +177,7 @@ namespace SRMLExtras.Templates
 		/// Sets the tree to be used based on the SpawnResource ID (only works for those already in the game)
 		/// </summary>
 		/// <param name="ID">The ID to get the tree from</param>
-		public BushPlantableTemplate SetCustomTree(SpawnResource.Id ID)
+		public FruitPlantableTemplate SetCustomTree(SpawnResource.Id ID)
 		{
 			if (GardenObjects.modelTreeMeshs.ContainsKey(ID))
 				treeID = ID;
@@ -190,7 +190,7 @@ namespace SRMLExtras.Templates
 		/// <param name="leaves">The leaves's mesh</param>
 		/// <param name="leavesMaterials">The materials for that leaves</param>
 		/// <param name="leavesCol">The leaves's mesh for the collider</param>
-		public BushPlantableTemplate SetCustomLeaves(Mesh leaves, Material[] leavesMaterials, Mesh leavesCol = null)
+		public FruitPlantableTemplate SetCustomLeaves(Mesh leaves, Material[] leavesMaterials, Mesh leavesCol = null)
 		{
 			this.leavesCol = leavesCol ?? leaves;
 			this.leaves = leaves;
@@ -202,7 +202,7 @@ namespace SRMLExtras.Templates
 		/// Sets the leaves to be used based on the SpawnResource ID (only works for those already in the game)
 		/// </summary>
 		/// <param name="ID">The ID to get the leaves from</param>
-		public BushPlantableTemplate SetCustomLeaves(SpawnResource.Id ID)
+		public FruitPlantableTemplate SetCustomLeaves(SpawnResource.Id ID)
 		{
 			if (GardenObjects.modelLeavesMeshs.ContainsKey(ID))
 				leavesID = ID;
@@ -213,7 +213,7 @@ namespace SRMLExtras.Templates
 		/// Sets the position for the leaves (uses the same for normal and deluxe)
 		/// </summary>
 		/// <param name="position">The new position to set</param>
-		public BushPlantableTemplate SetLeavesPosition(Vector3 position)
+		public FruitPlantableTemplate SetLeavesPosition(Vector3 position)
 		{
 			SetLeavesPosition(position, position);
 			return this;
@@ -224,7 +224,7 @@ namespace SRMLExtras.Templates
 		/// </summary>
 		/// <param name="position">The new position to set for normal</param>
 		/// <param name="deluxePosition">The new position to set for deluxe</param>
-		public BushPlantableTemplate SetLeavesPosition(Vector3 position, Vector3 deluxePosition)
+		public FruitPlantableTemplate SetLeavesPosition(Vector3 position, Vector3 deluxePosition)
 		{
 			leavesPosition = position;
 			leavesDeluxePosition = deluxePosition;
@@ -235,7 +235,7 @@ namespace SRMLExtras.Templates
 		/// Sets the scale for the leaves (uses the same for normal and deluxe)
 		/// </summary>
 		/// <param name="scale">The new scale to set</param>
-		public BushPlantableTemplate SetLeavesScale(Vector3 scale)
+		public FruitPlantableTemplate SetLeavesScale(Vector3 scale)
 		{
 			SetLeavesScale(scale, scale);
 			return this;
@@ -246,7 +246,7 @@ namespace SRMLExtras.Templates
 		/// </summary>
 		/// <param name="scale">The new scale to set for normal</param>
 		/// <param name="deluxeScale">The new scale to set for deluxe</param>
-		public BushPlantableTemplate SetLeavesScale(Vector3 scale, Vector3 deluxeScale)
+		public FruitPlantableTemplate SetLeavesScale(Vector3 scale, Vector3 deluxeScale)
 		{
 			leavesScale = scale;
 			leavesDeluxeScale = deluxeScale;
@@ -258,7 +258,7 @@ namespace SRMLExtras.Templates
 		/// Sets the scale for the tree (uses the same for normal and deluxe)
 		/// </summary>
 		/// <param name="scale">The new scale to set</param>
-		public BushPlantableTemplate SetTreeScale(Vector3 scale)
+		public FruitPlantableTemplate SetTreeScale(Vector3 scale)
 		{
 			SetTreeScale(scale, scale);
 			return this;
@@ -269,7 +269,7 @@ namespace SRMLExtras.Templates
 		/// </summary>
 		/// <param name="scale">The new scale to set for normal</param>
 		/// <param name="deluxeScale">The new scale to set for deluxe</param>
-		public BushPlantableTemplate SetTreeScale(Vector3 scale, Vector3 deluxeScale)
+		public FruitPlantableTemplate SetTreeScale(Vector3 scale, Vector3 deluxeScale)
 		{
 			treeScale = scale;
 			treeDeluxeScale = deluxeScale;
@@ -286,7 +286,7 @@ namespace SRMLExtras.Templates
 		/// <param name="maxHours">Max. hours to be ready to spawn</param>
 		/// <param name="minNutrient">Min. value of nutrients, related to growth rate</param>
 		/// <param name="waterHours">The number of hours the water lasts in the soil</param>
-		public BushPlantableTemplate SetSpawnInfo(int minSpawn, int maxSpawn, float minHours, float maxHours, float minNutrient = 20, float waterHours = 23)
+		public FruitPlantableTemplate SetSpawnInfo(int minSpawn, int maxSpawn, float minHours, float maxHours, float minNutrient = 20, float waterHours = 23)
 		{
 			this.minSpawn = minSpawn;
 			this.maxSpawn = maxSpawn;
@@ -302,7 +302,7 @@ namespace SRMLExtras.Templates
 		/// </summary>
 		/// <param name="modelMesh">The mesh for the model</param>
 		/// <param name="modelMaterials">The materials for the model</param>
-		public BushPlantableTemplate SetModel(Mesh modelMesh, Material[] modelMaterials)
+		public FruitPlantableTemplate SetModel(Mesh modelMesh, Material[] modelMaterials)
 		{
 			this.modelMesh = modelMesh;
 			this.modelMaterials = modelMaterials;
@@ -313,7 +313,7 @@ namespace SRMLExtras.Templates
 		/// Sets the spawn joints (the list needs to have 20 for non-deluxe and 34 for deluxe)
 		/// </summary>
 		/// <param name="spawnJoints">New spawn joints to set</param>
-		public BushPlantableTemplate SetSpawnJoints(List<ObjectTransformValues> spawnJoints)
+		public FruitPlantableTemplate SetSpawnJoints(List<ObjectTransformValues> spawnJoints)
 		{
 			if ((spawnJoints.Count < 20 && !isDeluxe) || (spawnJoints.Count < 34 && isDeluxe))
 			{
@@ -328,7 +328,7 @@ namespace SRMLExtras.Templates
 		/// <summary>
 		/// Creates the object of the template (To get the prefab version use .ToPrefab() after calling this)
 		/// </summary>
-		public override BushPlantableTemplate Create()
+		public override FruitPlantableTemplate Create()
 		{
 			// Create main object
 			mainObject.AddComponents(
@@ -369,12 +369,11 @@ namespace SRMLExtras.Templates
 
 			for (int i = 0; i < 4; i++)
 			{
-				ObjectTransformValues trans = GardenObjects.droneNodes[i];
 				droneNetworkNodes[i] = new GameObjectTemplate($"DroneNetworkNode{(i+1).ToString("00")}",
 					new Create<PathingNetworkNode>(null)
 				).AddChild(new GameObjectTemplate("NodeLoc").SetTransform(new Vector3(0, 2, 0), Vector3.zero, Vector3.one).SetDebugMarker(MarkerType.DroneNode))
 				.AddAfterChildren((obj) => obj.GetComponent<PathingNetworkNode>().nodeLoc = obj.transform.GetChild(0))
-				.SetTransform(new Vector3(trans.position.x * 1.5f, trans.position.y, trans.position.z * 1.5f), trans.rotation, trans.scale);
+				.SetTransform(GardenObjects.droneNodes[i]);
 			}
 
 			mainObject.AddChild(new GameObjectTemplate("DroneSubnetwork", new Create<GardenDroneSubnetwork>(null))
@@ -393,7 +392,7 @@ namespace SRMLExtras.Templates
 					col.sharedMesh = treeCol ?? (GardenObjects.modelTreeCols[treeID] ?? GardenObjects.modelTreeCols[SpawnResource.Id.POGO_TREE]);
 					col.convex = treeCol == tree;
 				})
-			).SetTransform(Vector3.up * -0.75f, Vector3.zero, customTreeScale ? treeScale : Vector3.one * 0.5f);
+			).SetTransform(Vector3.zero, Vector3.zero, customTreeScale ? treeScale : Vector3.one * 0.7f);
 
 			GameObjectTemplate leavesObj = new GameObjectTemplate("leaves_tree",
 				new Create<MeshFilter>((filter) => filter.sharedMesh = leaves ?? (GardenObjects.modelLeavesMeshs[leavesID] ?? GardenObjects.modelLeavesMeshs[SpawnResource.Id.POGO_TREE])),
@@ -411,7 +410,7 @@ namespace SRMLExtras.Templates
 			}
 			else
 			{
-				mainObject.AddChild(treeObj.Clone().AddComponents(
+				mainObject.AddChild(treeObj.AddComponents(
 					new Create<ScaleMarker>((scale) => scale.doNotScaleAsReplacement = false)
 				).AddChild(leavesObj));
 			}
@@ -419,7 +418,6 @@ namespace SRMLExtras.Templates
 			// Add spawn joints
 			for (int i = 0; i < 20; i++)
 			{
-				ObjectTransformValues trans = customSpawnJoints == null ? GardenObjects.treeSpawnJoints[leavesID][i] : customSpawnJoints[i];
 				mainObject.AddChild(new GameObjectTemplate($"SpawnJoint{(i+1).ToString("00")}",
 					new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.modelMeshs.ContainsKey(ID) ? GardenObjects.modelMeshs[ID] : modelMesh),
 					new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.modelMaterials.ContainsKey(ID) ? GardenObjects.modelMaterials[ID] : modelMaterials),
@@ -433,7 +431,7 @@ namespace SRMLExtras.Templates
 					}),
 					new Create<FixedJoint>(null),
 					new Create<HideOnStart>(null)
-				).SetTransform(customSpawnJoints != null ? trans.position : new Vector3(trans.position.x * 0.7f, trans.position.y - 1.55f, trans.position.z * 0.7f), trans.rotation, trans.scale)
+				).SetTransform(customSpawnJoints == null ? GardenObjects.treeSpawnJoints[leavesID][i] : customSpawnJoints[i])
 				.SetDebugMarker(MarkerType.SpawnPoint)
 				);
 			}
@@ -444,7 +442,6 @@ namespace SRMLExtras.Templates
 				// Add spawn joints
 				for (int i = 20; i < 34; i++)
 				{
-					ObjectTransformValues trans = customSpawnJoints == null ? GardenObjects.treeSpawnJoints[leavesID][i] : customSpawnJoints[i];
 					mainObject.AddChild(new GameObjectTemplate($"SpawnJoint{(i + 1).ToString("00")}",
 						new Create<MeshFilter>((filter) => filter.sharedMesh = GardenObjects.modelMeshs.ContainsKey(ID) ? GardenObjects.modelMeshs[ID] : modelMesh),
 						new Create<MeshRenderer>((render) => render.sharedMaterials = GardenObjects.modelMaterials.ContainsKey(ID) ? GardenObjects.modelMaterials[ID] : modelMaterials),
@@ -458,7 +455,7 @@ namespace SRMLExtras.Templates
 						}),
 						new Create<FixedJoint>(null),
 						new Create<HideOnStart>(null)
-					).SetTransform(customSpawnJoints != null ? trans.position : new Vector3(trans.position.x * 0.85f, trans.position.y - 0.95f, trans.position.z * 0.85f), trans.rotation, trans.scale)
+					).SetTransform(customSpawnJoints == null ? GardenObjects.treeSpawnJoints[leavesID][i] : customSpawnJoints[i])
 					.SetDebugMarker(MarkerType.SpawnPoint)
 					);
 				}
@@ -466,12 +463,12 @@ namespace SRMLExtras.Templates
 				// Add trees
 				mainObject.AddChild(treeObj.Clone().AddComponents(
 					new Create<ScaleMarker>((scale) => scale.doNotScaleAsReplacement = false)
-				).SetTransform(new Vector3(3.6f, 0.2f, -3.6f), new Vector3(0, 225, 0), customTreeScale ? treeDeluxeScale : new Vector3(0.4f, 0.5f, 0.4f))
+				).SetTransform(new Vector3(3.8f, 0.8f, -3.8f), new Vector3(0, 225, 0), customTreeScale ? treeDeluxeScale : new Vector3(0.4f, 0.5f, 0.4f))
 				.AddChild(leavesObj.Clone().SetTransform(leavesDeluxePosition, Vector3.zero, customLeavesScale ? leavesDeluxeScale : new Vector3(1.3f, 0.9f, 1.3f))));
 
 				mainObject.AddChild(treeObj.Clone().AddComponents(
 					new Create<ScaleMarker>((scale) => scale.doNotScaleAsReplacement = false)
-				).SetTransform(new Vector3(-3.6f, 0.2f, 3.6f), new Vector3(0, 45, 0), customTreeScale ? treeDeluxeScale : new Vector3(0.4f, 0.5f, 0.4f))
+				).SetTransform(new Vector3(-3.8f, 0.8f, 3.8f), new Vector3(0, 45, 0), customTreeScale ? treeDeluxeScale : new Vector3(0.4f, 0.5f, 0.4f))
 				.AddChild(leavesObj.Clone().SetTransform(leavesDeluxePosition, Vector3.zero, customLeavesScale ? leavesDeluxeScale : new Vector3(1.3f, 0.9f, 1.3f))));
 			}
 

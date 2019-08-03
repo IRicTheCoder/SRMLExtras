@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using MonomiPark.SlimeRancher.DataModel;
 using MonomiPark.SlimeRancher.Regions;
 using SRML.Console;
-using SRMLExtras.Markers;
+using SRMLExtras.Debug;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,7 +47,7 @@ namespace SRMLExtras.Templates
 
 		public static Mesh cubeMesh;
 
-		public static GameObject markerIdentifier;
+		public static GameObject debugSystem;
 
 		// Original Meshes and Materials
 		public readonly static Dictionary<string, Mesh> originMesh = new Dictionary<string, Mesh>();
@@ -174,8 +174,8 @@ namespace SRMLExtras.Templates
 			// Gets the cube for the markers
 			cubeMesh = originMesh["Cube"];
 
-			markerIdentifier = new GameObject("MarkerIdentifier", typeof(MarkerRaycast));
-			Object.DontDestroyOnLoad(markerIdentifier);
+			debugSystem = new GameObject("DebugSystem", typeof(DebugSystem));
+			Object.DontDestroyOnLoad(debugSystem);
 
 			// Adds markers to objects
 			foreach (GameObject obj in Director.plotPrefabs)

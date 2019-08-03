@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SRML.Console;
 
-namespace SRMLExtras
+namespace SRMLExtras.Debug
 {
 	public class DebugCommand : ConsoleCommand
 	{
