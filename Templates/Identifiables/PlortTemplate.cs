@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MonomiPark.SlimeRancher.Regions;
+using SRML.SR;
 using UnityEngine;
 
 namespace SRMLExtras.Templates
@@ -15,6 +16,9 @@ namespace SRMLExtras.Templates
 
 		// The Material
 		protected Material[] materials;
+
+		// Plort scale
+		protected Vector3 scale = Vector3.one * 0.3f;
 
 		/// <summary>
 		/// Template to create new plorts
@@ -35,6 +39,26 @@ namespace SRMLExtras.Templates
 		public PlortTemplate SetVacSize(Vacuumable.Size vacSize)
 		{
 			this.vacSize = vacSize;
+			return this;
+		}
+
+		/// <summary>
+		/// Sets the translation for this plort's name
+		/// </summary>
+		/// <param name="name">The translated name</param>
+		public override PlortTemplate SetTranslation(string name)
+		{
+			TranslationPatcher.AddActorTranslation("l." + ID.ToString().ToLower(), name);
+			return this;
+		}
+
+		/// <summary>
+		/// Sets the scale for the plort
+		/// </summary>
+		/// <param name="scale">The scale to set</param>
+		public PlortTemplate SetScale(Vector3 scale)
+		{
+			this.scale = scale;
 			return this;
 		}
 
@@ -60,6 +84,7 @@ namespace SRMLExtras.Templates
 				{
 					col.center = Vector3.zero;
 					col.radius = 1;
+					col.sharedMaterial = BaseObjects.originPhysMaterial["Slime"];
 				}),
 				new Create<DragFloatReactor>((drag) => drag.floatDragMultiplier = 10),
 				new Create<CollisionAggregator>(null),
@@ -77,8 +102,16 @@ namespace SRMLExtras.Templates
 				{
 					dest.lifeTimeHours = 24;
 					dest.destroyFX = EffectObjects.fxPlortDespawn;
+				}),
+				new Create<PlortInstability>((insta) =>
+				{
+					insta.lifetimeHours = 0.5f;
+					insta.explodePower = 400;
+					insta.explodeRadius = 7;
+					insta.explodeFX = EffectObjects.fxExplosion;
 				})
-			);
+			).SetTransform(Vector3.zero, Vector3.zero, scale)
+			.AddAfterChildren(SetShield);
 
 			// Create model
 			mainObject.AddChild(new GameObjectTemplate("Shield",
@@ -95,7 +128,7 @@ namespace SRMLExtras.Templates
 					col.isTrigger = true;
 				}),
 				new Create<VacDelaunchTrigger>(null)
-			));
+			).SetTransform(Vector3.zero, Vector3.zero, Vector3.one * 3));
 
 			mainObject.Layer = BaseObjects.layers["Actor"];
 

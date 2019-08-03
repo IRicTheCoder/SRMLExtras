@@ -241,6 +241,7 @@ namespace SRMLExtras.Templates
 				{
 					col.center = Vector3.zero;
 					col.radius = 0.5f;
+					col.sharedMaterial = BaseObjects.originPhysMaterial["Slime"];
 				}),
 				new Create<Rigidbody>((body) =>
 				{

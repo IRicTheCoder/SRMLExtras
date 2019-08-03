@@ -52,6 +52,7 @@ namespace SRMLExtras.Templates
 		// Original Meshes and Materials
 		public readonly static Dictionary<string, Mesh> originMesh = new Dictionary<string, Mesh>();
 		public readonly static Dictionary<string, Material> originMaterial = new Dictionary<string, Material>();
+		public readonly static Dictionary<string, PhysicMaterial> originPhysMaterial = new Dictionary<string, PhysicMaterial>();
 		public readonly static Dictionary<string, Texture> originTexture = new Dictionary<string, Texture>();
 		public readonly static Dictionary<string, Sprite> originSprite = new Dictionary<string, Sprite>();
 		public readonly static Dictionary<string, AudioClip> originClips = new Dictionary<string, AudioClip>();
@@ -104,6 +105,12 @@ namespace SRMLExtras.Templates
 				if (!mat.name.Equals(string.Empty) && !originMaterial.ContainsKey(mat.name.Replace("(Instance)", "")) &&
 					!mat.name.StartsWith("Hidden/") && !materialBlacklist.Contains(mat.name.Replace("(Instance)", "")))
 					originMaterial.Add(mat.name.Replace("(Instance)", ""), mat);
+			}
+
+			foreach (PhysicMaterial mat in Resources.FindObjectsOfTypeAll<PhysicMaterial>())
+			{
+				if (!mat.name.Equals(string.Empty) && !originPhysMaterial.ContainsKey(mat.name.Replace("(Instance)", "")))
+					originPhysMaterial.Add(mat.name.Replace("(Instance)", ""), mat);
 			}
 
 			foreach (Texture tex in Resources.FindObjectsOfTypeAll<Texture>())
@@ -223,6 +230,13 @@ namespace SRMLExtras.Templates
 						!mat.name.StartsWith("Hidden/") && !materialBlacklist.Contains(mat.name) &&
 						!(!mat.name.EndsWith("(Instance)") && Regex.IsMatch(mat.name, @".*\(.*\)")))
 						originMaterial.Add(mat.name.Replace("(Instance)", ""), mat);
+				}
+
+				foreach (PhysicMaterial mat in Resources.FindObjectsOfTypeAll<PhysicMaterial>())
+				{
+					if (!mat.name.Equals(string.Empty) && !originPhysMaterial.ContainsKey(mat.name.Replace("(Instance)", "")) &&
+						!(!mat.name.EndsWith("(Instance)") && Regex.IsMatch(mat.name, @".*\(.*\)")))
+						originPhysMaterial.Add(mat.name.Replace("(Instance)", ""), mat);
 				}
 
 				foreach (Texture tex in Resources.FindObjectsOfTypeAll<Texture>())

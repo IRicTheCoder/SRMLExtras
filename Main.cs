@@ -33,7 +33,9 @@ namespace SRMLExtras
 			HarmonyInstance.PatchAll(execAssembly);
 		}
 
-		public static Identifiable.Id GOLD_LIQUID;
+		public static Identifiable.Id TOFU_PLORT;
+		public static Identifiable.Id KOOKADOBA_PLORT;
+		public static Identifiable.Id GIANT_PINK_PLORT;
 
 		// LOADS MOD
 		public override void Load()
@@ -49,12 +51,18 @@ namespace SRMLExtras
 			- Floating Deco Template
 			- Food Template
 			- Liquid Template (Revisit to fix the coloring)
+			- Plort Template
 			- 
+
+			TO TEST:
+			- Toy
+			- Animal
+			- Fashion
+			- Gordo
 			
 			*/
 
 			// TEST FOR PREFABS
-
 
 			// DUMP PREFABS
 			/*PrefabUtils.DumpPrefab(Lookup.GetGadgetEntry(Gadget.Id.TELEPORTER_GOLD).prefab);
